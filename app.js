@@ -44,7 +44,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-27', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-28', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -420,6 +420,14 @@ function exerciseMarkup(config, item, index, solutions) {
   }
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   if (arithmetic) {
+    if (config.type === 'divisiones') {
+      const division = item.question.match(/^(\d+)\s+÷\s+(\d+)\s*=/);
+      if (division) {
+        const spaced = value => String(value).split('').join('&nbsp;');
+        const layout = `<table role="presentation" width="150" align="center" border="0" cellspacing="0" cellpadding="0" style="width:150px;table-layout:fixed;border-collapse:collapse;font:700 17px/1.15 Arial,Helvetica,sans-serif;color:#20283f"><tbody><tr><td width="64%" align="right" valign="middle" style="padding:0 12px 0 0;white-space:nowrap;letter-spacing:1px">${spaced(division[1])}</td><td width="36%" align="left" valign="middle" style="height:34px;padding:0 4px 3px 14px;border-left:1.5px solid #20283f;border-bottom:1.5px solid #20283f;white-space:nowrap;letter-spacing:1px">${spaced(division[2])}</td></tr></tbody></table>`;
+        return solutions ? `<div style="width:150px;margin:0 auto">${layout}<div style="padding:5px 7px 0 0;text-align:right;font:700 13pt Arial,Helvetica,sans-serif;color:#20283f">${item.answer}</div></div>` : layout;
+      }
+    }
     const threeTermMatch = item.question.match(/^(\d+)\s+([+−])\s+(\d+)\s+([+−])\s+(\d+)\s*=/);
     const numberRow = (operator, value) => `<tr><td width="20%" align="center" valign="middle"><font face="Arial,Helvetica,sans-serif" size="4"><b>${operator || '&nbsp;'}</b></font></td><td width="80%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="4"><b>${String(value).split('').join('&nbsp;')}</b></font></td></tr>`;
     const answerRows = solutions
@@ -447,16 +455,17 @@ function printableHtml(config, items, solutions) {
   const worksheetHeader = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="12%" align="left" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Nombre:</font></td><td width="65%" align="left" valign="bottom"><font face="Arial,Helvetica,sans-serif" size="2">${name ? escapeHtml(name) : '&nbsp;'}</font><hr width="100%" size="1" color="#20283f" noshade></td><td width="8%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Fecha:</font></td><td width="15%" align="left" valign="bottom"><hr width="100%" size="1" color="#20283f" noshade></td></tr></tbody></table>`;
   let worksheetContent;
   if (arithmetic) {
-    const cellsPerRow = 4;
+    const cellsPerRow = config.type === 'divisiones' ? 3 : 4;
+    const cellWidth = 100 / cellsPerRow;
     const operationRows = [];
     const rowHeightMm = Math.min(90, Math.floor(230 / Math.ceil(items.length / cellsPerRow)));
     const rowHeightPx = Math.round(rowHeightMm * 96 / 25.4);
     for (let start = 0; start < items.length; start += cellsPerRow) {
-      const cells = items.slice(start, start + cellsPerRow).map((item, offset) => `<td width="25%" height="${rowHeightPx}" align="center" valign="middle" style="height:${rowHeightPx}px;padding:1mm 2mm">${exerciseMarkup(config, item, start + offset, solutions)}</td>`);
-      while (cells.length < cellsPerRow) cells.push(`<td width="25%" height="${rowHeightPx}" style="height:${rowHeightPx}px">&nbsp;</td>`);
+      const cells = items.slice(start, start + cellsPerRow).map((item, offset) => `<td width="${cellWidth}%" height="${rowHeightPx}" align="center" valign="middle" style="height:${rowHeightPx}px;padding:1mm 2mm">${exerciseMarkup(config, item, start + offset, solutions)}</td>`);
+      while (cells.length < cellsPerRow) cells.push(`<td width="${cellWidth}%" height="${rowHeightPx}" style="height:${rowHeightPx}px">&nbsp;</td>`);
       operationRows.push(`<tr>${cells.join('')}</tr>`);
     }
-    worksheetContent = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout:fixed;border-collapse:collapse"><tbody><tr><td colspan="4" height="45">&nbsp;</td></tr>${operationRows.join('')}</tbody></table>`;
+    worksheetContent = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout:fixed;border-collapse:collapse"><tbody><tr><td colspan="${cellsPerRow}" height="45">&nbsp;</td></tr>${operationRows.join('')}</tbody></table>`;
   } else {
     worksheetContent = `<div class="exercise-grid text-grid">${rows}</div>${copyingGuide}`;
   }
