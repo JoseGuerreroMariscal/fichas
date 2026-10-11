@@ -6,6 +6,14 @@ const labels = {
   sumas: 'Sumas', restas: 'Restas', multiplicaciones: 'Multiplicaciones',
   divisiones: 'Divisiones', problemas: 'Problemas matemáticos', lectura: 'Lectura comprensiva'
 };
+const activityDescriptions = {
+  sumas: 'Practica sumas colocadas en columna.',
+  restas: 'Practica restas colocadas en columna.',
+  multiplicaciones: 'Practica multiplicaciones paso a paso.',
+  divisiones: 'Resuelve divisiones exactas.',
+  problemas: 'Lee, piensa y resuelve situaciones cotidianas.',
+  lectura: 'Lee un texto breve y responde preguntas.'
+};
 let lastTrigger = null;
 const preferenceIds = ['level', 'difficulty', 'count'];
 const preferenceKey = 'fichalia-preferences';
@@ -20,6 +28,16 @@ try {
   const saved = JSON.parse(localStorage.getItem(preferenceKey) || '{}');
   preferenceIds.forEach(id => { if (saved[id] && document.querySelector(`#${id}`)?.querySelector(`option[value="${CSS.escape(saved[id])}"]`)) document.querySelector(`#${id}`).value = saved[id]; });
 } catch (error) { /* preferencias opcionales */ }
+try {
+  const shared = new URLSearchParams(window.location.search);
+  const sharedActivity = shared.get('actividad');
+  if (sharedActivity && labels[sharedActivity]) activity.value = sharedActivity;
+  preferenceIds.forEach(id => {
+    const parameter = id === 'level' ? 'curso' : id === 'difficulty' ? 'dificultad' : 'ejercicios';
+    const value = shared.get(parameter);
+    if (value && document.querySelector(`#${id}`)?.querySelector(`option[value="${CSS.escape(value)}"]`)) document.querySelector(`#${id}`).value = value;
+  });
+} catch (error) { /* enlaces compartidos opcionales */ }
 updateConfigurationSummary();
 
 const countSelect = document.querySelector('#count');
@@ -37,6 +55,7 @@ const openGenerator = type => {
   result.innerHTML = '';
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
   document.querySelector('#activity-summary').textContent = labels[type];
+  document.querySelector('#modal-note').textContent = activityDescriptions[type];
   document.querySelectorAll('.activity-card').forEach(card => {
     const selected = card.dataset.type === type;
     card.classList.toggle('is-selected', selected);
@@ -49,13 +68,16 @@ document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('
 activity.addEventListener('change', () => {
   document.querySelector('#activity-summary').textContent = labels[activity.value];
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[activity.value].toLowerCase()}`;
+  document.querySelector('#modal-note').textContent = activityDescriptions[activity.value];
 });
 preferenceIds.forEach(id => document.querySelector(`#${id}`).addEventListener('change', () => { updateConfigurationSummary(); savePreferences(); }));
 document.querySelector('#reset-options').addEventListener('click', () => {
   document.querySelector('#level').value = '';
   document.querySelector('#difficulty').value = 'Tranquila';
   document.querySelector('#count').value = '20';
+  document.querySelector('#student').value = '';
   document.querySelector('#solutions').checked = false;
+  result.innerHTML = '';
   updateConfigurationSummary();
   savePreferences();
 });
@@ -148,6 +170,13 @@ function printableHtml(config, items, solutions) {
 
 const readConfig = () => ({ type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
 
+const shareUrl = config => {
+  const url = new URL(window.location.href);
+  url.hash = 'actividades';
+  url.search = new URLSearchParams({ actividad: config.type, curso: config.level, dificultad: config.difficulty, ejercicios: String(config.count) }).toString();
+  return url.toString();
+};
+
 function createSheets(config) {
   const items = makeContent(config.type, config.count, config.difficulty);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
@@ -163,9 +192,8 @@ function createSheets(config) {
 
 document.querySelector('#share-direct').addEventListener('click', async () => {
   const config = readConfig();
-  createSheets(config);
   const shareText = `He preparado una ficha de ${labels[config.type]} con FichasFácil.`;
-  const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: `${window.location.href.split('#')[0]}#actividades` };
+  const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: shareUrl(config) };
   try {
     if (navigator.share) await navigator.share(shareData);
     else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = `<div class="success-box"><strong>Ficha preparada para compartir</strong><span class="print-hint">Enlace copiado para compartirla.</span></div>`; }

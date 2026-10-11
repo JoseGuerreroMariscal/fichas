@@ -82,3 +82,23 @@ body{background:var(--surface);color:var(--ink)}
 @media(max-width:650px){.form-actions{grid-template-columns:1fr 1fr}.form-actions .reset-button{grid-column:1 / -1;grid-row:2;order:0}.print-button,.share-button{font-size:12px;padding:12px 8px}}
 .content-section,.use-section,.faq-section{width:min(960px,calc(100% - 40px));margin:0 auto}.content-section{padding:30px 0 100px}.content-heading{max-width:720px}.content-heading h2,.use-copy h2,.faq-section h2{margin:0 0 18px;color:var(--navy);font-size:clamp(30px,4.5vw,52px);line-height:1.04;letter-spacing:-.05em}.content-heading>p:last-child,.use-copy>p:not(.kicker){color:var(--muted);font-size:17px;line-height:1.6}.content-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}.content-card{padding:25px;border:2px solid #dfebe6;border-radius:18px;background:#fff;box-shadow:0 4px 12px #1e2d4909}.content-number{display:grid;place-items:center;width:37px;height:37px;margin-bottom:22px;border-radius:10px;background:var(--warm);color:#111;font-size:13px;font-weight:800}.content-card h3{margin:0 0 10px;color:var(--navy);font-size:19px}.content-card p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}.use-section{display:grid;grid-template-columns:1fr 1fr;gap:50px;padding:0 0 100px}.use-copy{max-width:540px}.use-copy>p:not(.kicker){font-size:16px}.use-points{display:grid;gap:12px;align-content:start}.use-points div{padding:20px 22px;border-left:5px solid var(--warm);border-radius:0 14px 14px 0;background:#fff;box-shadow:0 4px 12px #1e2d4909}.use-points strong,.use-points span{display:block}.use-points strong{margin-bottom:6px;color:var(--navy);font-size:15px}.use-points span{color:var(--muted);font-size:13px;line-height:1.45}.faq-section{padding:0 0 100px}.faq-list{max-width:760px;border-top:1px solid #dfe8e4}.faq-list details{border-bottom:1px solid #dfe8e4}.faq-list summary{padding:20px 4px;color:var(--navy);font-size:16px;font-weight:700;cursor:pointer;list-style:none}.faq-list summary::-webkit-details-marker{display:none}.faq-list summary::after{content:'+';float:right;color:#9b6b00;font-size:22px;font-weight:400;line-height:16px}.faq-list details[open] summary::after{content:'−'}.faq-list details p{max-width:680px;margin:0;padding:0 28px 20px 4px;color:var(--muted);font-size:14px;line-height:1.55}.site-footer nav{display:flex;gap:18px}.site-footer nav a{color:#c4cedc}.site-footer nav a:hover,.site-footer nav a:focus-visible{color:#fff;text-decoration:underline}
 @media(max-width:650px){.content-section,.use-section,.faq-section{width:calc(100% - 32px)}.content-section{padding:15px 0 70px}.content-heading h2,.use-copy h2,.faq-section h2{font-size:34px}.content-heading>p:last-child,.use-copy>p:not(.kicker){font-size:15px}.content-grid,.use-section{grid-template-columns:1fr}.content-grid{gap:12px;margin-top:25px}.content-card{padding:21px}.content-number{margin-bottom:17px}.use-section{gap:30px;padding-bottom:70px}.use-points div{padding:17px 18px}.faq-section{padding-bottom:70px}.faq-list summary{font-size:15px}.site-footer{flex-wrap:wrap}.site-footer nav{width:100%;gap:14px;flex-wrap:wrap}}
+
+/* Ajustes de uso diario: más claridad, mejores toques y un generador cómodo en móvil. */
+html{scroll-padding-top:84px}
+body{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+.activity-card,.hero-cta,.header-action,.print-button,.share-button,.reset-button{min-height:48px}
+.activity-card:active,.hero-cta:active,.header-action:active,.print-button:active,.share-button:active{transform:translateY(1px)}
+.activity-card small{line-height:1.35}
+.modal-note{min-height:17px;line-height:1.45}
+.form-actions{position:sticky;bottom:-1px;z-index:2;background:#fff}
+input::placeholder{color:#8995a8;opacity:1}
+.content-section,.use-section,.faq-section,.other-projects{content-visibility:auto;contain-intrinsic-size:500px}
+@media(prefers-contrast:more){.activity-card,.content-card,.project-links a{border-color:var(--navy)}.section-help,.content-card p,.project-links span{color:#394861}.kicker{color:#394861}}
+@media(max-width:650px){
+  .modal-backdrop{align-items:flex-end;padding:0}
+  .generator-modal{width:100%;max-height:calc(100vh - 18px);border-radius:22px 22px 0 0;padding:26px 18px calc(22px + env(safe-area-inset-bottom))}
+  .modal-close{right:16px;top:12px}
+  .modal-header{margin-bottom:21px}
+  .form-actions{margin-left:-18px;margin-right:-18px;padding:14px 18px 0}
+  .form-actions .print-button,.form-actions .share-button{min-height:52px}
+}
