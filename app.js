@@ -859,7 +859,7 @@ function printableHtml(config, items, solutions) {
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const rows = items.map((item, index) => exerciseMarkup(config, item, index, solutions)).join('');
   const copyingGuide = ['copiado', 'caligrafia'].includes(config.type) ? `<section class="copying-final-guide" style="display:block;break-before:auto;page-break-before:auto;break-inside:avoid;page-break-inside:avoid;width:180mm;margin:7mm auto 0"><h3 style="font-size:14px;margin:0 0 7px;color:#697772">Escribe el texto</h3><div class="lamela-guide" aria-label="Pauta Lamela para copiar el texto" style="display:block;width:100%;height:108mm;border-top:1.2px solid #647b9b">${Array.from({ length: 12 }, (_, index) => `<div class="lamela-line lamela-line-${index % 3}" aria-hidden="true" style="display:block;width:100%;height:9mm;border-bottom:${index % 3 === 0 ? '1.2px solid #7890af' : index % 3 === 1 ? '1px dashed #b7c4d2' : '1.2px solid #ef9b9b'}"></div>`).join('')}</div></section>` : '';
-  const simpleWritingGuide = ['copiado', 'caligrafia'].includes(config.type) ? `<section class="copying-final-guide" style="display:block;break-inside:avoid;page-break-inside:avoid;width:180mm;margin:7mm auto 0"><h3 style="font-size:14px;margin:0 0 7px;color:#697772">Escribe el texto</h3><div aria-label="Pauta de renglones para copiar el texto" style="display:grid;grid-template-rows:repeat(8,14mm);width:100%;height:112mm">${Array.from({ length: 8 }, () => '<div style="height:14mm;border-top:1.2px solid #7890af;border-bottom:1.2px solid #ef9b9b"></div>').join('')}</div></section>` : '';
+  const simpleWritingGuide = ['copiado', 'caligrafia'].includes(config.type) ? `<section class="copying-final-guide" style="display:block;break-inside:avoid;page-break-inside:avoid;width:180mm;margin:7mm auto 0"><h3 style="font-size:14px;margin:0 0 7px;color:#697772">Escribe el texto</h3><div aria-label="Pauta de renglones para copiar el texto" style="display:grid;grid-template-rows:repeat(10,9mm);width:100%;height:90mm">${Array.from({ length: 10 }, () => '<div style="height:9mm;border-top:1px solid #192330;border-bottom:1px solid #192330"></div>').join('')}</div></section>` : '';
   const worksheetHeader = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="12%" align="left" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Nombre:</font></td><td width="65%" align="left" valign="bottom"><font face="Arial,Helvetica,sans-serif" size="2">${name ? escapeHtml(name) : '&nbsp;'}</font><hr width="100%" size="1" color="#20283f" noshade></td><td width="8%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Fecha:</font></td><td width="15%" align="left" valign="bottom"><hr width="100%" size="1" color="#20283f" noshade></td></tr></tbody></table>`;
   let worksheetContent;
   if (arithmetic) {
@@ -999,11 +999,10 @@ function downloadPdf(config, items, solutions = false) {
   const writeAnswerLines = (count = 3) => {
     for (let row = 0; row < count; row += 1) {
       ensureSpace(10);
-      doc.setDrawColor(120, 144, 175);
+      doc.setDrawColor(25, 35, 50);
       doc.line(margin + 4, y, pageWidth - margin - 4, y);
-      doc.setDrawColor(239, 155, 155);
-      doc.line(margin + 4, y + 8, pageWidth - margin - 4, y + 8);
-      y += 10;
+      doc.line(margin + 4, y + 6, pageWidth - margin - 4, y + 6);
+      y += 8;
     }
     doc.setDrawColor(0, 0, 0);
     y += 3;

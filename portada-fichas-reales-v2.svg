@@ -3,7 +3,7 @@
   <desc id="desc">Vista de varias fichas A4 reales con matemáticas, geometría y caligrafía.</desc>
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#102747" flood-opacity=".24"/></filter>
-    <style>.paper{fill:#fff;stroke:#dbe4ee;stroke-width:2}.navy{fill:#20385f}.muted{fill:#718198}.gold{fill:#9b6b00}.rule{stroke:#aab7c5;stroke-width:1}.blue{stroke:#315c9b;stroke-width:2;fill:none}.red{stroke:#ef9b9b;stroke-width:1.5}.dash{stroke:#b7c4d2;stroke-width:1;stroke-dasharray:3 3}.writing .dash{display:none}.title{font:700 17px Arial,sans-serif}.small{font:10px Arial,sans-serif}.body{font:12px Arial,sans-serif}.math{font:13px monospace;fill:#20385f}</style>
+    <style>.paper{fill:#fff;stroke:#dbe4ee;stroke-width:2}.navy{fill:#20385f}.muted{fill:#718198}.gold{fill:#9b6b00}.rule{stroke:#aab7c5;stroke-width:1}.blue{stroke:#315c9b;stroke-width:2;fill:none}.red{stroke:#ef9b9b;stroke-width:1.5}.dash{stroke:#b7c4d2;stroke-width:1;stroke-dasharray:3 3}.writing .dash{display:none}.writing .blue,.writing .red{stroke:#192330;stroke-width:1}.writing > g{transform:translate(18px,108px) scale(1,.72);transform-origin:0 0}.title{font:700 17px Arial,sans-serif}.small{font:10px Arial,sans-serif}.body{font:12px Arial,sans-serif}.math{font:13px monospace;fill:#20385f}</style>
   </defs>
   <g transform="translate(48 57) rotate(-8 120 205)" filter="url(#shadow)">
     <rect class="paper" width="240" height="366" rx="5"/>
