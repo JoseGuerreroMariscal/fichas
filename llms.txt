@@ -8,6 +8,7 @@ FichasFácil permite crear fichas de matemáticas, lectura y escritura sin regis
 
 - [Generador de fichas](https://joseguerreromariscal.github.io/fichas/): elige una actividad, configura sus opciones y pulsa “Imprimir ficha” o “Compartir ficha”.
 - [Blog educativo](https://joseguerreromariscal.github.io/fichas/blog.html): consejos sobre matemáticas, comprensión lectora, escritura y uso de fichas.
+- [Guía para usar fichas](https://joseguerreromariscal.github.io/fichas/guia.html): orientación breve para elegir una actividad, ajustar la dificultad y preparar una hoja clara.
 
 ## Actividades disponibles
 
