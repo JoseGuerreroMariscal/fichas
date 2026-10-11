@@ -106,6 +106,10 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
 
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
+}
+
 function makeOperation(type, difficulty) {
   const max = difficulty === 'Tranquila' ? 20 : difficulty === 'Estándar' ? 99 : 999;
   let a = randomInt(1, max), b = randomInt(1, max);
@@ -162,9 +166,9 @@ function printableHtml(config, items, solutions) {
   const title = labels[config.type];
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const rows = items.map((item, index) => exerciseMarkup(config, item, index, solutions)).join('');
-  const worksheetFields = [name && `<div>Nombre:<span>${name}</span></div>`, course && `<div>Curso:<span>${course}</span></div>`].filter(Boolean).join('');
+  const worksheetFields = [name && `<div>Nombre:<span>${escapeHtml(name)}</span></div>`, course && `<div>Curso:<span>${escapeHtml(course)}</span></div>`].filter(Boolean).join('');
   const worksheetHeader = worksheetFields ? `<div class="worksheet-header">${worksheetFields}</div>` : '';
-  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title} · FichasFácil</title><style>
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escapeHtml(title)} · FichasFácil</title><style>
 *{box-sizing:border-box}body{font-family:ui-rounded,'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;color:#20283f;margin:0;padding:20mm 15mm;max-width:210mm;min-height:297mm}h1{text-align:center;font-size:28px;margin:0 0 14px;color:#20283f}h2{text-align:center;font-size:14px;font-weight:normal;margin:0 0 18px;color:#697772}.worksheet-header{display:flex;justify-content:flex-start;gap:30px;border-bottom:1.5px solid #20283f;padding-bottom:11px;margin-bottom:24px;font-size:13px;font-weight:700}.worksheet-header span{display:inline-block;min-width:145px;border-bottom:1px solid #20283f;margin-left:6px;height:16px}.exercise-grid{display:grid;gap:15px 20px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.text-grid{grid-template-columns:1fr}.print-row{break-inside:avoid}.arithmetic{display:flex;align-items:flex-start;gap:5px;min-height:102px;padding:4px 2px}.print-row .number{font-size:11px;color:#6b7486;padding-top:3px}.operation{width:100%;font-size:22px;font-weight:700;line-height:1.05}.top-number{text-align:right;padding-right:5px;letter-spacing:5px;min-height:28px}.bottom-number{display:grid;grid-template-columns:1fr auto;gap:6px;text-align:right;padding-right:5px}.bottom-number span:first-child{text-align:left;font-weight:400}.operation-rule{border-bottom:1.5px solid #20283f;margin-top:4px}.answer-space{height:28px;border-bottom:1px solid #7f8998}.solution{font-size:20px;text-align:right;color:#ef8e69;padding:6px 5px 0}.text-exercise{display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto 25px;align-items:end;gap:5px 7px;min-height:78px;padding:8px 4px;border-bottom:1px solid #e4ebe5}.text-exercise strong{font-size:19px;line-height:1.25}.text-exercise i{display:block;border-bottom:1.5px solid #82958b;height:22px}.text-exercise b{font-size:20px;color:#ef8e69;grid-column:2}.foot{position:fixed;bottom:8mm;font-size:10px;color:#89958f}@media print{body{padding:13mm 12mm}.exercise-grid{gap:13px 18px}}@media(max-width:650px){body{padding:18px 14px;max-width:none;min-height:0;overflow-x:hidden}h1{font-size:24px}.worksheet-header{font-size:11px;gap:12px}.worksheet-header span{min-width:90px}.math-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}.arithmetic{min-height:105px}.operation{font-size:22px}}</style></head><body><h1>${title}</h1>${worksheetHeader}<div class="exercise-grid ${arithmetic ? 'math-grid' : 'text-grid'}">${rows}</div></body></html>`;
 }
 
@@ -194,11 +198,17 @@ document.querySelector('#share-direct').addEventListener('click', async () => {
   const config = readConfig();
   const shareText = `He preparado una ficha de ${labels[config.type]} con FichasFácil.`;
   const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: shareUrl(config) };
+  const shareButton = document.querySelector('#share-direct');
+  shareButton.disabled = true;
   try {
-    if (navigator.share) await navigator.share(shareData);
+    const { worksheet } = createSheets(config);
+    const file = new File([worksheet], `${config.type}-fichasfacil.html`, { type: 'text/html' });
+    if (navigator.share && navigator.canShare?.({ files: [file] })) await navigator.share({ ...shareData, files: [file] });
+    else if (navigator.share) await navigator.share(shareData);
     else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = `<div class="success-box"><strong>Ficha preparada para compartir</strong><span class="print-hint">Enlace copiado para compartirla.</span></div>`; }
     else result.innerHTML = `<div class="success-box"><strong>Ficha preparada</strong><span class="print-hint">Copia el enlace de esta página para compartirla.</span></div>`;
   } catch (error) { if (error.name !== 'AbortError') result.innerHTML = '<div class="success-box"><strong>No se ha podido compartir</strong><span class="print-hint">Puedes probar de nuevo o imprimir la ficha.</span></div>'; }
+  finally { shareButton.disabled = false; }
 });
 
 form.addEventListener('submit', event => {
@@ -206,9 +216,10 @@ form.addEventListener('submit', event => {
   const submitButton = document.querySelector('#print-direct');
   submitButton.disabled = true;
   const config = readConfig();
+  form.setAttribute('aria-busy', 'true');
   const { worksheet, answerSheet, print } = createSheets(config);
   const printed = print(worksheet);
-  setTimeout(() => { submitButton.disabled = false; }, 500);
+  setTimeout(() => { submitButton.disabled = false; form.setAttribute('aria-busy', 'false'); }, 500);
   result.innerHTML = `<div class="success-box"><strong>${printed ? 'Ficha lista para imprimir' : 'Permite las ventanas emergentes'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${config.count} ejercicios` : 'El navegador ha bloqueado la ventana de impresión.'}</span>${config.solutions ? '<button class="solutions-link" id="print-solutions" type="button">Imprimir soluciones</button>' : ''}</div>`;
   document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
 });
