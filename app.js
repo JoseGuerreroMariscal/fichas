@@ -160,10 +160,18 @@ form.addEventListener('submit', event => {
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
   const print = html => { const win = window.open('', '_blank'); if (!win) return false; win.document.write(html); win.document.close(); win.focus(); setTimeout(() => win.print(), 250); return true; };
-  const printed = print(worksheet);
   setTimeout(() => { submitButton.disabled = false; }, 500);
-  result.innerHTML = `<div class="success-box"><strong>La ficha está lista</strong><span class="print-hint">${printed ? 'Se ha abierto la ventana de impresión.' : 'Permite las ventanas emergentes para imprimir la ficha.'}</span>${labels[config.type]} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir de nuevo</button>${config.solutions ? '<button id="print-solutions">Imprimir soluciones</button>' : ''}<button id="new-sheet">Crear otra</button></div></div>`;
+  result.innerHTML = `<div class="success-box"><strong>La ficha está lista</strong><span class="print-hint">Puedes imprimirla o compartirla desde aquí.</span>${labels[config.type]} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir ficha</button><button id="share-sheet">Compartir ficha</button>${config.solutions ? '<button id="print-solutions">Imprimir soluciones</button>' : ''}<button id="new-sheet">Crear otra</button></div></div>`;
   document.querySelector('#print-sheet').onclick = () => print(worksheet);
+  document.querySelector('#share-sheet').onclick = async () => {
+    const shareText = `He preparado una ficha de ${labels[config.type]} con FichasFácil.`;
+    const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: `${window.location.href.split('#')[0]}#actividades` };
+    try {
+      if (navigator.share) await navigator.share(shareData);
+      else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.querySelector('.print-hint').textContent = 'Enlace copiado para compartir la ficha.'; }
+      else result.querySelector('.print-hint').textContent = 'Copia el enlace de esta página para compartirla.';
+    } catch (error) { if (error.name !== 'AbortError') result.querySelector('.print-hint').textContent = 'No se ha podido abrir el menú de compartir.'; }
+  };
   document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
   document.querySelector('#new-sheet').onclick = () => { result.innerHTML = ''; document.querySelector('#student').focus(); };
 });
