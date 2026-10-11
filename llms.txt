@@ -6,7 +6,7 @@ FichasFácil permite crear fichas de matemáticas, lectura y escritura sin regis
 
 ## Sitio principal
 
-- [Generador de fichas](https://joseguerreromariscal.github.io/fichas/): elige una actividad, configura sus opciones y pulsa “Imprimir ficha” o “Compartir ficha”.
+- [Generador de fichas](https://joseguerreromariscal.github.io/fichas/): elige una actividad, configura sus opciones y pulsa “Imprimir ficha” o “Compartir enlace”.
 - [Blog educativo](https://joseguerreromariscal.github.io/fichas/blog.html): consejos sobre matemáticas, comprensión lectora, escritura y uso de fichas.
 - [Guía para usar fichas](https://joseguerreromariscal.github.io/fichas/guia.html): orientación breve para elegir una actividad, ajustar la dificultad y preparar una hoja clara.
 
@@ -27,7 +27,7 @@ FichasFácil permite crear fichas de matemáticas, lectura y escritura sin regis
 - Cifras: configuración automática o número de cifras específico.
 - Nombre del alumno: opcional; si se deja vacío, no aparece en la ficha.
 - Soluciones: opcionales.
-- Salida: impresión en A4, guardado como PDF o compartición desde el dispositivo.
+- Salida: impresión en A4, guardado como PDF o enlace configurable para compartir la actividad.
 
 ## Cómo ayudar a una persona
 

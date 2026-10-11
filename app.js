@@ -20,7 +20,15 @@ const pageBackground = [document.querySelector('.site-header'), document.querySe
 const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs'];
 const preferenceKey = 'fichalia-preferences';
 let installPrompt = null;
+let sharedActivity = '';
+let sharedSolutions = false;
 const installButton = document.querySelector('#install-app');
+const setSelectValue = (id, value) => {
+  const select = document.querySelector(`#${id}`);
+  if (!select || ![...select.options].some(option => option.value === value)) return false;
+  select.value = value;
+  return true;
+};
 window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault();
   installPrompt = event;
@@ -66,16 +74,18 @@ const savePreferences = () => {
 };
 try {
   const saved = JSON.parse(localStorage.getItem(preferenceKey) || '{}');
-  preferenceIds.forEach(id => { if (saved[id] && document.querySelector(`#${id}`)?.querySelector(`option[value="${CSS.escape(saved[id])}"]`)) document.querySelector(`#${id}`).value = saved[id]; });
+  preferenceIds.forEach(id => { if (saved[id]) setSelectValue(id, saved[id]); });
 } catch (error) { /* preferencias opcionales */ }
 try {
   const shared = new URLSearchParams(window.location.search);
-  const sharedActivity = shared.get('actividad');
+  sharedActivity = shared.get('actividad') || '';
   if (sharedActivity && labels[sharedActivity]) activity.value = sharedActivity;
+  sharedSolutions = shared.get('soluciones') === '1';
+  if (sharedSolutions) document.querySelector('#solutions').checked = true;
   preferenceIds.forEach(id => {
     const parameter = id === 'difficulty' ? 'dificultad' : id === 'count' ? 'ejercicios' : id === 'operands' ? 'numeros' : id === 'firstDigits' ? 'cifras1' : id === 'secondDigits' ? 'cifras2' : 'parrafos';
     const value = shared.get(parameter);
-    if (value && document.querySelector(`#${id}`)?.querySelector(`option[value="${CSS.escape(value)}"]`)) document.querySelector(`#${id}`).value = value;
+    if (value) setSelectValue(id, value);
   });
 } catch (error) { /* enlaces compartidos opcionales */ }
 updateConfigurationSummary();
@@ -90,6 +100,7 @@ if (countSelect && !countSelect.querySelector('option[value="20"]')) {
 
 const openGenerator = type => {
   lastTrigger = document.querySelector(`[data-type="${type}"]`);
+  document.querySelectorAll('[data-type]').forEach(card => card.setAttribute('aria-expanded', String(card === lastTrigger)));
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
@@ -102,15 +113,16 @@ const openGenerator = type => {
   updateDigitLabels();
   updateConfigurationSummary();
   updateActivityFields();
+  if (sharedSolutions) document.querySelector('#solutions').checked = true;
   document.querySelectorAll('.activity-card').forEach(card => {
     const selected = card.dataset.type === type;
     card.classList.toggle('is-selected', selected);
-    card.setAttribute('aria-pressed', String(selected));
   });
   setTimeout(() => activity.focus(), 50);
 };
 
 document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('click', () => openGenerator(card.dataset.type)));
+if (sharedActivity && labels[sharedActivity]) setTimeout(() => openGenerator(sharedActivity), 0);
 activity.addEventListener('change', () => {
   document.querySelector('#activity-summary').textContent = labels[activity.value];
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[activity.value].toLowerCase()}`;
@@ -153,6 +165,7 @@ function closeGenerator() {
   modal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
   pageBackground.forEach(element => { element.inert = false; element.removeAttribute('aria-hidden'); });
+  document.querySelectorAll('[data-type]').forEach(card => card.setAttribute('aria-expanded', 'false'));
   lastTrigger?.focus();
 }
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) closeGenerator(); });
@@ -286,7 +299,7 @@ const readConfig = () => ({ type: activity.value, level: '', difficulty: documen
 const shareUrl = config => {
   const url = new URL(window.location.href);
   url.hash = 'actividades';
-  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits, parrafos: String(config.paragraphs) }).toString();
+  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits, parrafos: String(config.paragraphs), ...(config.solutions ? { soluciones: '1' } : {}) }).toString();
   return url.toString();
 };
 

@@ -9,7 +9,7 @@ FichasFácil es una herramienta web en español que ayuda a preparar actividades
 1. Abrir el generador en https://joseguerreromariscal.github.io/fichas/.
 2. Elegir una de las siete actividades.
 3. Ajustar dificultad, cantidad y cifras cuando estén disponibles.
-4. Elegir “Imprimir ficha” para abrir la vista de impresión o “Compartir ficha” para compartir la configuración.
+4. Elegir “Imprimir ficha” para abrir la vista de impresión o “Compartir enlace” para compartir la configuración.
 
 ## Descripción de actividades
 
