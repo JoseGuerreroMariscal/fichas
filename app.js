@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-32', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-33', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -885,29 +885,23 @@ function createSheets(config) {
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
   const print = html => {
-    const frame = document.createElement('iframe');
-    frame.title = 'Ficha preparada para imprimir';
-    frame.setAttribute('aria-hidden', 'true');
-    frame.tabIndex = -1;
-    frame.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;';
-    const removeFrame = () => { if (frame.isConnected) frame.remove(); };
+    let printWindow = null;
     try {
-      document.body.appendChild(frame);
-      const printWindow = frame.contentWindow;
-      const printDocument = frame.contentDocument;
-      if (!printWindow || !printDocument) { removeFrame(); return false; }
+      printWindow = window.open('', 'fichasfacil-print');
+      if (!printWindow) return false;
+      const printDocument = printWindow.document;
       printDocument.open();
       printDocument.write(html);
       printDocument.close();
-      printWindow.addEventListener('afterprint', removeFrame, { once: true });
+      printWindow.addEventListener('afterprint', () => printWindow.close(), { once: true });
       setTimeout(() => {
         try { printWindow.focus(); printWindow.print(); }
-        catch (error) { removeFrame(); }
+        catch (error) { printWindow.close(); }
       }, 250);
-      setTimeout(removeFrame, 300000);
+      setTimeout(() => { if (printWindow && !printWindow.closed) printWindow.close(); }, 300000);
       return true;
     } catch (error) {
-      removeFrame();
+      if (printWindow && !printWindow.closed) printWindow.close();
       return false;
     }
   };
