@@ -110,19 +110,31 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
 }
 
-function makeOperation(type, difficulty) {
+function levelIndex(level) {
+  if (level === 'Infantil') return 0;
+  const match = level.match(/([1-6])/);
+  return match ? Number(match[1]) : 0;
+}
+
+function makeOperation(type, difficulty, level = '') {
+  const grade = levelIndex(level);
   if (type === 'multiplicaciones') {
-    const ranges = difficulty === 'Tranquila' ? [10, 99, 2, 9] : difficulty === 'Estándar' ? [100, 999, 2, 9] : [1000, 9999, 10, 99];
+    const rangesByGrade = [[1, 9, 2, 5], [1, 20, 2, 5], [10, 99, 2, 9], [100, 999, 2, 9], [1000, 9999, 2, 9], [1000, 99999, 2, 12], [10000, 999999, 10, 99]];
+    const ranges = [...(rangesByGrade[grade] || rangesByGrade[1])];
+    if (difficulty === 'Un poquito más' && grade < 6) { ranges[0] *= 10; ranges[1] *= 10; }
     const a = randomInt(ranges[0], ranges[1]);
     const b = randomInt(ranges[2], ranges[3]);
     return { question: `${a} × ${b} =`, answer: a * b };
   }
-  const max = difficulty === 'Tranquila' ? 20 : difficulty === 'Estándar' ? 99 : 999;
-  let a = randomInt(1, max), b = randomInt(1, max);
+  const rangesByGrade = [[1, 9], [1, 20], [10, 99], [10, 999], [100, 9999], [1000, 99999], [10000, 999999]];
+  const range = rangesByGrade[grade] || rangesByGrade[1];
+  let [minimum, maximum] = range;
+  if (difficulty === 'Un poquito más' && grade < 6) { minimum *= 10; maximum *= 10; }
+  let a = randomInt(minimum, maximum), b = randomInt(minimum, maximum);
   if (type === 'restas' && b > a) [a, b] = [b, a];
   if (type === 'divisiones') {
-    b = randomInt(2, difficulty === 'Tranquila' ? 5 : 12);
-    const q = randomInt(1, difficulty === 'Tranquila' ? 10 : 30);
+    b = randomInt(2, grade >= 5 ? 12 : 9);
+    const q = randomInt(Math.max(1, Math.floor(minimum / 10)), Math.max(10, Math.floor(maximum / b)));
     a = b * q;
     return { question: `${a} ÷ ${b} =`, answer: q };
   }
@@ -131,9 +143,9 @@ function makeOperation(type, difficulty) {
   return { question: `${a} ${symbols[type]} ${b} =`, answer };
 }
 
-function makeContent(type, count, difficulty) {
+function makeContent(type, count, difficulty, level) {
   if (['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(type)) {
-    return Array.from({ length: count }, () => makeOperation(type, difficulty));
+    return Array.from({ length: count }, () => makeOperation(type, difficulty, level));
   }
   if (type === 'lectura') return [{
     kind: 'reading',
@@ -186,7 +198,7 @@ const shareUrl = config => {
 };
 
 function createSheets(config) {
-  const items = makeContent(config.type, config.count, config.difficulty);
+  const items = makeContent(config.type, config.count, config.difficulty, config.level);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const textStyles = '.text-exercise i{grid-column:2;width:100%}.text-exercise strong{font-size:17px;line-height:1.35}.reading-sheet{max-width:180mm;margin:0 auto}.reading-sheet h3{font-size:24px;margin:0 0 14px}.reading-text{font-size:16px;line-height:1.55;margin:0 0 20px}.reading-sheet h4{font-size:14px;margin:0 0 10px}.reading-question{display:grid;grid-template-columns:22px 1fr;gap:5px 7px;min-height:53px;align-items:start;margin-bottom:7px}.reading-question span{font-weight:700}.reading-question strong{font-size:15px;line-height:1.35}.reading-question i{grid-column:2;height:25px;border-bottom:1px solid #82958b}.reading-question b{grid-column:2;color:#275fac}';
   const preparePrint = html => html
