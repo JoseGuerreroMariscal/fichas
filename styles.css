@@ -26,5 +26,6 @@ button,select,input{font:inherit}
 .section-label{color:#b9b9c1}.section-label span:last-child{color:#777780}
 .intro-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}.intro-meta span{padding:8px 11px;border:1px solid var(--line);border-radius:999px;color:#b9b9c1;font-size:11px}.intro-meta span::before{content:'✓';color:#8bd1aa;margin-right:6px}
 .modal-open{overflow:hidden}
+.activity-summary{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;color:var(--ink);font-weight:700}.summary-dot{width:8px;height:8px;border-radius:50%;background:#f4cc6b;box-shadow:0 0 0 4px #f4cc6b22}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #f4cc6b;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

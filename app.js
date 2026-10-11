@@ -22,6 +22,7 @@ const openGenerator = type => {
   activity.value = type;
   result.innerHTML = '';
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
+  document.querySelector('#activity-summary').textContent = labels[type];
   document.querySelectorAll('.activity-card').forEach(card => {
     const selected = card.dataset.type === type;
     card.classList.toggle('is-selected', selected);
@@ -31,6 +32,10 @@ const openGenerator = type => {
 };
 
 document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('click', () => openGenerator(card.dataset.type)));
+activity.addEventListener('change', () => {
+  document.querySelector('#activity-summary').textContent = labels[activity.value];
+  document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[activity.value].toLowerCase()}`;
+});
 document.querySelector('.modal-close').addEventListener('click', () => {
   closeGenerator();
 });
