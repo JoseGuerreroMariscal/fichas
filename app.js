@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-33', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-34', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -797,9 +797,10 @@ function exerciseMarkup(config, item, index, solutions) {
     if (config.type === 'divisiones') {
       const division = item.question.match(/^(\d+)\s+÷\s+(\d+)\s*=/);
       if (division) {
-        const spaced = value => String(value).split('').join('&nbsp;');
-        const layout = `<table role="presentation" width="150" align="center" border="0" cellspacing="0" cellpadding="0" style="width:150px;table-layout:fixed;border-collapse:collapse;font:700 17px/1.15 Arial,Helvetica,sans-serif;color:#20283f"><tbody><tr><td width="64%" align="right" valign="middle" style="padding:0 12px 0 0;white-space:nowrap;letter-spacing:1px">${spaced(division[1])}</td><td width="36%" align="left" valign="middle" style="height:34px;padding:0 4px 3px 14px;border-left:1.5px solid #20283f;border-bottom:1.5px solid #20283f;white-space:nowrap;letter-spacing:1px">${spaced(division[2])}</td></tr></tbody></table>`;
-        return solutions ? `<div style="width:150px;margin:0 auto">${layout}<div style="padding:5px 7px 0 0;text-align:right;font:700 13pt Arial,Helvetica,sans-serif;color:#20283f">${item.answer}</div></div>` : layout;
+        const answer = solutions
+          ? `<strong style="min-width:70px;color:#20283f">${item.answer}</strong>`
+          : '<span aria-label="espacio para responder" style="display:inline-block;width:58px;height:24px;border-bottom:1.5px solid #7f8998"></span>';
+        return `<div class="division-exercise" style="display:flex;align-items:baseline;justify-content:center;gap:7px;min-height:70px;padding:10px 2px;font:700 18px/1.15 Arial,Helvetica,sans-serif;color:#20283f;white-space:nowrap"><span>${division[1]}</span><span aria-hidden="true">÷</span><span>${division[2]}</span><span aria-hidden="true">=</span>${answer}</div>`;
       }
     }
     const threeTermMatch = item.question.match(/^(\d+)\s+([+−])\s+(\d+)\s+([+−])\s+(\d+)\s*=/);
