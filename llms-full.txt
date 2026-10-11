@@ -1,0 +1,40 @@
+# FichasFácil · Información ampliada para asistentes
+
+## Propósito
+
+FichasFácil es una herramienta web en español que ayuda a preparar actividades educativas sencillas para imprimir o compartir. No requiere registro y no pide nombre del alumno ni curso: esos datos solo aparecen si la persona los escribe de forma opcional.
+
+## Flujo recomendado
+
+1. Abrir el generador en https://joseguerreromariscal.github.io/fichas/.
+2. Elegir una de las siete actividades.
+3. Ajustar dificultad, cantidad y cifras cuando estén disponibles.
+4. Elegir “Imprimir ficha” para abrir la vista de impresión o “Compartir ficha” para compartir la configuración.
+
+## Descripción de actividades
+
+### Matemáticas
+
+Sumas, restas, multiplicaciones y divisiones se presentan en vertical, con cifras alineadas y espacio para que el alumno escriba. En sumas y restas se puede elegir trabajar con dos o tres números. En multiplicaciones se pueden definir por separado las cifras del multiplicando y del multiplicador. En divisiones se pueden definir las cifras del dividendo y del divisor.
+
+### Lengua
+
+Comprensión lectora ofrece un texto breve y preguntas. Copiado permite seleccionar de uno a cinco párrafos y proporciona una pauta de escritura tipo Lamela debajo de cada modelo.
+
+### Problemas
+
+Los problemas presentan situaciones cotidianas breves y un espacio de respuesta. Son adecuados para practicar lectura, elección de operación y explicación del resultado.
+
+## Límites importantes
+
+- La web genera fichas del lado del navegador.
+- El asistente no debe presentar una ficha como descargada si la persona no ha confirmado la impresión o el guardado.
+- La web no ofrece cuentas, historial ni almacenamiento de datos de alumnos.
+- La web no sustituye la adaptación pedagógica de un docente o profesional.
+
+## Recursos
+
+- Inicio y generador: https://joseguerreromariscal.github.io/fichas/
+- Blog: https://joseguerreromariscal.github.io/fichas/blog.html
+- Robots: https://joseguerreromariscal.github.io/fichas/robots.txt
+- Sitemap: https://joseguerreromariscal.github.io/fichas/sitemap.xml
