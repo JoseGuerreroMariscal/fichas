@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-29', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-32', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -391,7 +391,41 @@ const readingActivitiesByLevel = {
   ]
 };
 
-const readingActivities = Object.entries(readingActivitiesByLevel).flatMap(([level, activities]) => activities.map(activity => makeReading(level, activity)));
+const additionalReadingActivitiesByLevel = {
+  Inicial: [
+    ['El paraguas compartido', 'Cuando empezó a llover, Irene vio que su compañero no llevaba paraguas. Se acercaron bajo el suyo y caminaron juntos hasta la entrada.', '¿Qué tiempo hacía?', 'Llovía.', '¿Qué no llevaba el compañero?', 'Un paraguas.', '¿Dónde llegaron?', 'A la entrada.'],
+    ['La caja de música', 'Alicia encontró una caja de música en un armario. La limpió con cuidado y llamó a su madre para escuchar la melodía.', '¿Dónde encontró la caja?', 'En un armario.', '¿Qué hizo Alicia primero?', 'La limpió.', '¿Con quién quiso escucharla?', 'Con su madre.'],
+    ['El bocadillo', 'Héctor preparó un bocadillo de queso antes de salir. Lo envolvió en una servilleta y lo guardó en la mochila.', '¿De qué era el bocadillo?', 'De queso.', '¿Dónde lo guardó?', 'En la mochila.', '¿Con qué lo envolvió?', 'Con una servilleta.'],
+    ['La cometa azul', 'Valentina llevó una cometa azul a la colina. Esperó a que soplara el viento y pidió ayuda para levantarla.', '¿De qué color era la cometa?', 'Azul.', '¿Dónde la llevó?', 'A la colina.', '¿Qué necesitaba para volar?', 'Viento.'],
+    ['La caja de pinturas', 'Bruno ordenó sus pinturas por colores antes de empezar un dibujo. Dejó el pincel en un vaso y cubrió la mesa con papel.', '¿Qué ordenó Bruno?', 'Sus pinturas.', '¿Dónde dejó el pincel?', 'En un vaso.', '¿Qué puso sobre la mesa?', 'Papel.'],
+    ['El caracol', 'Marta encontró un caracol junto a una hoja después de la lluvia. Lo observó un momento y luego lo dejó donde estaba.', '¿Cuándo encontró el caracol?', 'Después de la lluvia.', '¿Dónde estaba?', 'Junto a una hoja.', '¿Qué hizo Marta al final?', 'Lo dejó donde estaba.'],
+    ['La pelota naranja', 'Álvaro llevó una pelota naranja al patio. Jugó con su primo y la guardó en una bolsa cuando terminó.', '¿De qué color era la pelota?', 'Naranja.', '¿Con quién jugó Álvaro?', 'Con su primo.', '¿Dónde guardó la pelota?', 'En una bolsa.'],
+    ['La receta familiar', 'Mía ayudó a su padre a preparar una ensalada. Lavó los tomates, cortó la lechuga con ayuda y colocó todo en un cuenco.', '¿Qué prepararon?', 'Una ensalada.', '¿Qué lavó Mía?', 'Los tomates.', '¿Dónde colocó los ingredientes?', 'En un cuenco.']
+  ],
+  Medio: [
+    ['El cuaderno de campo', 'Durante una excursión, Diego anotó las plantas que encontraba junto al sendero. Dibujó una hoja grande y comparó su forma con la de otra más pequeña.', '¿Qué anotó Diego?', 'Las plantas que encontraba.', '¿Qué dibujó?', 'Una hoja grande.', '¿Qué comparó?', 'La forma de dos hojas.'],
+    ['La estación meteorológica', 'La clase construyó una estación meteorológica con materiales sencillos. Cada mañana medían la temperatura y observaban la dirección del viento.', '¿Qué construyó la clase?', 'Una estación meteorológica.', '¿Cuándo hacían las mediciones?', 'Cada mañana.', '¿Qué observaban además de la temperatura?', 'La dirección del viento.'],
+    ['El mapa del barrio', 'Lucía dibujó un mapa del barrio para explicar a su primo cómo llegar a la biblioteca. Marcó la plaza, el parque y el paso de peatones.', '¿Para qué dibujó el mapa?', 'Para explicar cómo llegar a la biblioteca.', '¿Qué lugares marcó?', 'La plaza, el parque y el paso de peatones.', '¿A quién quería ayudar?', 'A su primo.'],
+    ['El taller de reparación', 'En el taller del colegio, los alumnos aprendieron a reparar una cremallera y ajustar una rueda. Antes de empezar, organizaron las herramientas sobre la mesa.', '¿Qué aprendieron a reparar?', 'Una cremallera y una rueda.', '¿Qué hicieron antes de empezar?', 'Organizaron las herramientas.', '¿Dónde las colocaron?', 'Sobre la mesa.'],
+    ['El plano de la escuela', 'La clase dibujó un plano de la escuela para localizar las salidas y los espacios comunes. Primero recorrieron el edificio y después compararon sus anotaciones.', '¿Qué dibujó la clase?', 'Un plano de la escuela.', '¿Qué localizaron?', 'Las salidas y los espacios comunes.', '¿Qué hicieron antes de comparar?', 'Recorrieron el edificio.'],
+    ['La biblioteca viajera', 'Cada viernes, una caja de libros visitaba una clase diferente. El alumnado elegía un título, escribía su nombre en una hoja y devolvía el libro la semana siguiente.', '¿Cuándo visitaba las clases la caja?', 'Cada viernes.', '¿Qué hacía el alumnado al elegir un libro?', 'Escribía su nombre.', '¿Cuándo lo devolvía?', 'La semana siguiente.'],
+    ['El sonido del patio', 'Un grupo investigó qué sonidos se escuchaban en el patio a distintas horas. Descubrió que por la mañana predominaban las voces y, durante el recreo, aumentaban los sonidos de los juegos.', '¿Qué investigó el grupo?', 'Los sonidos del patio.', '¿Cuándo predominaban las voces?', 'Por la mañana.', '¿Qué aumentaba durante el recreo?', 'Los sonidos de los juegos.'],
+    ['La ruta del agua', 'Los alumnos siguieron el recorrido del agua desde el depósito hasta los grifos del colegio. Después propusieron colocar carteles para recordar que había que cerrarlos bien.', '¿Qué recorrido siguieron?', 'El del agua hasta los grifos.', '¿Desde dónde partía el agua?', 'Desde el depósito.', '¿Qué propusieron?', 'Colocar carteles.']
+  ],
+  Avanzado: [
+    ['El jardín de polinizadores', 'El colegio reservó una zona del jardín para plantas que atraen abejas y mariposas. El alumnado investigó qué especies florecían en cada estación y preparó carteles para explicar su importancia.', '¿Para qué reservó el colegio una zona?', 'Para plantas que atraen abejas y mariposas.', '¿Qué investigó el alumnado?', 'Qué especies florecían en cada estación.', '¿Para qué preparó carteles?', 'Para explicar su importancia.'],
+    ['La energía del edificio', 'Un grupo estudió cómo reducir el consumo de energía del colegio. Comparó los datos de varias semanas y propuso aprovechar mejor la luz natural antes de encender las lámparas.', '¿Qué quería reducir el grupo?', 'El consumo de energía.', '¿Qué comparó?', 'Los datos de varias semanas.', '¿Qué propuso?', 'Aprovechar mejor la luz natural.'],
+    ['El archivo sonoro', 'Para conservar las historias de las personas mayores del barrio, la biblioteca grabó sus recuerdos sobre antiguos oficios. Después organizó los audios por temas y añadió una breve explicación a cada uno.', '¿Qué quería conservar la biblioteca?', 'Los recuerdos sobre antiguos oficios.', '¿Cómo organizó los audios?', 'Por temas.', '¿Qué añadió a cada audio?', 'Una breve explicación.'],
+    ['La decisión del equipo', 'El equipo tuvo que escoger entre presentar un experimento sencillo o uno más llamativo pero difícil de explicar. Tras valorar el tiempo disponible y los materiales, eligió la primera opción para poder explicar cada paso con claridad.', '¿Qué tuvo que escoger el equipo?', 'Entre dos experimentos.', '¿Qué valoró antes de decidir?', 'El tiempo y los materiales.', '¿Por qué eligió el experimento sencillo?', 'Para explicar cada paso con claridad.'],
+    ['La ciudad de los árboles', 'Un grupo comparó dos calles del barrio: una tenía muchos árboles y otra apenas ofrecía sombra. Midió la temperatura en varios puntos y propuso plantar nuevos ejemplares donde el calor era mayor.', '¿Qué comparó el grupo?', 'Dos calles del barrio.', '¿Qué midió?', 'La temperatura.', '¿Dónde propuso plantar árboles?', 'Donde el calor era mayor.'],
+    ['El museo de la memoria', 'El museo pidió a los vecinos objetos relacionados con antiguos trabajos del pueblo. Cada pieza llegó acompañada de una historia, y el equipo decidió mostrar ambas para que el objeto no perdiera su significado.', '¿Qué pidió el museo?', 'Objetos relacionados con antiguos trabajos.', '¿Qué acompañaba a cada pieza?', 'Una historia.', '¿Por qué mostrarían las historias?', 'Para conservar el significado del objeto.'],
+    ['La huella digital', 'La clase analizó cómo una fotografía publicada puede circular fuera del grupo que la recibió. A partir de varios ejemplos, redactó unas normas para pedir permiso y revisar la información antes de compartirla.', '¿Qué analizó la clase?', 'Cómo puede circular una fotografía.', '¿Qué redactó?', 'Unas normas.', '¿Qué debía revisar antes de compartir?', 'El permiso y la información.'],
+    ['El río y el pueblo', 'Después de varias lluvias, el río cambió su recorrido cerca del pueblo. Los estudiantes consultaron mapas antiguos, hablaron con vecinos y observaron la vegetación para entender qué había sucedido.', '¿Qué cambió?', 'El recorrido del río.', '¿Qué consultaron?', 'Mapas antiguos.', '¿Qué observaron además de hablar con vecinos?', 'La vegetación.']
+  ]
+};
+
+const readingActivities = Object.entries(readingActivitiesByLevel)
+  .flatMap(([level, activities]) => [...activities, ...(additionalReadingActivitiesByLevel[level] || [])].map(activity => makeReading(level, activity)));
 
 const copyingSequences = [
   [
@@ -435,14 +469,56 @@ const copyingSequences = [
     'Su abuela le explicó quién aparecía en las fotografías. También le contó cómo era el pueblo cuando ella era pequeña.',
     'Juntos ordenaron las imágenes y escribieron las fechas detrás. Martín escuchó con atención para no confundir los nombres de la familia.',
     'Después guardaron la caja en un lugar seguro para volver a verla. Martín comprendió que las fotografías también pueden conservar recuerdos e historias.'
+  ],
+  [
+    'El lunes, Valeria llevó una libreta nueva a clase. Quería anotar las preguntas que se le ocurrieran durante el experimento.',
+    'El grupo mezcló agua, arena y piedras en tres recipientes. Después observó qué materiales se quedaban arriba y cuáles bajaban al fondo.',
+    'Valeria dibujó cada recipiente y escribió una palabra para describirlo. Su equipo comparó los dibujos antes de ordenar los resultados.',
+    'Al terminar, limpiaron la mesa y devolvieron cada material a su caja. La profesora les recordó que observar también significa cuidar el espacio de trabajo.',
+    'En casa, Valeria contó el experimento a su hermano. Juntos pensaron en otras mezclas que podrían investigar otro día.'
+  ],
+  [
+    'Óscar encontró una semilla dentro de una vaina durante el paseo. La guardó en un sobre para enseñársela a su profesora.',
+    'En clase, observaron la forma, el color y el tamaño de la semilla. Después buscaron una fotografía de la planta adulta.',
+    'Cada alumno escribió una hipótesis sobre lo que necesitaría para crecer. Óscar pensó que la tierra, el agua y la luz serían importantes.',
+    'Plantaron varias semillas en macetas iguales y colocaron cada una en un lugar distinto. Así podrían comparar los cambios con el paso de los días.',
+    'Al cabo de una semana, anotaron sus observaciones. La clase descubrió que una pregunta bien planteada ayuda a mirar con más atención.'
+  ],
+  [
+    'Nerea preparó una tarjeta para felicitar a su amiga por su cumpleaños. Eligió un papel amarillo y buscó lápices de varios colores.',
+    'Primero dibujó unas flores en la portada. Después escribió una frase corta y revisó que todas las palabras estuvieran completas.',
+    'Su hermano le sugirió añadir una fecha. Nerea la escribió en una esquina para recordar cuándo había preparado la tarjeta.',
+    'Antes de guardarla en el sobre, Nerea leyó el mensaje en voz alta. Cambió una palabra para que la frase sonara más cercana.',
+    'Al día siguiente entregó la tarjeta después de clase. Su amiga sonrió al descubrir que estaba hecha a mano.'
+  ],
+  [
+    'Samuel decidió construir un avión de papel para probar qué diseño volaba más lejos. Preparó varias hojas y las dobló siguiendo instrucciones diferentes.',
+    'En el patio, su equipo marcó una línea de salida y lanzó cada avión tres veces. Anotaron la distancia de cada lanzamiento en una tabla.',
+    'Uno de los aviones giró hacia un lado y cayó enseguida. Samuel revisó el doblez de una esquina y lo ajustó antes de volver a lanzarlo.',
+    'Al comparar los resultados, descubrieron que el avión más sencillo había llegado más lejos. No siempre el diseño con más dobleces era el mejor.',
+    'Samuel guardó la tabla para repetir la prueba otro día. Quería comprobar si el viento cambiaba las distancias.'
+  ],
+  [
+    'La clase preparó una exposición sobre animales nocturnos. Cada grupo eligió una especie y buscó información en varios libros.',
+    'Irene escogió el murciélago y anotó cuándo sale, qué come y cómo se orienta. Después dibujó sus alas para el cartel.',
+    'El equipo revisó los textos para separar los datos importantes de las curiosidades. También comprobó que las imágenes correspondieran al animal.',
+    'El día de la exposición, Irene explicó su parte a las familias. Sus compañeros le hicieron preguntas y ella buscó las respuestas en sus notas.',
+    'Al terminar, guardaron los carteles para enseñarlos a otra clase. La investigación les había ayudado a hablar con más seguridad.'
+  ],
+  [
+    'Durante una semana, la familia de Nora anotó cuánto tiempo utilizaba cada aparato eléctrico. Querían descubrir qué hábitos podían cambiar.',
+    'Nora observó que algunas luces permanecían encendidas aunque nadie estuviera en la habitación. Lo apuntó en una tabla junto con la hora.',
+    'El sábado revisaron todos los datos y eligieron dos medidas sencillas. Apagarían las luces al salir y desconectarían los cargadores que no usaran.',
+    'Una semana después volvieron a medir el consumo. La diferencia no era enorme, pero habían aprendido que varios gestos pequeños podían sumarse.',
+    'Nora preparó un cartel para recordar las medidas. Lo colocó cerca del interruptor de la entrada.'
   ]
 ];
 
 const calligraphySamples = {
-  letters: ['a  a  a  a  a', 'e  e  e  e  e', 'i  i  i  i  i', 'o  o  o  o  o', 'u  u  u  u  u', 'm  m  m  m  m', 'p  p  p  p  p', 's  s  s  s  s'],
-  syllables: ['ma  me  mi  mo  mu', 'pa  pe  pi  po  pu', 'la  le  li  lo  lu', 'sa  se  si  so  su', 'bra  bre  bri  bro  bru', 'pla  ple  pli  plo  plu'],
-  words: ['mariposa', 'pelota', 'camino', 'familia', 'escuela', 'ventana', 'primavera', 'biblioteca'],
-  sentences: ['Mi casa tiene un jardín.', 'La rana salta junto al lago.', 'Hoy aprendemos algo nuevo.', 'Mi mochila está preparada.', 'Los amigos juegan en el parque.', 'Cuidamos juntos nuestro planeta.']
+  letters: ['a  a  a  a  a', 'e  e  e  e  e', 'i  i  i  i  i', 'o  o  o  o  o', 'u  u  u  u  u', 'm  m  m  m  m', 'p  p  p  p  p', 's  s  s  s  s', 'l  l  l  l  l', 't  t  t  t  t', 'n  n  n  n  n', 'r  r  r  r  r', 'd  d  d  d  d', 'c  c  c  c  c'],
+  syllables: ['ma  me  mi  mo  mu', 'pa  pe  pi  po  pu', 'la  le  li  lo  lu', 'sa  se  si  so  su', 'bra  bre  bri  bro  bru', 'pla  ple  pli  plo  plu', 'tra  tre  tri  tro  tru', 'cla  cle  cli  clo  clu', 'que  qui  qua  quo  cu', 'ña  ñe  ñi  ño  ñu'],
+  words: ['mariposa', 'pelota', 'camino', 'familia', 'escuela', 'ventana', 'primavera', 'biblioteca', 'montaña', 'elefante', 'cuaderno', 'amistad', 'jardín', 'aventura'],
+  sentences: ['Mi casa tiene un jardín.', 'La rana salta junto al lago.', 'Hoy aprendemos algo nuevo.', 'Mi mochila está preparada.', 'Los amigos juegan en el parque.', 'Cuidamos juntos nuestro planeta.', 'La tortuga camina despacio.', 'Mi familia prepara la merienda.', 'El sol ilumina la ventana.', 'Compartir nos ayuda a aprender.', 'El tren llega a la estación.', 'Cada día practico un poco.']
 };
 
 const spellingActivities = [
@@ -453,14 +529,25 @@ const spellingActivities = [
   ['Coloca las mayúsculas', 'marta vive en sevilla y visita el museo.', 'Marta vive en Sevilla y visita el museo.'],
   ['Coloca las tildes', 'El camaleon cambio de color junto al arbol.', 'El camaleón cambió de color junto al árbol.'],
   ['Completa con ll o y', 'El po_ito corre detrás de la _egua.', 'El pollito corre detrás de la yegua.'],
-  ['Completa con r o rr', 'El pe_o corre alrededor del ca_o.', 'El perro corre alrededor del carro.']
+  ['Completa con r o rr', 'El pe_o corre alrededor del ca_o.', 'El perro corre alrededor del carro.'],
+  ['Completa con m o n', 'La ca_pana suena junto al ta_bor.', 'La campana suena junto al tambor.'],
+  ['Completa con mp o mb', 'El ca_po tiene una bo_billa.', 'El campo tiene una bombilla.'],
+  ['Completa con güe o gue', 'La ci_eña vuela sobre el para_e.', 'La cigüeña vuela sobre el parque.'],
+  ['Completa con qu o c', 'El _eso está en la _ocina.', 'El queso está en la cocina.'],
+  ['Completa con s o x', 'El e_amen fue muy sencillo y e_plicó la respuesta.', 'El examen fue muy sencillo y explicó la respuesta.'],
+  ['Coloca los signos', 'que sorpresa has preparado', '¡Qué sorpresa has preparado!'],
+  ['Coloca las tildes', 'El pajaro llevo una ramita al arbol.', 'El pájaro llevó una ramita al árbol.'],
+  ['Completa con y o i', 'La _glesia está junto al ra_o.', 'La iglesia está junto al rayo.']
 ];
 
 const logicActivities = [
   ['2, 4, 6, 8, __', '10'], ['5, 10, 15, 20, __', '25'], ['30, 27, 24, 21, __', '18'],
   ['1, 3, 5, 7, __', '9'], ['4, 8, 12, 16, __', '20'], ['50, 45, 40, 35, __', '30'],
   ['3, 6, 12, 24, __', '48'], ['1, 2, 4, 8, __', '16'], ['100, 90, 80, 70, __', '60'],
-  ['7, 14, 21, 28, __', '35']
+  ['7, 14, 21, 28, __', '35'], ['10, 20, 30, 40, __', '50'], ['81, 72, 63, 54, __', '45'],
+  ['2, 5, 8, 11, __', '14'], ['6, 12, 18, 24, __', '30'], ['64, 32, 16, 8, __', '4'],
+  ['9, 18, 27, 36, __', '45'], ['40, 36, 32, 28, __', '24'], ['1, 4, 7, 10, __', '13'],
+  ['2, 6, 18, 54, __', '162'], ['200, 180, 160, 140, __', '120']
 ];
 
 const practicalActivities = {
@@ -469,51 +556,152 @@ const practicalActivities = {
     ['Una película empieza a las 17:00 y dura una hora y media. ¿A qué hora termina?', 'A las 18:30.'],
     ['¿Cuántos minutos hay en media hora?', '30 minutos.'],
     ['Si son las 9:45, ¿qué hora será dentro de 30 minutos?', 'Las 10:15.'],
-    ['¿Cuántos cuartos de hora forman una hora?', '4 cuartos de hora.']
+    ['¿Cuántos cuartos de hora forman una hora?', '4 cuartos de hora.'],
+    ['Si son las 14:20, ¿qué hora será dentro de 40 minutos?', 'Las 15:00.'],
+    ['¿Cuántos minutos hay en un cuarto de hora?', '15 minutos.'],
+    ['Una clase empieza a las 9:00 y dura 45 minutos. ¿A qué hora termina?', 'A las 9:45.'],
+    ['¿Qué hora es si la aguja corta está en el 6 y la larga en el 12?', 'Las seis en punto.']
   ],
   dinero: [
     ['Una libreta cuesta 2 € y un lápiz 1 €. ¿Cuánto pagas por los dos?', '3 €.'],
     ['Tienes 5 € y compras un cuento de 3 €. ¿Cuánto te sobra?', '2 €.'],
     ['¿Cuántas monedas de 50 céntimos necesitas para reunir 2 €?', '4 monedas.'],
     ['Una mochila cuesta 12 € y tienes 10 €. ¿Cuánto te falta?', '2 €.'],
-    ['Compras tres pegatinas de 20 céntimos. ¿Cuánto pagas?', '60 céntimos.']
+    ['Compras tres pegatinas de 20 céntimos. ¿Cuánto pagas?', '60 céntimos.'],
+    ['Una pelota cuesta 7 € y pagas con 10 €. ¿Qué cambio recibes?', '3 €.'],
+    ['¿Cuántas monedas de 20 céntimos forman 1 €?', '5 monedas.'],
+    ['Un libro cuesta 8 € y un cuaderno 2 €. ¿Cuánto pagas?', '10 €.'],
+    ['Tienes 15 € y gastas 6 €. ¿Cuánto dinero te queda?', '9 €.']
   ],
   medidas: [
     ['¿Cuántos centímetros hay en un metro?', '100 centímetros.'],
     ['¿Qué unidad usarías para medir la capacidad de una botella?', 'Litros.'],
     ['Una cinta mide 2 metros y otra 50 centímetros. ¿Cuánto miden juntas?', '2 metros y 50 centímetros.'],
     ['¿Qué pesa más: 1 kilogramo o 500 gramos?', '1 kilogramo.'],
-    ['¿Cuántos mililitros hay en un litro?', '1000 mililitros.']
+    ['¿Cuántos mililitros hay en un litro?', '1000 mililitros.'],
+    ['¿Cuántos milímetros hay en un centímetro?', '10 milímetros.'],
+    ['Una botella tiene 750 mililitros. ¿Le falta mucho para llegar a 1 litro?', '250 mililitros.'],
+    ['¿Qué unidad usarías para pesar una sandía?', 'Kilogramos.'],
+    ['¿Cuántos gramos hay en un kilogramo?', '1000 gramos.']
   ],
   fracciones: [
     ['Una pizza se divide en 4 partes iguales y comes 1. ¿Qué fracción comes?', '1/4.'],
     ['¿Qué fracción representa la mitad?', '1/2.'],
     ['¿Cuántas partes iguales tiene un tercio?', '3 partes.'],
     ['De 8 partes iguales, 3 están coloreadas. ¿Qué fracción está coloreada?', '3/8.'],
-    ['¿Qué es mayor: 1/2 o 1/4?', '1/2.']
+    ['¿Qué es mayor: 1/2 o 1/4?', '1/2.'],
+    ['Una tarta tiene 6 partes y comes 2. ¿Qué fracción comes?', '2/6.'],
+    ['¿Qué fracción representa un cuarto?', '1/4.'],
+    ['De 10 partes iguales, 7 están coloreadas. ¿Qué fracción está coloreada?', '7/10.'],
+    ['¿Qué es menor: 1/3 o 1/2?', '1/3.']
   ],
   geometria: [
     ['¿Cuántos lados tiene un triángulo?', '3 lados.'],
     ['¿Cuántos vértices tiene un cuadrado?', '4 vértices.'],
     ['¿Qué figura tiene todos sus puntos a la misma distancia del centro?', 'El círculo.'],
     ['¿Cómo se llama un polígono de 5 lados?', 'Pentágono.'],
-    ['¿Cuántos lados tiene un rectángulo?', '4 lados.']
+    ['¿Cuántos lados tiene un rectángulo?', '4 lados.'],
+    ['¿Cómo se llama un polígono de 6 lados?', 'Hexágono.'],
+    ['¿Cuántos lados tiene un pentágono?', '5 lados.'],
+    ['¿Qué figura tiene cuatro lados iguales?', 'El cuadrado.'],
+    ['¿Cómo se llama un ángulo menor que uno recto?', 'Ángulo agudo.']
   ],
   vocabulario: [
     ['Escribe un sinónimo de “contento”.', 'Feliz.'],
     ['Escribe un antónimo de “grande”.', 'Pequeño.'],
     ['¿Qué significa “rápido”?', 'Que se mueve o sucede con velocidad.'],
     ['Escribe una palabra de la familia de “pan”.', 'Panadero, panadería o panecillo.'],
-    ['¿Cuál no pertenece al grupo: manzana, pera, mesa, plátano?', 'Mesa.']
+    ['¿Cuál no pertenece al grupo: manzana, pera, mesa, plátano?', 'Mesa.'],
+    ['Escribe un sinónimo de “rápido”.', 'Veloz.'],
+    ['Escribe un antónimo de “cerca”.', 'Lejos.'],
+    ['¿Qué significa “enorme”?', 'Muy grande.'],
+    ['Escribe una palabra de la familia de “flor”.', 'Florero, florista o floristería.'],
+    ['¿Cuál no pertenece al grupo: rojo, azul, silla, verde?', 'Silla.']
   ],
   ordenar: [
     ['Ordena: parque / juega / Ana / en el.', 'Ana juega en el parque.'],
     ['Ordena: azul / coche / El / es.', 'El coche es azul.'],
     ['Ordena: temprano / levantó / Pablo / se.', 'Pablo se levantó temprano.'],
     ['Ordena: flores / jardín / hay / En / el.', 'En el jardín hay flores.'],
-    ['Ordena: libro / un / Leo / lee.', 'Leo lee un libro.']
+    ['Ordena: libro / un / Leo / lee.', 'Leo lee un libro.'],
+    ['Ordena: mañana / temprano / salimos / por la.', 'Salimos temprano por la mañana.'],
+    ['Ordena: música / escucha / Marta / tranquila.', 'Marta escucha música tranquila.'],
+    ['Ordena: reciclamos / papel / el / En / colegio.', 'En el colegio reciclamos el papel.'],
+    ['Ordena: sobre / vuela / mar / la / gaviota / el.', 'La gaviota vuela sobre el mar.'],
+    ['Ordena: una / prepara / sopa / Elena.', 'Elena prepara una sopa.']
   ]
 };
+
+spellingActivities.push(
+  ['Completa con b o v', 'El _arco navega junto a la _oya.', 'El barco navega junto a la boya.'],
+  ['Completa con g o j', 'La _irafa come ho_as del árbol.', 'La jirafa come hojas del árbol.'],
+  ['Completa con h', 'Mi _ermano _izo una tarta.', 'Mi hermano hizo una tarta.'],
+  ['Coloca las tildes', 'La musica sono en el salon.', 'La música sonó en el salón.'],
+  ['Completa con ll o y', 'La _ave tiene una _anta amarilla.', 'La llave tiene una llanta amarilla.'],
+  ['Completa con r o rr', 'El ca_o llegó por la ca_etera.', 'El carro llegó por la carretera.'],
+  ['Coloca las mayúsculas', 'el lunes viajamos a granada.', 'El lunes viajamos a Granada.'],
+  ['Completa con c o z', 'La _ebra cruza la _ona de hierba.', 'La cebra cruza la zona de hierba.']
+);
+
+logicActivities.push(
+  ['12, 15, 18, 21, __', '24'], ['90, 80, 70, 60, __', '50'], ['2, 3, 5, 8, __', '12'],
+  ['5, 15, 25, 35, __', '45'], ['72, 63, 54, 45, __', '36'], ['4, 12, 36, 108, __', '324'],
+  ['11, 22, 33, 44, __', '55'], ['1, 5, 9, 13, __', '17'], ['96, 84, 72, 60, __', '48'],
+  ['8, 16, 24, 32, __', '40']
+);
+
+const additionalPracticalActivities = {
+  reloj: [
+    ['Un partido empieza a las 16:15 y dura una hora. ¿A qué hora termina?', 'A las 17:15.'],
+    ['Si son las 11:50, ¿qué hora será dentro de 20 minutos?', 'Las 12:10.'],
+    ['¿Cuántas horas tiene un día completo?', '24 horas.'],
+    ['Una excursión comienza a las 8:30 y termina a las 13:00. ¿Cuánto dura?', '4 horas y 30 minutos.'],
+    ['¿Qué hora marca un reloj si la aguja corta está en el 9 y la larga en el 12?', 'Las nueve en punto.']
+  ],
+  dinero: [
+    ['Un zumo cuesta 1,50 € y una fruta 0,50 €. ¿Cuánto pagas?', '2 €.'],
+    ['Tienes 20 € y compras un juego de 14 €. ¿Qué cambio recibes?', '6 €.'],
+    ['¿Cuántas monedas de 10 céntimos forman 1 €?', '10 monedas.'],
+    ['Dos cuadernos cuestan 3 € cada uno. ¿Cuánto pagas?', '6 €.'],
+    ['Una entrada cuesta 5 € y compras dos. ¿Cuánto necesitas?', '10 €.']
+  ],
+  medidas: [
+    ['¿Cuántos metros hay en un kilómetro?', '1000 metros.'],
+    ['¿Qué unidad usarías para medir la longitud de un lápiz?', 'Centímetros.'],
+    ['Una cuerda mide 3 metros y cortas 1 metro. ¿Cuánto queda?', '2 metros.'],
+    ['¿Cuántos litros son 2 medios litros?', '1 litro.'],
+    ['¿Qué pesa más: 2 kilogramos o 1500 gramos?', '2 kilogramos.']
+  ],
+  fracciones: [
+    ['Una barra tiene 8 partes y comes 4. ¿Qué fracción comes?', '4/8.'],
+    ['¿Qué fracción es mayor: 3/4 o 1/4?', '3/4.'],
+    ['De 5 partes iguales, 2 están coloreadas. ¿Qué fracción está coloreada?', '2/5.'],
+    ['¿Qué fracción representa un entero dividido en dos partes iguales?', '2/2.'],
+    ['¿Qué es mayor: 2/3 o 1/3?', '2/3.']
+  ],
+  geometria: [
+    ['¿Cuántos ángulos tiene un triángulo?', '3 ángulos.'],
+    ['¿Qué figura tiene dos lados largos y dos cortos?', 'El rectángulo.'],
+    ['¿Cómo se llama un polígono de 8 lados?', 'Octógono.'],
+    ['¿Qué línea no tiene principio ni final?', 'La línea recta infinita.'],
+    ['¿Cuántos vértices tiene un pentágono?', '5 vértices.']
+  ],
+  vocabulario: [
+    ['Escribe un sinónimo de “bonito”.', 'Hermoso.'],
+    ['Escribe un antónimo de “lento”.', 'Rápido.'],
+    ['¿Qué significa “observar”?', 'Mirar con atención.'],
+    ['Escribe una palabra de la familia de “mar”.', 'Marino, marinero o marea.'],
+    ['¿Cuál no pertenece al grupo: correr, saltar, azul, nadar?', 'Azul.']
+  ],
+  ordenar: [
+    ['Ordena: ventana / abre / Lucía / la.', 'Lucía abre la ventana.'],
+    ['Ordena: flores / riega / Pedro / las.', 'Pedro riega las flores.'],
+    ['Ordena: camino / seguimos / el / largo.', 'Seguimos el camino largo.'],
+    ['Ordena: cuento / antes / leo / dormir / de.', 'Leo un cuento antes de dormir.'],
+    ['Ordena: contentos / vuelven / casa / a / Los niños.', 'Los niños vuelven contentos a casa.']
+  ]
+};
+Object.entries(additionalPracticalActivities).forEach(([type, items]) => practicalActivities[type].push(...items));
 
 function randomReadingActivity(difficulty) {
   const level = difficulty === 'Inicial' || difficulty === 'Tranquila' ? 'Inicial' : difficulty === 'Medio' || difficulty === 'Estándar' ? 'Medio' : 'Avanzado';
@@ -565,18 +753,34 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
       { question: '¿Cuántos lados tiene un triángulo?', answer: '3 lados.' },
       { question: 'Una entrada cuesta 4 € y pagas con 5 €. ¿Qué cambio recibes?', answer: '1 €.' },
       { question: '¿Qué hora será una hora después de las 10:30?', answer: 'Las 11:30.' },
-      { question: 'Lee: “Marta plantó una semilla y la regó”. ¿Qué hizo Marta después de plantar?', answer: 'La regó.' }
+      { question: 'Lee: “Marta plantó una semilla y la regó”. ¿Qué hizo Marta después de plantar?', answer: 'La regó.' },
+      { question: '¿Cuántos centímetros hay en medio metro?', answer: '50 centímetros.' },
+      { question: 'Escribe el antónimo de “oscuro”.', answer: 'Claro.' },
+      { question: 'Ordena: parque / al / vamos / Hoy.', answer: 'Hoy vamos al parque.' },
+      { question: '¿Qué fracción representa una de cuatro partes iguales?', answer: '1/4.' },
+      { question: 'Una caja tiene 6 lápices y compras 2 cajas. ¿Cuántos lápices tienes?', answer: '12 lápices.' },
+      { question: 'Completa: 12, 15, 18, __.', answer: '21.' },
+      { question: '¿Qué figura tiene tres lados?', answer: 'El triángulo.' },
+      { question: '¿Cuántos minutos hay en una hora?', answer: '60 minutos.' },
+      { question: 'Completa con h: _oy _ace sol.', answer: 'Hoy hace sol.' },
+      { question: 'Escribe un sinónimo de “feliz”.', answer: 'Contento.' },
+      { question: 'Ordena: mochila / mi / preparada / está.', answer: 'Mi mochila está preparada.' },
+      { question: '¿Qué fracción es mayor: 1/2 o 1/4?', answer: '1/2.' },
+      { question: 'Una entrada cuesta 6 € y pagas con 10 €. ¿Qué cambio recibes?', answer: '4 €.' },
+      { question: 'Completa: 50, 45, 40, __.', answer: '35.' },
+      { question: '¿Cuántos vértices tiene un cuadrado?', answer: '4 vértices.' }
     ];
     return Array.from({ length: type === 'diaria' ? 5 : Math.max(8, count) }, (_, index) => mixed[index % mixed.length]);
   }
-  const people = ['Lucía', 'Mario', 'Sara', 'Leo', 'Amina'];
-  const objects = ['pegatinas', 'lápices', 'canicas', 'cromos', 'libros'];
+  const people = ['Lucía', 'Mario', 'Sara', 'Leo', 'Amina', 'Hugo', 'Nora', 'Diego', 'Clara', 'Pablo', 'Irene', 'Mateo', 'Valeria', 'Álvaro', 'Marta', 'Elena', 'Bruno', 'Inés', 'Óscar', 'Sofía'];
+  const objects = ['pegatinas', 'lápices', 'canicas', 'cromos', 'libros', 'rotuladores', 'cuadernos', 'cartas', 'piezas', 'semillas', 'botones', 'monedas', 'figuras', 'fotografías', 'globos', 'caracolas', 'tarjetas', 'pinceles', 'borradores', 'hojas'];
+  const feminineObjects = new Set(['pegatinas', 'canicas', 'cartas', 'semillas', 'monedas', 'figuras', 'fotografías', 'caracolas', 'tarjetas', 'hojas']);
   return Array.from({ length: count }, (_, i) => {
     const first = i + 2;
     const second = i + 3;
     const person = people[i % people.length];
     const object = objects[i % objects.length];
-    return { question: `${person} tiene ${first} cajas con ${second} ${object} en cada una. ¿Cuántos ${object} tiene en total?`, answer: first * second };
+    return { question: `${person} tiene ${first} cajas con ${second} ${object} en cada una. ¿Cuánt${feminineObjects.has(object) ? 'as' : 'os'} ${object} tiene en total?`, answer: first * second };
   });
 }
 

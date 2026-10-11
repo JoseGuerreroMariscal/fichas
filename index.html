@@ -6,7 +6,8 @@
     <meta name="description" content="Crea fichas educativas gratis para primaria: matemáticas, comprensión lectora, ortografía, caligrafía y lógica. Imprime en A4 o guarda como PDF, sin registro." />
     <meta name="author" content="FichasFácil" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="Permissions-Policy" content="accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=()" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://joseguerreromariscal.github.io/fichas/" />
     <link rel="help" href="https://joseguerreromariscal.github.io/fichas/llms.txt" />
@@ -17,10 +18,12 @@
     <meta property="og:url" content="https://joseguerreromariscal.github.io/fichas/" />
     <meta property="og:site_name" content="FichasFácil" />
     <meta property="og:image" content="https://joseguerreromariscal.github.io/fichas/social-preview.svg" />
+    <meta property="og:image:alt" content="Vista previa de FichasFácil, generador de fichas educativas" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Fichas educativas para primaria | FichasFácil" />
     <meta name="twitter:description" content="Genera fichas de matemáticas, lengua, lectura, caligrafía y lógica para imprimir en A4 o guardar como PDF." />
     <meta name="twitter:image" content="https://joseguerreromariscal.github.io/fichas/social-preview.svg" />
+    <meta name="twitter:image:alt" content="Vista previa de FichasFácil, generador de fichas educativas" />
     <meta name="theme-color" content="#20385f" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -30,7 +33,7 @@
     <link rel="icon" href="favicon.svg?v=20261011-17" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="pwa-icon.svg?v=20261011-17" />
-    <link rel="stylesheet" href="styles.css?v=20261011-32" />
+    <link rel="stylesheet" href="styles.css?v=20261011-33" />
   </head>
   <body>
     <a class="skip-link" href="#actividades">Saltar a las actividades</a>
@@ -38,7 +41,7 @@
     <header class="site-header">
       <a class="brand" href="#inicio" aria-label="FichasFácil, inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> FichasFácil</a>
       <nav class="header-nav" aria-label="Navegación principal"><a href="#actividades">Actividades</a><a href="blog.html">Blog</a><a href="guia.html">Guía</a></nav>
-      <a class="header-action" href="#actividades">Ver actividades <span>↓</span></a>
+      <a class="header-action" href="#actividades">Crear ficha <span>↓</span></a>
     </header>
 
     <main id="inicio" class="page-shell">
@@ -47,9 +50,9 @@
           <div class="hero-copy">
             <p class="kicker">FichasFácil · generador educativo</p>
             <h1>Fichas educativas para primaria.<br /><span>Listas para imprimir.</span></h1>
-            <p class="intro-copy">Crea en segundos fichas de matemáticas, comprensión lectora, ortografía, caligrafía y lógica. Ajusta la dificultad y úsalas en casa o en el aula.</p>
-            <div class="hero-actions"><a class="hero-cta" href="#actividades">Crear una ficha <span>→</span></a></div>
-            <div class="intro-meta" aria-label="Ventajas de FichasFácil"><span>PDF en A4</span><span>Sin registro</span><span>Imprime o comparte</span></div>
+            <p class="intro-copy">Elige una habilidad, ajusta el nivel y crea en segundos una ficha clara de matemáticas, lectura, escritura o lógica para casa o el aula.</p>
+            <div class="hero-actions"><a class="hero-cta" href="#actividades">Crear mi primera ficha <span>→</span></a><a class="hero-secondary" href="#como-funciona">Ver cómo funciona <span>↓</span></a></div>
+            <div class="intro-meta" aria-label="Ventajas de FichasFácil"><span>19 actividades</span><span>3 niveles</span><span>PDF en A4</span><span>Sin registro</span></div>
             <button id="install-app" class="install-button" type="button" hidden>Instalar FichasFácil en este dispositivo</button>
           </div>
           <div class="hero-preview" aria-label="Ejemplo de una ficha educativa">
@@ -60,7 +63,7 @@
       </section>
 
       <section id="actividades" class="activities" aria-labelledby="activities-title">
-        <div class="section-label"><span id="activities-title">Elige una actividad</span><span>01 / 19</span></div>
+        <div class="section-label"><span id="activities-title">Elige una actividad</span><span class="activity-count">19 actividades</span></div>
         <p class="section-help">Pulsa una tarjeta para empezar a configurarla.</p>
         <div class="activity-grid">
           <button class="activity-card card-blue" data-type="sumas" aria-haspopup="dialog" aria-controls="generator" aria-expanded="false"><span class="card-symbol">＋</span><span><strong>Sumas</strong><small>Cálculo básico</small></span></button>
@@ -82,6 +85,19 @@
           <button class="activity-card card-teal" data-type="caligrafia" aria-haspopup="dialog" aria-controls="generator" aria-expanded="false"><span class="card-symbol">✍</span><span><strong>Caligrafía</strong><small>Escribir con pauta</small></span></button>
           <button class="activity-card card-blue" data-type="mixta" aria-haspopup="dialog" aria-controls="generator" aria-expanded="false"><span class="card-symbol">✦</span><span><strong>Ficha mixta</strong><small>Repaso completo</small></span></button>
           <button class="activity-card card-green" data-type="diaria" aria-haspopup="dialog" aria-controls="generator" aria-expanded="false"><span class="card-symbol">☀</span><span><strong>Ficha diaria</strong><small>5 minutos</small></span></button>
+        </div>
+      </section>
+
+      <section class="homepage-how" id="como-funciona" aria-labelledby="how-title">
+        <div class="homepage-how-heading">
+          <p class="kicker">Así de fácil</p>
+          <h2 id="how-title">De una idea a una ficha lista para usar</h2>
+          <p>Diseñada para que familias y docentes puedan preparar una actividad útil sin perder tiempo en configuraciones complicadas.</p>
+        </div>
+        <div class="homepage-how-grid">
+          <article class="homepage-how-card"><span class="content-number" aria-hidden="true">01</span><div><h3>Elige</h3><p>Selecciona una de las 19 actividades: cálculo, lectura, escritura, lógica y más.</p></div></article>
+          <article class="homepage-how-card"><span class="content-number" aria-hidden="true">02</span><div><h3>Ajusta</h3><p>Escoge el nivel y la cantidad de ejercicios según el momento de aprendizaje.</p></div></article>
+          <article class="homepage-how-card"><span class="content-number" aria-hidden="true">03</span><div><h3>Imprime</h3><p>Genera tu ficha en A4, imprímela o guárdala como PDF para compartirla.</p></div></article>
         </div>
       </section>
 
@@ -139,7 +155,7 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>FichasFácil</span><span>Fichas educativas para practicar, imprimir y compartir.</span><span class="site-version" aria-label="Versión de la web">v36</span><nav aria-label="Enlaces de la página"><a href="#recursos">Recursos</a><a href="#preguntas">Preguntas frecuentes</a><a href="guia.html">Guía para usar fichas</a><a href="blog.html">Blog educativo</a><a href="mailto:fichasfaciles@gmail.com?subject=Consulta%20sobre%20FichasF%C3%A1cil" aria-label="Escribir a FichasFácil por correo">Contacto</a></nav></footer>
+    <footer class="site-footer"><span>FichasFácil</span><span>Fichas educativas para practicar, imprimir y compartir.</span><span class="site-version" aria-label="Versión de la web">v38</span><nav aria-label="Enlaces de la página"><a href="#recursos">Recursos</a><a href="#preguntas">Preguntas frecuentes</a><a href="guia.html">Guía para usar fichas</a><a href="blog.html">Blog educativo</a><a href="mailto:fichasfaciles@gmail.com?subject=Consulta%20sobre%20FichasF%C3%A1cil" aria-label="Escribir a FichasFácil por correo">Contacto</a></nav></footer>
 
     <div class="modal-backdrop" id="generator" aria-hidden="true">
       <section class="generator-modal" role="dialog" aria-modal="true" aria-labelledby="generator-title" aria-describedby="generator-help">
@@ -168,9 +184,9 @@
         <div class="preview-result" id="preview-result" role="status" aria-live="polite"></div>
       </section>
     </div>
-    <script src="app.js?v=20261011-25"></script>
+    <script src="app.js?v=20261011-26"></script>
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"WebSite","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","description":"Generador gratuito de fichas educativas para primaria: matemáticas, lengua, lectura, escritura y lógica.","inLanguage":"es-ES","publisher":{"@type":"Organization","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","sameAs":["https://rutinavisual.es/","https://tiempovisual.es/","https://autobusesdecordoba.es/"]}}
+      {"@context":"https://schema.org","@type":"WebSite","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","description":"Generador gratuito de fichas educativas para primaria: matemáticas, lengua, lectura, escritura y lógica.","inLanguage":"es-ES","publisher":{"@type":"Organization","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","logo":"https://joseguerreromariscal.github.io/fichas/pwa-icon.svg","sameAs":["https://rutinavisual.es/","https://tiempovisual.es/","https://autobusesdecordoba.es/"]}}
     </script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"WebApplication","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"es-ES","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"featureList":["Fichas de matemáticas","Problemas matemáticos","Comprensión lectora","Copiado y caligrafía","Ortografía y vocabulario","Series y lógica","Horas, dinero y medidas","Fracciones y geometría","Fichas mixtas imprimibles","Impresión en A4 y enlaces configurables para compartir"]}
