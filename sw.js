@@ -1,9 +1,9 @@
-const CACHE_NAME = 'fichasfacil-v22';
+const CACHE_NAME = 'fichasfacil-v23';
 const APP_SHELL = [
   './',
   './index.html',
-  './styles.css?v=20261011-27',
-  './app.js?v=20261011-18',
+  './styles.css?v=20261011-28',
+  './app.js?v=20261011-19',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-16',
   './pwa-icon.svg?v=20261011-16',
