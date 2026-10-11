@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-42', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-43', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -930,11 +930,17 @@ function downloadPdf(config, items, solutions = false) {
     y += lines.length * lineHeight + (options.gap ?? 2);
   };
   const writeAnswerLines = (count = 3) => {
-    doc.setDrawColor(150, 163, 177);
-    for (let line = 0; line < count; line += 1) {
-      ensureSpace(8);
+    for (let row = 0; row < count; row += 1) {
+      ensureSpace(10);
+      doc.setDrawColor(120, 144, 175);
       doc.line(margin + 4, y, pageWidth - margin - 4, y);
-      y += 8;
+      doc.setLineDashPattern([1, 1], 0);
+      doc.setDrawColor(183, 196, 210);
+      doc.line(margin + 4, y + 4, pageWidth - margin - 4, y + 4);
+      doc.setLineDashPattern([], 0);
+      doc.setDrawColor(239, 155, 155);
+      doc.line(margin + 4, y + 8, pageWidth - margin - 4, y + 8);
+      y += 10;
     }
     doc.setDrawColor(0, 0, 0);
     y += 3;
