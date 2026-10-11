@@ -16,6 +16,7 @@ const activityDescriptions = {
   copiado: 'Copia un texto breve siguiendo una pauta de escritura.'
 };
 let lastTrigger = null;
+const pageBackground = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')].filter(Boolean);
 const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs'];
 const preferenceKey = 'fichalia-preferences';
 let installPrompt = null;
@@ -92,6 +93,7 @@ const openGenerator = type => {
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
+  pageBackground.forEach(element => { element.inert = true; element.setAttribute('aria-hidden', 'true'); });
   activity.value = type;
   result.innerHTML = '';
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
@@ -150,6 +152,7 @@ function closeGenerator() {
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
+  pageBackground.forEach(element => { element.inert = false; element.removeAttribute('aria-hidden'); });
   lastTrigger?.focus();
 }
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) closeGenerator(); });
@@ -306,14 +309,15 @@ document.querySelector('#share-direct').addEventListener('click', async () => {
   const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: shareUrl(config) };
   const shareButton = document.querySelector('#share-direct');
   shareButton.disabled = true;
+  const fallbackMarkup = (message, linkLabel = 'Abrir enlace') => `<div class="success-box"><strong>Enlace listo para compartir</strong><span class="print-hint">${message}</span><a class="share-url" href="${escapeHtml(shareData.url)}">${linkLabel}</a></div>`;
   try {
-    const { worksheet } = createSheets(config);
-    const file = new File([worksheet], `${config.type}-fichasfacil.html`, { type: 'text/html' });
-    if (navigator.share && navigator.canShare?.({ files: [file] })) await navigator.share({ ...shareData, files: [file] });
-    else if (navigator.share) await navigator.share(shareData);
-    else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = `<div class="success-box"><strong>Ficha preparada para compartir</strong><span class="print-hint">Enlace copiado para compartirla.</span></div>`; }
-    else result.innerHTML = `<div class="success-box"><strong>Ficha preparada</strong><span class="print-hint">Copia el enlace de esta página para compartirla.</span></div>`;
-  } catch (error) { if (error.name !== 'AbortError') result.innerHTML = '<div class="success-box"><strong>No se ha podido compartir</strong><span class="print-hint">Puedes probar de nuevo o imprimir la ficha.</span></div>'; }
+    if (navigator.share) await navigator.share(shareData);
+    else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = `<div class="success-box"><strong>Enlace listo para compartir</strong><span class="print-hint">Hemos copiado el enlace con la configuración de esta ficha.</span></div>`; }
+    else result.innerHTML = fallbackMarkup('Copia o abre este enlace para compartir la configuración.');
+  } catch (error) {
+    if (error.name === 'AbortError') result.innerHTML = fallbackMarkup('Has cancelado la ventana de compartir. Puedes abrir el enlace directamente.');
+    else result.innerHTML = fallbackMarkup('El navegador no permite compartir automáticamente. Puedes abrir el enlace directamente.');
+  }
   finally { shareButton.disabled = false; }
 });
 

@@ -15,7 +15,7 @@
     <meta property="og:url" content="https://joseguerreromariscal.github.io/fichas/" />
     <meta property="og:site_name" content="FichasFácil" />
     <meta property="og:image" content="https://joseguerreromariscal.github.io/fichas/social-preview.svg" />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Fichas educativas para imprimir | FichasFácil" />
     <meta name="twitter:description" content="Crea en segundos una ficha de matemáticas, lectura o escritura y úsala en casa o en el aula." />
     <meta name="twitter:image" content="https://joseguerreromariscal.github.io/fichas/social-preview.svg" />
@@ -25,10 +25,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="FichasFácil" />
     <title>Fichas educativas para imprimir | FichasFácil</title>
-    <link rel="icon" href="favicon.svg?v=20261011-7" type="image/svg+xml" />
+    <link rel="icon" href="favicon.svg?v=20261011-8" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="pwa-icon.svg" />
-    <link rel="stylesheet" href="styles.css?v=20261011-7" />
+    <link rel="stylesheet" href="styles.css?v=20261011-8" />
   </head>
   <body>
     <a class="skip-link" href="#actividades">Saltar a las actividades</a>
@@ -113,9 +113,9 @@
         </div>
         <div class="faq-list">
           <details><summary>¿Tengo que registrarme?</summary><p>No. Puedes elegir una actividad y generar una ficha sin crear una cuenta.</p></details>
-          <details><summary>¿Puedo elegir la dificultad y el número de ejercicios?</summary><p>Sí. Antes de generar la ficha puedes seleccionar el nivel, la dificultad y cuántos ejercicios quieres incluir.</p></details>
+          <details><summary>¿Puedo elegir la dificultad y el número de ejercicios?</summary><p>Sí. Antes de generar la ficha puedes seleccionar la dificultad, el número de ejercicios y, en matemáticas, el número de cifras.</p></details>
           <details><summary>¿Puedo imprimir la ficha?</summary><p>Sí. La ficha se prepara en formato A4 para imprimirla desde el navegador o guardarla como PDF.</p></details>
-          <details><summary>¿Puedo compartirla?</summary><p>Sí. Cuando se abre la vista de impresión puedes guardarla como PDF y compartir ese archivo desde tu dispositivo.</p></details>
+          <details><summary>¿Puedo compartirla?</summary><p>Sí. Puedes compartir un enlace con la actividad y sus opciones para que otra persona la abra y la imprima desde su dispositivo.</p></details>
         </div>
       </section>
 
@@ -149,7 +149,7 @@
     <div class="modal-backdrop" id="generator" aria-hidden="true">
       <section class="generator-modal" role="dialog" aria-modal="true" aria-labelledby="generator-title" aria-describedby="generator-help">
         <button class="modal-close" aria-label="Cerrar" aria-keyshortcuts="Escape"><span aria-hidden="true">×</span><span class="close-label">Cerrar</span></button>
-        <div class="modal-header"><p class="kicker">Crea tu ficha PDF</p><div class="activity-summary"><span class="summary-dot" aria-hidden="true"></span><span id="activity-summary">Sumas</span></div><h2 id="generator-title">Prepara una ficha</h2><p id="generator-help">Ajusta las opciones y elige si quieres imprimir o compartir.</p><p class="configuration-summary" id="configuration-summary" role="status">Tranquila · 20 ejercicios · 2 números</p></div>
+        <div class="modal-header"><p class="kicker">Crea tu ficha PDF</p><div class="activity-summary"><span class="summary-dot" aria-hidden="true"></span><span id="activity-summary">Sumas</span></div><h2 id="generator-title">Prepara una ficha</h2><p id="generator-help">Ajusta las opciones y elige si quieres imprimir o compartir el enlace.</p><p class="configuration-summary" id="configuration-summary" role="status">Tranquila · 20 ejercicios · 2 números</p></div>
         <form id="generator-form">
           <div class="form-grid">
             <label for="activity">Actividad<select id="activity"><option value="sumas">Sumas</option><option value="restas">Restas</option><option value="multiplicaciones">Multiplicaciones</option><option value="divisiones">Divisiones</option><option value="problemas">Problemas matemáticos</option><option value="lectura">Lectura comprensiva</option><option value="copiado">Copiado</option></select></label>
@@ -161,22 +161,22 @@
             <label id="paragraphs-field" class="hidden-field" for="paragraphs">N.º de párrafos<select id="paragraphs"><option value="1" selected>1 párrafo</option><option value="2">2 párrafos</option><option value="3">3 párrafos</option><option value="4">4 párrafos</option><option value="5">5 párrafos</option></select></label>
             <label class="full-field" for="student">Nombre (opcional)<input id="student" type="text" placeholder="Nombre del alumno" maxlength="36" autocomplete="name" /></label>
           </div>
-          <p class="modal-note" id="modal-note">Puedes cambiar estas opciones antes de imprimir o compartir la ficha.</p>
+          <p class="modal-note" id="modal-note">Puedes cambiar estas opciones antes de imprimir o compartir el enlace.</p>
           <label id="solutions-field" class="check-label"><input id="solutions" type="checkbox" /> <span>Incluir soluciones</span></label>
-          <div class="form-actions"><button class="reset-button" id="reset-options" type="button">Restablecer</button><button class="print-button" id="print-direct" type="submit">Imprimir ficha</button><button class="share-button" id="share-direct" type="button">Compartir ficha</button></div>
+          <div class="form-actions"><button class="reset-button" id="reset-options" type="button">Restablecer</button><button class="print-button" id="print-direct" type="submit">Imprimir ficha</button><button class="share-button" id="share-direct" type="button">Compartir enlace</button></div>
         </form>
         <div class="preview-result" id="preview-result" role="status" aria-live="polite"></div>
       </section>
     </div>
-    <script src="app.js?v=20261011-7"></script>
+    <script src="app.js?v=20261011-8"></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"WebSite","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","description":"Generador gratuito de fichas educativas para imprimir y compartir.","inLanguage":"es-ES","publisher":{"@type":"Organization","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","sameAs":["https://rutinavisual.es/","https://tiempovisual.es/","https://autobusesdecordoba.es/"]}}
     </script>
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"WebApplication","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"es-ES","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"featureList":["Fichas de sumas y restas","Fichas de multiplicaciones y divisiones","Problemas matemáticos","Comprensión lectora","Copiado con pauta","Impresión y compartición en PDF"]}
+      {"@context":"https://schema.org","@type":"WebApplication","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"es-ES","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"featureList":["Fichas de sumas y restas","Fichas de multiplicaciones y divisiones","Problemas matemáticos","Comprensión lectora","Copiado con pauta","Impresión en A4 y enlaces configurables para compartir"]}
     </script>
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Tengo que registrarme?","acceptedAnswer":{"@type":"Answer","text":"No. Puedes elegir una actividad y generar una ficha sin crear una cuenta."}},{"@type":"Question","name":"¿Puedo imprimir la ficha?","acceptedAnswer":{"@type":"Answer","text":"Sí. La ficha se prepara en formato A4 para imprimirla desde el navegador o guardarla como PDF."}},{"@type":"Question","name":"¿Puedo compartirla?","acceptedAnswer":{"@type":"Answer","text":"Sí. Puedes compartir la ficha desde tu dispositivo después de generarla."}}]}
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Tengo que registrarme?","acceptedAnswer":{"@type":"Answer","text":"No. Puedes elegir una actividad y generar una ficha sin crear una cuenta."}},{"@type":"Question","name":"¿Puedo imprimir la ficha?","acceptedAnswer":{"@type":"Answer","text":"Sí. La ficha se prepara en formato A4 para imprimirla desde el navegador o guardarla como PDF."}},{"@type":"Question","name":"¿Puedo compartirla?","acceptedAnswer":{"@type":"Answer","text":"Sí. Puedes compartir un enlace con la actividad y sus opciones para que otra persona la abra y la imprima."}}]}
     </script>
   </body>
 </html>
