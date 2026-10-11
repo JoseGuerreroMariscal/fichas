@@ -15,15 +15,15 @@ const activityDescriptions = {
   lectura: 'Lee un texto breve y responde preguntas.'
 };
 let lastTrigger = null;
-const preferenceIds = ['level', 'difficulty', 'count', 'operands', 'firstDigits', 'secondDigits'];
+const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits'];
 const preferenceKey = 'fichalia-preferences';
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
     const first = document.querySelector('#firstDigits').value;
     const second = document.querySelector('#secondDigits').value;
-    const digits = first === 'auto' && second === 'auto' ? 'Según el curso' : `${first === 'auto' ? 'curso' : `${first} cifras`} / ${second === 'auto' ? 'curso' : `${second} cifras`}`;
-    summary.textContent = `${document.querySelector('#level').value || 'Sin curso'} · ${document.querySelector('#difficulty').value} · ${document.querySelector('#count').selectedOptions[0].textContent} · ${digits}`;
+    const digits = first === 'auto' && second === 'auto' ? 'Según la dificultad' : `${first === 'auto' ? 'dificultad' : `${first} cifras`} / ${second === 'auto' ? 'dificultad' : `${second} cifras`}`;
+    summary.textContent = `${document.querySelector('#difficulty').value} · ${document.querySelector('#count').selectedOptions[0].textContent} · ${digits}`;
   }
 };
 const updateDigitLabels = () => {
@@ -43,7 +43,7 @@ try {
   const sharedActivity = shared.get('actividad');
   if (sharedActivity && labels[sharedActivity]) activity.value = sharedActivity;
   preferenceIds.forEach(id => {
-    const parameter = id === 'level' ? 'curso' : id === 'difficulty' ? 'dificultad' : id === 'count' ? 'ejercicios' : id === 'operands' ? 'numeros' : id === 'firstDigits' ? 'cifras1' : 'cifras2';
+    const parameter = id === 'difficulty' ? 'dificultad' : id === 'count' ? 'ejercicios' : id === 'operands' ? 'numeros' : id === 'firstDigits' ? 'cifras1' : 'cifras2';
     const value = shared.get(parameter);
     if (value && document.querySelector(`#${id}`)?.querySelector(`option[value="${CSS.escape(value)}"]`)) document.querySelector(`#${id}`).value = value;
   });
@@ -86,7 +86,6 @@ activity.addEventListener('change', () => {
 });
 preferenceIds.forEach(id => document.querySelector(`#${id}`).addEventListener('change', () => { updateConfigurationSummary(); savePreferences(); }));
 document.querySelector('#reset-options').addEventListener('click', () => {
-  document.querySelector('#level').value = '';
   document.querySelector('#difficulty').value = 'Tranquila';
   document.querySelector('#count').value = '20';
   document.querySelector('#operands').value = '2';
@@ -140,7 +139,7 @@ function rangeForDigits(digits, fallback, minimum = 1) {
 }
 
 function makeOperation(type, difficulty, level = '', operands = 2, firstDigits = 'auto', secondDigits = 'auto') {
-  const grade = levelIndex(level);
+  const grade = level ? levelIndex(level) : difficulty === 'Tranquila' ? 1 : difficulty === 'Estándar' ? 3 : 5;
   if (type === 'multiplicaciones') {
     const rangesByGrade = [[1, 9, 2, 5], [1, 20, 2, 5], [10, 99, 2, 9], [100, 999, 2, 9], [1000, 9999, 2, 9], [1000, 99999, 2, 12], [10000, 999999, 10, 99]];
     const ranges = [...(rangesByGrade[grade] || rangesByGrade[1])];
@@ -232,12 +231,12 @@ function printableHtml(config, items, solutions) {
 *{box-sizing:border-box}body{font-family:ui-rounded,'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;color:#20283f;margin:0;padding:20mm 15mm;max-width:210mm;min-height:297mm}h1{text-align:center;font-size:28px;margin:0 0 14px;color:#20283f}h2{text-align:center;font-size:14px;font-weight:normal;margin:0 0 18px;color:#697772}.worksheet-header{display:flex;justify-content:flex-start;gap:30px;border-bottom:1.5px solid #20283f;padding-bottom:11px;margin-bottom:24px;font-size:13px;font-weight:700}.worksheet-header span{display:inline-block;min-width:145px;border-bottom:1px solid #20283f;margin-left:6px;height:16px}.exercise-grid{display:grid;gap:15px 20px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.text-grid{grid-template-columns:1fr}.print-row{break-inside:avoid}.arithmetic{display:flex;align-items:flex-start;gap:5px;min-height:102px;padding:4px 2px}.print-row .number{font-size:11px;color:#6b7486;padding-top:3px}.operation{width:100%;font-size:22px;font-weight:700;line-height:1.05}.top-number,.extra-number{text-align:right;padding-right:5px;letter-spacing:5px;min-height:28px}.bottom-number{display:grid;grid-template-columns:1fr auto;gap:6px;text-align:right;padding-right:5px}.bottom-number span:first-child{text-align:left;font-weight:400}.operation-rule{border-bottom:1.5px solid #20283f;margin-top:4px}.answer-space{height:28px;border-bottom:1px solid #7f8998}.solution{font-size:20px;text-align:right;color:#ef8e69;padding:6px 5px 0}.text-exercise{display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto 25px;align-items:end;gap:5px 7px;min-height:78px;padding:8px 4px;border-bottom:1px solid #e4ebe5}.text-exercise strong{font-size:19px;line-height:1.25}.text-exercise i{display:block;border-bottom:1.5px solid #82958b;height:22px}.text-exercise b{font-size:20px;color:#ef8e69;grid-column:2}.foot{position:fixed;bottom:8mm;font-size:10px;color:#89958f}@media print{body{padding:13mm 12mm}.exercise-grid{gap:13px 18px}}@media(max-width:650px){body{padding:18px 14px;max-width:none;min-height:0;overflow-x:hidden}h1{font-size:24px}.worksheet-header{font-size:11px;gap:12px}.worksheet-header span{min-width:90px}.math-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}.arithmetic{min-height:105px}.operation{font-size:22px}}</style></head><body><h1>${title}</h1>${worksheetHeader}<div class="exercise-grid ${arithmetic ? 'math-grid' : 'text-grid'}">${rows}</div></body></html>`;
 }
 
-const readConfig = () => ({ type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), operands: Number(document.querySelector('#operands').value), firstDigits: document.querySelector('#firstDigits').value, secondDigits: document.querySelector('#secondDigits').value, student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
+const readConfig = () => ({ type: activity.value, level: '', difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), operands: Number(document.querySelector('#operands').value), firstDigits: document.querySelector('#firstDigits').value, secondDigits: document.querySelector('#secondDigits').value, student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
 
 const shareUrl = config => {
   const url = new URL(window.location.href);
   url.hash = 'actividades';
-  url.search = new URLSearchParams({ actividad: config.type, curso: config.level, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits }).toString();
+  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits }).toString();
   return url.toString();
 };
 
