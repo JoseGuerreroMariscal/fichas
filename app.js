@@ -18,6 +18,22 @@ const activityDescriptions = {
 let lastTrigger = null;
 const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs'];
 const preferenceKey = 'fichalia-preferences';
+let installPrompt = null;
+const installButton = document.querySelector('#install-app');
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  installPrompt = event;
+  if (installButton) installButton.hidden = false;
+});
+installButton?.addEventListener('click', async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  installButton.hidden = true;
+});
+window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {

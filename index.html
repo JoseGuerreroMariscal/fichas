@@ -19,8 +19,14 @@
     <meta name="twitter:description" content="Genera fichas de matemáticas, lectura y escritura listas para imprimir o compartir." />
     <meta name="twitter:image" content="https://joseguerreromariscal.github.io/fichas/social-preview.svg" />
     <meta name="theme-color" content="#20385f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FichasFácil" />
     <title>FichasFácil · Generador de fichas</title>
     <link rel="icon" href="favicon.svg?v=20261011-7" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="pwa-icon.svg" />
     <link rel="stylesheet" href="styles.css?v=20261011-7" />
   </head>
   <body>
@@ -39,6 +45,7 @@
         <p class="intro-copy">Matemáticas y comprensión lectora para practicar en casa o en el aula, sin registro y en unos segundos.</p>
         <div class="intro-meta" aria-label="Ventajas de FichasFácil"><span>PDF en A4</span><span>Sin registro</span><span>Imprime o comparte</span></div>
         <div class="hero-actions"><a class="hero-cta" href="#actividades">Crear una ficha PDF <span>✦</span></a><a class="hero-secondary" href="#como-funciona">Ver cómo funciona <span>↓</span></a></div>
+        <button id="install-app" class="install-button" type="button" hidden>Instalar FichasFácil en este dispositivo</button>
       </section>
 
       <section id="actividades" class="activities" aria-labelledby="activities-title">
