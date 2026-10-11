@@ -3,77 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Generador gratuito de fichas educativas para imprimir." />
-    <title>Generador de fichas · Fichalia</title>
+    <meta name="description" content="Crea fichas educativas imprimibles de Matemáticas y Lengua para Infantil y Primaria." />
+    <title>Fichas listas para aprender | Fichalia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="./">Fichalia</a>
-      <span class="header-note">Fichas educativas para imprimir</span>
+      <a class="brand" href="#inicio" aria-label="Fichalia, inicio">
+        <span class="brand-mark">✦</span><span>fichalia</span>
+      </a>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="#crear">Crear ficha</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#recursos">Recursos</a>
+      </nav>
+      <a class="header-link" href="#crear">Empezar ahora <span>↗</span></a>
     </header>
 
-    <main class="page-shell">
-      <section class="intro" aria-labelledby="page-title">
-        <h1 id="page-title">Generador de fichas</h1>
-        <p>Elige una actividad, configura la dificultad y genera tu ficha lista para imprimir.</p>
-      </section>
-
-      <section class="generator-card" id="generator" aria-labelledby="generator-title">
-        <div class="card-heading">
-          <h2 id="generator-title">Crear una ficha</h2>
-          <p>Solo tienes que elegir las opciones que necesitas.</p>
+    <main id="inicio">
+      <section class="hero section-wrap">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> Aprender también puede ser fácil</p>
+          <h1>Una ficha a medida.<br /><em>En menos de un minuto.</em></h1>
+          <p class="hero-lead">Crea actividades bonitas y listas para imprimir para acompañar cada pequeño gran paso.</p>
+          <a class="button button-primary" href="#crear">Crear mi primera ficha <span>→</span></a>
+          <div class="trust-row"><span>✓ Sin registro</span><span>✓ Gratis para empezar</span><span>✓ Pensado para España</span></div>
         </div>
-
-        <div class="quick-types" aria-label="Elegir actividad rápidamente">
-          <button type="button" class="quick-type is-selected" data-type="sumas">＋ Sumas</button>
-          <button type="button" class="quick-type" data-type="restas">− Restas</button>
-          <button type="button" class="quick-type" data-type="multiplicaciones">× Multiplicaciones</button>
-          <button type="button" class="quick-type" data-type="divisiones">÷ Divisiones</button>
-        </div>
-
-        <form id="generator-form">
-          <div class="form-grid">
-            <label>Actividad
-              <select id="activity">
-                <option value="sumas">Sumas</option>
-                <option value="restas">Restas</option>
-                <option value="multiplicaciones">Multiplicaciones</option>
-                <option value="divisiones">Divisiones</option>
-                <option value="problemas">Problemas matemáticos</option>
-                <option value="lectura">Lectura comprensiva</option>
-              </select>
-            </label>
-            <label>Curso
-              <select id="level">
-                <option>Infantil</option><option>1.º Primaria</option><option>2.º Primaria</option>
-                <option>3.º Primaria</option><option>4.º Primaria</option><option>5.º Primaria</option><option>6.º Primaria</option>
-              </select>
-            </label>
-            <label>Dificultad
-              <select id="difficulty"><option>Tranquila</option><option>Estándar</option><option>Un poquito más</option></select>
-            </label>
-            <label>Número de ejercicios
-              <select id="count"><option value="10">10 ejercicios</option><option value="15">15 ejercicios</option><option value="20" selected>20 ejercicios</option></select>
-            </label>
+        <div class="hero-art" aria-label="Ilustración de una ficha educativa" role="img">
+          <div class="sun"></div><div class="scribble scribble-one">✳</div><div class="scribble scribble-two">＋</div>
+          <div class="paper-card">
+            <div class="paper-top"><span class="paper-pill">FICHA 01</span><span class="paper-star">✦</span></div>
+            <p class="paper-kicker">Matemáticas · 2.º Primaria</p>
+            <h2>Sumas<br /><span>con alegría</span></h2>
+            <div class="paper-line"></div>
+            <div class="paper-exercises"><span>7 + 5 =</span><span>12 + 8 =</span><span>4 + 9 =</span></div>
+            <div class="paper-footer"><span>Nombre: __________________</span><span>1</span></div>
           </div>
-
-          <label class="check-row"><input id="solutions" type="checkbox" /> <span>Incluir soluciones en una segunda página</span></label>
-          <input id="student" type="hidden" value="" />
-          <input id="theme" type="hidden" value="" />
-          <button class="generate-button" type="submit">Generar ficha <span>→</span></button>
-        </form>
-        <div class="preview-result" id="preview-result"></div>
+          <div class="floating-note note-yellow">¡Tú<br />puedes!</div>
+          <div class="floating-note note-pink">☀</div>
+        </div>
       </section>
 
-      <section class="steps" aria-label="Cómo funciona">
-        <div><strong>1</strong><span>Elige la actividad</span></div>
-        <div><strong>2</strong><span>Configura la ficha</span></div>
-        <div><strong>3</strong><span>Imprime</span></div>
+      <section class="stats section-wrap" aria-label="Ventajas de Fichalia">
+        <div><strong>+6</strong><span>niveles escolares</span></div><div><strong>4</strong><span>tipos de actividad</span></div><div><strong>∞</strong><span>fichas diferentes</span></div><div><strong>0€</strong><span>para empezar</span></div>
       </section>
+
+      <section class="create-section section-wrap" id="crear">
+        <div class="section-heading"><div><p class="eyebrow">Tu momento creativo</p><h2>¿Qué te apetece<br /><em>preparar hoy?</em></h2></div><p class="heading-note">Elige una actividad y personalízala<br />a tu ritmo. Sin complicaciones.</p></div>
+        <div class="activity-grid">
+          <button class="activity-card card-blue" data-type="sumas"><span class="activity-icon">＋</span><span><strong>Sumas</strong><small>Practicar y ganar confianza</small></span><b>↗</b></button>
+          <button class="activity-card card-lilac" data-type="restas"><span class="activity-icon">−</span><span><strong>Restas</strong><small>Paso a paso, sin miedo</small></span><b>↗</b></button>
+          <button class="activity-card card-yellow" data-type="multiplicaciones"><span class="activity-icon">×</span><span><strong>Multiplicaciones</strong><small>Un reto cada día</small></span><b>↗</b></button>
+          <button class="activity-card card-green" data-type="divisiones"><span class="activity-icon">÷</span><span><strong>Divisiones</strong><small>Entender para resolver</small></span><b>↗</b></button>
+          <button class="activity-card card-coral wide-card" data-type="problemas"><span class="activity-icon">?</span><span><strong>Problemas matemáticos</strong><small>Leer, pensar y encontrar la solución</small></span><b>↗</b></button>
+          <button class="activity-card card-pink wide-card" data-type="lectura"><span class="activity-icon">Aa</span><span><strong>Lectura comprensiva</strong><small>Historias que despiertan la curiosidad</small></span><b>↗</b></button>
+        </div>
+      </section>
+
+      <section class="how-section" id="como-funciona"><div class="section-wrap"><div class="section-heading"><div><p class="eyebrow">Así de sencillo</p><h2>Del “¿qué hacemos?”<br /><em>a “¡mira lo que sé!”</em></h2></div></div><div class="steps"><div class="step"><span>01</span><h3>Elige</h3><p>Una actividad, un nivel y un reto que encaje con ese momento.</p></div><div class="step"><span>02</span><h3>Personaliza</h3><p>Añade su nombre, el número de ejercicios y una temática.</p></div><div class="step"><span>03</span><h3>Descarga</h3><p>Imprime una ficha preciosa con sus soluciones incluidas.</p></div></div></div></section>
+
+      <section class="resource-section section-wrap" id="recursos"><div class="resource-copy"><p class="eyebrow">Hecho para acompañar</p><h2>Más que ejercicios.<br /><em>Pequeños logros.</em></h2><p>Cada ficha está pensada para que aprender se sienta como lo que es: un camino lleno de descubrimientos.</p><a href="#crear" class="text-link">Ver todas las actividades <span>→</span></a></div><div class="resource-quote"><span class="quote-mark">“</span><p>La ficha perfecta no es la más difícil. Es la que llega justo cuando hace falta.</p><span class="quote-sign">— El equipo de Fichalia</span></div></section>
     </main>
 
-    <footer class="site-footer">Fichalia · Sin registro y gratis</footer>
+    <footer class="site-footer section-wrap"><a class="brand" href="#inicio"><span class="brand-mark">✦</span><span>fichalia</span></a><p>Fichas que hacen sitio a la curiosidad.</p><span>© 2026 Fichalia</span></footer>
+
+    <div class="modal-backdrop" id="generator" aria-hidden="true"><section class="generator-modal" role="dialog" aria-modal="true" aria-labelledby="generator-title"><button class="modal-close" aria-label="Cerrar">×</button><div class="modal-header"><p class="eyebrow">Tu ficha personalizada</p><h2 id="generator-title">Vamos a prepararla.</h2><p>Un par de elecciones y estará lista para imprimir.</p></div><form id="generator-form"><div class="form-grid"><label>Actividad<select id="activity"><option value="sumas">Sumas</option><option value="restas">Restas</option><option value="multiplicaciones">Multiplicaciones</option><option value="divisiones">Divisiones</option><option value="problemas">Problemas matemáticos</option><option value="lectura">Lectura comprensiva</option></select></label><label>Curso<select id="level"><option>Infantil</option><option>1.º Primaria</option><option>2.º Primaria</option><option>3.º Primaria</option><option>4.º Primaria</option><option>5.º Primaria</option><option>6.º Primaria</option></select></label><label>Dificultad<select id="difficulty"><option>Tranquila</option><option>Estándar</option><option>Un poquito más</option></select></label><label>N.º de ejercicios<select id="count"><option value="6">6 ejercicios</option><option value="8" selected>8 ejercicios</option><option value="10">10 ejercicios</option><option value="12">12 ejercicios</option></select></label><label class="full-field">Nombre (opcional)<input id="student" type="text" placeholder="¿Para quién es?" maxlength="36" /></label><label class="full-field">Temática<select id="theme"><option>Arcoíris y colores</option><option>Animales</option><option>Espacio</option><option>Dinosaurios</option><option>Fútbol</option><option>Naturaleza</option></select></label></div><label class="check-label"><input id="large-print" type="checkbox" /> <span>Letra grande y diseño simplificado</span></label><button class="button button-primary full-button" type="submit">Generar mi ficha <span>→</span></button></form><div class="preview-result" id="preview-result"></div></section></div>
     <script src="app.js"></script>
   </body>
 </html>
+

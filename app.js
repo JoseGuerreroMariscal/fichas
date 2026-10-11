@@ -14,14 +14,21 @@ if (countSelect && !countSelect.querySelector('option[value="20"]')) {
 }
 
 const openGenerator = type => {
-  modal.classList.add('has-selection');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
   activity.value = type;
   result.innerHTML = '';
-  document.querySelectorAll('.quick-type').forEach(button => button.classList.toggle('is-selected', button.dataset.type === type));
+  setTimeout(() => activity.focus(), 50);
 };
 
 document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('click', () => openGenerator(card.dataset.type)));
-document.addEventListener('keydown', event => { if (event.key === 'Escape') modal.classList.remove('has-selection'); });
+document.querySelector('.modal-close').addEventListener('click', () => {
+  modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true');
+});
+modal.addEventListener('click', event => {
+  if (event.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+});
+document.addEventListener('keydown', event => { if (event.key === 'Escape') modal.classList.remove('open'); });
 
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
