@@ -44,7 +44,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-23', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-24', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -424,7 +424,9 @@ function exerciseMarkup(config, item, index, solutions) {
     const numberRow = (operator, value) => `<tr><td width="20%" align="center" valign="middle"><font face="Arial,Helvetica,sans-serif" size="4"><b>${operator || '&nbsp;'}</b></font></td><td width="80%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="4"><b>${String(value).split('').join('&nbsp;')}</b></font></td></tr>`;
     const answerRows = solutions
       ? `<tr><td colspan="2" height="8mm" align="right" valign="middle" style="font:700 13pt Arial,Helvetica,sans-serif;padding-right:2mm;color:#20283f">${item.answer}</td></tr>`
-      : '';
+      : config.type === 'multiplicaciones'
+        ? Array.from({ length: 3 }, () => '<tr><td colspan="2" height="25" align="center" valign="bottom"><hr width="100%" size="1" color="#c4cbd4" noshade></td></tr>').join('')
+        : '';
     const operationRows = threeTermMatch
       ? `${numberRow('', threeTermMatch[1])}${numberRow(threeTermMatch[2], threeTermMatch[3])}${numberRow(threeTermMatch[4], threeTermMatch[5])}`
       : (() => {
@@ -442,7 +444,7 @@ function printableHtml(config, items, solutions) {
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const rows = items.map((item, index) => exerciseMarkup(config, item, index, solutions)).join('');
   const copyingGuide = config.type === 'copiado' ? `<section class="copying-final-guide" style="display:block;break-before:auto;page-break-before:auto;break-inside:avoid;page-break-inside:avoid;width:180mm;margin:7mm auto 0"><h3 style="font-size:14px;margin:0 0 7px;color:#697772">Escribe el texto</h3><div class="lamela-guide" aria-label="Pauta Lamela para copiar el texto" style="display:block;width:100%;height:108mm;border-top:1.2px solid #647b9b">${Array.from({ length: 12 }, (_, index) => `<div class="lamela-line lamela-line-${index % 3}" aria-hidden="true" style="display:block;width:100%;height:9mm;border-bottom:${index % 3 === 0 ? '1.2px solid #7890af' : index % 3 === 1 ? '1px dashed #b7c4d2' : '1.2px solid #ef9b9b'}"></div>`).join('')}</div></section>` : '';
-  const worksheetHeader = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="72%" align="left" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Nombre: ${name ? `<u>${escapeHtml(name)}</u>` : '______________________________'}</font></td><td width="28%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Fecha: ______________</font></td></tr></tbody></table>`;
+  const worksheetHeader = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="12%" align="left" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Nombre:</font></td><td width="65%" align="left" valign="bottom"><font face="Arial,Helvetica,sans-serif" size="2">${name ? escapeHtml(name) : '&nbsp;'}</font><hr width="100%" size="1" color="#20283f" noshade></td><td width="8%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Fecha:</font></td><td width="15%" align="left" valign="bottom"><hr width="100%" size="1" color="#20283f" noshade></td></tr></tbody></table>`;
   let worksheetContent;
   if (arithmetic) {
     const cellsPerRow = 4;
@@ -450,8 +452,8 @@ function printableHtml(config, items, solutions) {
     const rowHeightMm = Math.min(90, Math.floor(230 / Math.ceil(items.length / cellsPerRow)));
     const rowHeightPx = Math.round(rowHeightMm * 96 / 25.4);
     for (let start = 0; start < items.length; start += cellsPerRow) {
-      const cells = items.slice(start, start + cellsPerRow).map((item, offset) => `<td width="25%" height="${rowHeightPx}" align="center" valign="middle" style="padding:1mm 2mm">${exerciseMarkup(config, item, start + offset, solutions)}</td>`);
-      while (cells.length < cellsPerRow) cells.push(`<td width="25%" height="${rowHeightPx}">&nbsp;</td>`);
+      const cells = items.slice(start, start + cellsPerRow).map((item, offset) => `<td width="25%" height="${rowHeightPx}" align="center" valign="middle" style="height:${rowHeightPx}px;padding:1mm 2mm">${exerciseMarkup(config, item, start + offset, solutions)}</td>`);
+      while (cells.length < cellsPerRow) cells.push(`<td width="25%" height="${rowHeightPx}" style="height:${rowHeightPx}px">&nbsp;</td>`);
       operationRows.push(`<tr>${cells.join('')}</tr>`);
     }
     worksheetContent = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout:fixed;border-collapse:collapse"><tbody><tr><td colspan="4" height="45">&nbsp;</td></tr>${operationRows.join('')}</tbody></table>`;
