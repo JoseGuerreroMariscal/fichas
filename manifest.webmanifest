@@ -1,7 +1,7 @@
 {
   "name": "FichasFácil · Generador de fichas educativas",
   "short_name": "FichasFácil",
-  "description": "Genera fichas educativas de matemáticas, lectura y escritura para imprimir o compartir.",
+  "description": "Genera fichas educativas de matemáticas, lengua, lectura, escritura y lógica para imprimir o compartir.",
   "lang": "es-ES",
   "dir": "ltr",
   "start_url": "./?source=pwa",

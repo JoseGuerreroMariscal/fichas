@@ -4,7 +4,7 @@ const activity = document.querySelector('#activity');
 const result = document.querySelector('#preview-result');
 const labels = {
   sumas: 'Sumas', restas: 'Restas', multiplicaciones: 'Multiplicaciones',
-  divisiones: 'Divisiones', problemas: 'Problemas matemáticos', lectura: 'Lectura comprensiva', copiado: 'Copiado'
+  divisiones: 'Divisiones', problemas: 'Problemas matemáticos', lectura: 'Lectura comprensiva', copiado: 'Copiado', ortografia: 'Ortografía', logica: 'Lógica', reloj: 'Horas y reloj', dinero: 'Dinero', medidas: 'Medidas', fracciones: 'Fracciones', geometria: 'Geometría', vocabulario: 'Vocabulario', ordenar: 'Ordenar frases', caligrafia: 'Caligrafía', mixta: 'Ficha mixta', diaria: 'Ficha diaria'
 };
 const activityDescriptions = {
   sumas: 'Practica sumas colocadas en columna.',
@@ -13,11 +13,23 @@ const activityDescriptions = {
   divisiones: 'Resuelve divisiones exactas.',
   problemas: 'Lee, piensa y resuelve situaciones cotidianas.',
   lectura: 'Lee un texto breve y responde preguntas.',
-  copiado: 'Copia un texto breve siguiendo una pauta de escritura.'
+  copiado: 'Copia un texto breve siguiendo una pauta de escritura.',
+  ortografia: 'Completa palabras y refuerza las reglas ortográficas.',
+  logica: 'Completa series numéricas y descubre el patrón.',
+  reloj: 'Lee la hora y resuelve situaciones con el reloj.',
+  dinero: 'Practica compras, monedas y cambios.',
+  medidas: 'Trabaja longitudes, capacidades y conversiones sencillas.',
+  fracciones: 'Reconoce partes de un todo y fracciones básicas.',
+  geometria: 'Identifica figuras y conceptos geométricos.',
+  vocabulario: 'Relaciona palabras con su significado.',
+  ordenar: 'Ordena palabras para construir frases.',
+  caligrafia: 'Practica letras, palabras y frases con pauta.',
+  mixta: 'Combina cálculo, lectura, lengua y lógica en una sola ficha.',
+  diaria: 'Una práctica breve y variada para cada día.'
 };
 let lastTrigger = null;
 const pageBackground = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')].filter(Boolean);
-const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs', 'carryMode', 'tableNumber', 'specificDivisor', 'divisionMode'];
+const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs', 'calligraphyMode', 'carryMode', 'tableNumber', 'specificDivisor', 'divisionMode'];
 const preferenceKey = 'fichalia-preferences';
 let installPrompt = null;
 let sharedActivity = '';
@@ -44,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-28', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-29', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -52,8 +64,8 @@ const updateConfigurationSummary = () => {
     const second = document.querySelector('#secondDigits').value;
     const isMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(activity.value);
     const digits = isMath ? (first === 'auto' && second === 'auto' ? 'Según la dificultad' : `${first === 'auto' ? 'dificultad' : `${first} cifras`} / ${second === 'auto' ? 'dificultad' : `${second} cifras`}`) : '';
-    const countSummary = ['lectura', 'copiado'].includes(activity.value) ? '' : ` · ${document.querySelector('#count').selectedOptions[0].textContent}`;
-    const paragraphSummary = activity.value === 'copiado' ? ` · ${document.querySelector('#paragraphs').selectedOptions[0].textContent}` : '';
+    const countSummary = ['lectura', 'copiado', 'caligrafia', 'mixta', 'diaria'].includes(activity.value) ? '' : ` · ${document.querySelector('#count').selectedOptions[0].textContent}`;
+    const paragraphSummary = ['copiado', 'caligrafia'].includes(activity.value) ? ` · ${document.querySelector('#paragraphs').selectedOptions[0].textContent}` : '';
     const extra = activity.value === 'sumas' || activity.value === 'restas' ? document.querySelector('#carryMode').selectedOptions[0].textContent : activity.value === 'multiplicaciones' ? document.querySelector('#tableNumber').value === 'all' ? 'Todas las tablas' : `Tabla del ${document.querySelector('#tableNumber').value}` : activity.value === 'divisiones' ? `${document.querySelector('#divisionMode').selectedOptions[0].textContent}${document.querySelector('#specificDivisor').value === 'all' ? '' : ` · entre ${document.querySelector('#specificDivisor').value}`}` : '';
     summary.textContent = `${document.querySelector('#difficulty').value}${countSummary}${digits ? ` · ${digits}` : ''}${paragraphSummary}${extra ? ` · ${extra}` : ''}`;
   }
@@ -66,12 +78,13 @@ const updateDigitLabels = () => {
 const updateActivityFields = () => {
   const isMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(activity.value);
   const usesMultipleTerms = ['sumas', 'restas'].includes(activity.value);
-  const isCopying = activity.value === 'copiado';
+  const isCopying = ['copiado', 'caligrafia'].includes(activity.value);
   const isReading = activity.value === 'lectura';
   document.querySelector('#operands-field').classList.toggle('hidden-field', !usesMultipleTerms);
   ['first-digits-field', 'second-digits-field'].forEach(id => document.querySelector(`#${id}`).classList.toggle('hidden-field', !isMath));
   document.querySelector('#count-field').classList.toggle('hidden-field', isReading || isCopying);
   document.querySelector('#paragraphs-field').classList.toggle('hidden-field', !isCopying);
+  document.querySelector('#calligraphy-field').classList.toggle('hidden-field', activity.value !== 'caligrafia');
   document.querySelector('#solutions-field').classList.toggle('hidden-field', isCopying);
   document.querySelector('#carry-field').classList.toggle('hidden-field', !['sumas', 'restas'].includes(activity.value));
   document.querySelector('#table-field').classList.toggle('hidden-field', activity.value !== 'multiplicaciones');
@@ -92,7 +105,7 @@ try {
   sharedSolutions = shared.get('soluciones') === '1';
   if (sharedSolutions) document.querySelector('#solutions').checked = true;
   preferenceIds.forEach(id => {
-    const parameter = ({ difficulty: 'dificultad', count: 'ejercicios', operands: 'numeros', firstDigits: 'cifras1', secondDigits: 'cifras2', paragraphs: 'parrafos', carryMode: 'llevadas', tableNumber: 'tabla', specificDivisor: 'divisor', divisionMode: 'resto' })[id];
+    const parameter = ({ difficulty: 'dificultad', count: 'ejercicios', operands: 'numeros', firstDigits: 'cifras1', secondDigits: 'cifras2', paragraphs: 'parrafos', calligraphyMode: 'caligrafia', carryMode: 'llevadas', tableNumber: 'tabla', specificDivisor: 'divisor', divisionMode: 'resto' })[id];
     const value = shared.get(parameter);
     if (value) setSelectValue(id, value);
   });
@@ -161,6 +174,7 @@ document.querySelector('#reset-options').addEventListener('click', () => {
   document.querySelector('#specificDivisor').value = 'all';
   document.querySelector('#divisionMode').value = 'exact';
   document.querySelector('#paragraphs').value = '1';
+  document.querySelector('#calligraphyMode').value = 'sentences';
   document.querySelector('#student').value = '';
   document.querySelector('#solutions').checked = false;
   result.innerHTML = '';
@@ -424,6 +438,83 @@ const copyingSequences = [
   ]
 ];
 
+const calligraphySamples = {
+  letters: ['a  a  a  a  a', 'e  e  e  e  e', 'i  i  i  i  i', 'o  o  o  o  o', 'u  u  u  u  u', 'm  m  m  m  m', 'p  p  p  p  p', 's  s  s  s  s'],
+  syllables: ['ma  me  mi  mo  mu', 'pa  pe  pi  po  pu', 'la  le  li  lo  lu', 'sa  se  si  so  su', 'bra  bre  bri  bro  bru', 'pla  ple  pli  plo  plu'],
+  words: ['mariposa', 'pelota', 'camino', 'familia', 'escuela', 'ventana', 'primavera', 'biblioteca'],
+  sentences: ['Mi casa tiene un jardín.', 'La rana salta junto al lago.', 'Hoy aprendemos algo nuevo.', 'Mi mochila está preparada.', 'Los amigos juegan en el parque.', 'Cuidamos juntos nuestro planeta.']
+};
+
+const spellingActivities = [
+  ['Completa con b o v', 'La _icicleta de Bea es _erde.', 'La bicicleta de Bea es verde.'],
+  ['Completa con g o j', 'El _inete monta un ca_allo.', 'El jinete monta un caballo.'],
+  ['Completa con h', 'Ayer _icimos una excursión y _allamos un tesoro.', 'Ayer hicimos una excursión y hallamos un tesoro.'],
+  ['Completa con c o z', 'El _apato está junto a la _anahoria.', 'El zapato está junto a la zanahoria.'],
+  ['Coloca las mayúsculas', 'marta vive en sevilla y visita el museo.', 'Marta vive en Sevilla y visita el museo.'],
+  ['Coloca las tildes', 'El camaleon cambio de color junto al arbol.', 'El camaleón cambió de color junto al árbol.'],
+  ['Completa con ll o y', 'El po_ito corre detrás de la _egua.', 'El pollito corre detrás de la yegua.'],
+  ['Completa con r o rr', 'El pe_o corre alrededor del ca_o.', 'El perro corre alrededor del carro.']
+];
+
+const logicActivities = [
+  ['2, 4, 6, 8, __', '10'], ['5, 10, 15, 20, __', '25'], ['30, 27, 24, 21, __', '18'],
+  ['1, 3, 5, 7, __', '9'], ['4, 8, 12, 16, __', '20'], ['50, 45, 40, 35, __', '30'],
+  ['3, 6, 12, 24, __', '48'], ['1, 2, 4, 8, __', '16'], ['100, 90, 80, 70, __', '60'],
+  ['7, 14, 21, 28, __', '35']
+];
+
+const practicalActivities = {
+  reloj: [
+    ['¿Qué hora marca un reloj si la aguja corta está en el 3 y la larga en el 12?', 'Las tres en punto.'],
+    ['Una película empieza a las 17:00 y dura una hora y media. ¿A qué hora termina?', 'A las 18:30.'],
+    ['¿Cuántos minutos hay en media hora?', '30 minutos.'],
+    ['Si son las 9:45, ¿qué hora será dentro de 30 minutos?', 'Las 10:15.'],
+    ['¿Cuántos cuartos de hora forman una hora?', '4 cuartos de hora.']
+  ],
+  dinero: [
+    ['Una libreta cuesta 2 € y un lápiz 1 €. ¿Cuánto pagas por los dos?', '3 €.'],
+    ['Tienes 5 € y compras un cuento de 3 €. ¿Cuánto te sobra?', '2 €.'],
+    ['¿Cuántas monedas de 50 céntimos necesitas para reunir 2 €?', '4 monedas.'],
+    ['Una mochila cuesta 12 € y tienes 10 €. ¿Cuánto te falta?', '2 €.'],
+    ['Compras tres pegatinas de 20 céntimos. ¿Cuánto pagas?', '60 céntimos.']
+  ],
+  medidas: [
+    ['¿Cuántos centímetros hay en un metro?', '100 centímetros.'],
+    ['¿Qué unidad usarías para medir la capacidad de una botella?', 'Litros.'],
+    ['Una cinta mide 2 metros y otra 50 centímetros. ¿Cuánto miden juntas?', '2 metros y 50 centímetros.'],
+    ['¿Qué pesa más: 1 kilogramo o 500 gramos?', '1 kilogramo.'],
+    ['¿Cuántos mililitros hay en un litro?', '1000 mililitros.']
+  ],
+  fracciones: [
+    ['Una pizza se divide en 4 partes iguales y comes 1. ¿Qué fracción comes?', '1/4.'],
+    ['¿Qué fracción representa la mitad?', '1/2.'],
+    ['¿Cuántas partes iguales tiene un tercio?', '3 partes.'],
+    ['De 8 partes iguales, 3 están coloreadas. ¿Qué fracción está coloreada?', '3/8.'],
+    ['¿Qué es mayor: 1/2 o 1/4?', '1/2.']
+  ],
+  geometria: [
+    ['¿Cuántos lados tiene un triángulo?', '3 lados.'],
+    ['¿Cuántos vértices tiene un cuadrado?', '4 vértices.'],
+    ['¿Qué figura tiene todos sus puntos a la misma distancia del centro?', 'El círculo.'],
+    ['¿Cómo se llama un polígono de 5 lados?', 'Pentágono.'],
+    ['¿Cuántos lados tiene un rectángulo?', '4 lados.']
+  ],
+  vocabulario: [
+    ['Escribe un sinónimo de “contento”.', 'Feliz.'],
+    ['Escribe un antónimo de “grande”.', 'Pequeño.'],
+    ['¿Qué significa “rápido”?', 'Que se mueve o sucede con velocidad.'],
+    ['Escribe una palabra de la familia de “pan”.', 'Panadero, panadería o panecillo.'],
+    ['¿Cuál no pertenece al grupo: manzana, pera, mesa, plátano?', 'Mesa.']
+  ],
+  ordenar: [
+    ['Ordena: parque / juega / Ana / en el.', 'Ana juega en el parque.'],
+    ['Ordena: azul / coche / El / es.', 'El coche es azul.'],
+    ['Ordena: temprano / levantó / Pablo / se.', 'Pablo se levantó temprano.'],
+    ['Ordena: flores / jardín / hay / En / el.', 'En el jardín hay flores.'],
+    ['Ordena: libro / un / Leo / lee.', 'Leo lee un libro.']
+  ]
+};
+
 function randomReadingActivity(difficulty) {
   const level = difficulty === 'Inicial' || difficulty === 'Tranquila' ? 'Inicial' : difficulty === 'Medio' || difficulty === 'Estándar' ? 'Medio' : 'Avanzado';
   const available = readingActivities.filter(activity => activity.level === level && activity.title !== lastReadingTitle);
@@ -437,11 +528,46 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
     return Array.from({ length: count }, () => makeOperation(type, difficulty, level, operands, firstDigits, secondDigits, options));
   }
   if (type === 'lectura') return [{ kind: 'reading', ...randomReadingActivity(difficulty) }];
+  if (type === 'caligrafia') {
+    const samples = calligraphySamples[options.calligraphyMode] || calligraphySamples.sentences;
+    return Array.from({ length: Math.max(3, paragraphs * 2) }, (_, index) => ({ kind: 'copying', text: samples[index % samples.length] }));
+  }
   if (type === 'copiado') {
     const available = copyingSequences.map((_, index) => index).filter(index => index !== lastCopyingSequence);
     const sequenceIndex = available[randomInt(0, available.length - 1)] ?? 0;
     lastCopyingSequence = sequenceIndex;
     return copyingSequences[sequenceIndex].slice(0, paragraphs).map(text => ({ kind: 'copying', text }));
+  }
+  if (type === 'ortografia') {
+    return Array.from({ length: count }, (_, index) => {
+      const item = spellingActivities[index % spellingActivities.length];
+      return { question: `${item[0]}: ${item[1]}`, answer: item[2] };
+    });
+  }
+  if (type === 'logica') {
+    return Array.from({ length: count }, (_, index) => {
+      const item = logicActivities[index % logicActivities.length];
+      return { question: `Completa la serie: ${item[0]}`, answer: item[1] };
+    });
+  }
+  if (practicalActivities[type]) {
+    return Array.from({ length: count }, (_, index) => {
+      const item = practicalActivities[type][index % practicalActivities[type].length];
+      return { question: item[0], answer: item[1] };
+    });
+  }
+  if (type === 'mixta' || type === 'diaria') {
+    const mixed = [
+      { question: 'Calcula: 7 + 8 =', answer: '15' },
+      { question: 'Completa con b o v: La _icicleta es _erde.', answer: 'La bicicleta es verde.' },
+      { question: 'Completa la serie: 3, 6, 9, 12, __', answer: '15' },
+      { question: 'Escribe un sinónimo de “bonito”.', answer: 'Hermoso o bello.' },
+      { question: '¿Cuántos lados tiene un triángulo?', answer: '3 lados.' },
+      { question: 'Una entrada cuesta 4 € y pagas con 5 €. ¿Qué cambio recibes?', answer: '1 €.' },
+      { question: '¿Qué hora será una hora después de las 10:30?', answer: 'Las 11:30.' },
+      { question: 'Lee: “Marta plantó una semilla y la regó”. ¿Qué hizo Marta después de plantar?', answer: 'La regó.' }
+    ];
+    return Array.from({ length: type === 'diaria' ? 5 : Math.max(8, count) }, (_, index) => mixed[index % mixed.length]);
   }
   const people = ['Lucía', 'Mario', 'Sara', 'Leo', 'Amina'];
   const objects = ['pegatinas', 'lápices', 'canicas', 'cromos', 'libros'];
@@ -495,7 +621,7 @@ function printableHtml(config, items, solutions) {
   const title = labels[config.type];
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const rows = items.map((item, index) => exerciseMarkup(config, item, index, solutions)).join('');
-  const copyingGuide = config.type === 'copiado' ? `<section class="copying-final-guide" style="display:block;break-before:auto;page-break-before:auto;break-inside:avoid;page-break-inside:avoid;width:180mm;margin:7mm auto 0"><h3 style="font-size:14px;margin:0 0 7px;color:#697772">Escribe el texto</h3><div class="lamela-guide" aria-label="Pauta Lamela para copiar el texto" style="display:block;width:100%;height:108mm;border-top:1.2px solid #647b9b">${Array.from({ length: 12 }, (_, index) => `<div class="lamela-line lamela-line-${index % 3}" aria-hidden="true" style="display:block;width:100%;height:9mm;border-bottom:${index % 3 === 0 ? '1.2px solid #7890af' : index % 3 === 1 ? '1px dashed #b7c4d2' : '1.2px solid #ef9b9b'}"></div>`).join('')}</div></section>` : '';
+  const copyingGuide = ['copiado', 'caligrafia'].includes(config.type) ? `<section class="copying-final-guide" style="display:block;break-before:auto;page-break-before:auto;break-inside:avoid;page-break-inside:avoid;width:180mm;margin:7mm auto 0"><h3 style="font-size:14px;margin:0 0 7px;color:#697772">Escribe el texto</h3><div class="lamela-guide" aria-label="Pauta Lamela para copiar el texto" style="display:block;width:100%;height:108mm;border-top:1.2px solid #647b9b">${Array.from({ length: 12 }, (_, index) => `<div class="lamela-line lamela-line-${index % 3}" aria-hidden="true" style="display:block;width:100%;height:9mm;border-bottom:${index % 3 === 0 ? '1.2px solid #7890af' : index % 3 === 1 ? '1px dashed #b7c4d2' : '1.2px solid #ef9b9b'}"></div>`).join('')}</div></section>` : '';
   const worksheetHeader = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td width="12%" align="left" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Nombre:</font></td><td width="65%" align="left" valign="bottom"><font face="Arial,Helvetica,sans-serif" size="2">${name ? escapeHtml(name) : '&nbsp;'}</font><hr width="100%" size="1" color="#20283f" noshade></td><td width="8%" align="right" valign="middle"><font face="Arial,Helvetica,sans-serif" size="2">Fecha:</font></td><td width="15%" align="left" valign="bottom"><hr width="100%" size="1" color="#20283f" noshade></td></tr></tbody></table>`;
   let worksheetContent;
   if (arithmetic) {
@@ -517,12 +643,12 @@ function printableHtml(config, items, solutions) {
 *{box-sizing:border-box}html{background:#fff}body{font-family:ui-rounded,'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;color:#20283f;margin:0;padding:20mm 15mm;width:210mm;min-height:297mm;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}h1{text-align:center;font-size:28px;margin:0 0 14px;color:#20283f}h2{text-align:center;font-size:14px;font-weight:normal;margin:0 0 18px;color:#697772}.worksheet-header{display:flex;justify-content:flex-start;gap:30px;border-bottom:1.5px solid #20283f;padding-bottom:11px;margin-bottom:24px;font-size:13px;font-weight:700}.worksheet-header span{display:inline-block;min-width:145px;border-bottom:1px solid #20283f;margin-left:6px;height:16px}.exercise-grid{display:grid;gap:15px 20px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.text-grid{grid-template-columns:1fr}.print-row{break-inside:avoid;page-break-inside:avoid}.arithmetic{display:flex;align-items:flex-start;gap:5px;min-height:102px;padding:4px 2px}.print-row .number{font-size:11px;color:#6b7486;padding-top:3px}.operation{width:100%;font-size:22px;font-weight:700;line-height:1.05}.top-number,.extra-number{text-align:right;padding-right:5px;letter-spacing:5px;min-height:28px}.bottom-number{display:grid;grid-template-columns:1fr auto;gap:6px;text-align:right;padding-right:5px}.bottom-number span:first-child{text-align:left;font-weight:400}.operation-rule{border-bottom:1.5px solid #20283f;margin-top:4px}.answer-space{height:28px;border-bottom:1px solid #7f8998}.solution{font-size:20px;text-align:right;color:#ef8e69;padding:6px 5px 0}.text-exercise{display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto 25px;align-items:end;gap:5px 7px;min-height:78px;padding:8px 4px;border-bottom:1px solid #e4ebe5}.text-exercise strong{font-size:19px;line-height:1.25}.text-exercise i{display:block;border-bottom:1.5px solid #82958b;height:22px}.text-exercise b{font-size:20px;color:#ef8e69;grid-column:2}.copying-sheet{break-inside:avoid;page-break-inside:avoid;margin:0 auto 9mm;max-width:180mm}.copying-text{font-size:17px;line-height:1.55;margin:0}.copying-final-guide{break-inside:avoid;page-break-inside:avoid;max-width:180mm;margin:7mm auto 0}.copying-final-guide h3{font-size:14px;margin:0 0 7px;color:#697772}.lamela-guide{height:108mm;border-top:1.2px solid #647b9b}.lamela-guide span,.lamela-guide div{display:block;height:9mm;border-bottom:1px solid #9aaabd}.lamela-line-0{border-bottom:1.2px solid #7890af!important}.lamela-line-1{border-bottom:1px dashed #b7c4d2!important}.lamela-line-2{border-bottom:1.2px solid #ef9b9b!important}.foot{position:fixed;bottom:8mm;font-size:10px;color:#89958f}@page{size:A4;margin:0}@media print{body{padding:13mm 12mm}.exercise-grid{gap:13px 18px}}@media(max-width:650px){body{padding:18px 14px;max-width:none;min-height:0;overflow-x:hidden}h1{font-size:24px}.worksheet-header{font-size:11px;gap:12px}.worksheet-header span{min-width:90px}.math-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}.arithmetic{min-height:105px}.operation{font-size:22px}}</style></head><body><h1 align="center"><font face="Arial,Helvetica,sans-serif" size="4">${title}</font></h1>${worksheetHeader}${worksheetContent}</body></html>`;
 }
 
-const readConfig = () => ({ type: activity.value, level: '', difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), operands: Number(document.querySelector('#operands').value), firstDigits: document.querySelector('#firstDigits').value, secondDigits: document.querySelector('#secondDigits').value, paragraphs: Number(document.querySelector('#paragraphs').value), carryMode: document.querySelector('#carryMode').value, tableNumber: document.querySelector('#tableNumber').value, specificDivisor: document.querySelector('#specificDivisor').value, divisionMode: document.querySelector('#divisionMode').value, student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
+const readConfig = () => ({ type: activity.value, level: '', difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), operands: Number(document.querySelector('#operands').value), firstDigits: document.querySelector('#firstDigits').value, secondDigits: document.querySelector('#secondDigits').value, paragraphs: Number(document.querySelector('#paragraphs').value), calligraphyMode: document.querySelector('#calligraphyMode').value, carryMode: document.querySelector('#carryMode').value, tableNumber: document.querySelector('#tableNumber').value, specificDivisor: document.querySelector('#specificDivisor').value, divisionMode: document.querySelector('#divisionMode').value, student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
 
 const shareUrl = config => {
   const url = new URL(window.location.href);
   url.hash = 'actividades';
-  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits, parrafos: String(config.paragraphs), llevadas: config.carryMode, tabla: config.tableNumber, divisor: config.specificDivisor, resto: config.divisionMode, ...(config.solutions ? { soluciones: '1' } : {}) }).toString();
+  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits, parrafos: String(config.paragraphs), caligrafia: config.calligraphyMode, llevadas: config.carryMode, tabla: config.tableNumber, divisor: config.specificDivisor, resto: config.divisionMode, ...(config.solutions ? { soluciones: '1' } : {}) }).toString();
   return url.toString();
 };
 
@@ -611,7 +737,7 @@ form.addEventListener('submit', event => {
   const { worksheet, answerSheet, print } = createSheets(config);
   const printed = print(worksheet);
   setTimeout(() => { submitButton.disabled = false; form.setAttribute('aria-busy', 'false'); }, 500);
-  const contentSummary = config.type === 'copiado'
+  const contentSummary = ['copiado', 'caligrafia'].includes(config.type)
     ? `${config.paragraphs} ${config.paragraphs === 1 ? 'párrafo' : 'párrafos'}`
     : config.type === 'lectura' ? '1 lectura' : `${config.count} ejercicios`;
   result.innerHTML = `<div class="success-box"><strong>${printed ? 'Ficha lista para imprimir' : 'Permite las ventanas emergentes'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}` : 'El navegador ha bloqueado la ventana de impresión.'}</span>${config.solutions ? '<button class="solutions-link" id="print-solutions" type="button">Imprimir soluciones</button>' : ''}</div>`;
