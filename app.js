@@ -88,8 +88,9 @@ form.addEventListener('submit', event => {
     .replaceAll('@media(max-width:650px)', '@media screen and (max-width:650px)');
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
-  result.innerHTML = `<div class="success-box"><strong>La ficha está lista</strong>${labels[config.type]} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir ficha</button>${config.solutions ? '<button id="print-solutions">Imprimir soluciones</button>' : ''}<button id="new-sheet">Crear otra</button></div></div>`;
   const print = html => { const win = window.open('', '_blank'); win.document.write(html); win.document.close(); win.focus(); setTimeout(() => win.print(), 250); };
+  print(worksheet);
+  result.innerHTML = `<div class="success-box"><strong>La ficha está lista</strong>${labels[config.type]} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir de nuevo</button>${config.solutions ? '<button id="print-solutions">Imprimir soluciones</button>' : ''}<button id="new-sheet">Crear otra</button></div></div>`;
   document.querySelector('#print-sheet').onclick = () => print(worksheet);
   document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
   document.querySelector('#new-sheet').onclick = () => { result.innerHTML = ''; document.querySelector('#student').focus(); };
