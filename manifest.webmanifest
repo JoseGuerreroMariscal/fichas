@@ -12,6 +12,6 @@
   "theme_color": "#20385f",
   "categories": ["education", "kids", "productivity"],
   "icons": [
-    {"src":"pwa-icon.svg?v=20261011-13","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+    {"src":"pwa-icon.svg?v=20261011-14","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }
