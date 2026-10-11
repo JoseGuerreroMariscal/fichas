@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>FichasFácil</title>
+  <rect width="64" height="64" rx="16" fill="#20385f"/>
+  <rect x="13" y="11" width="38" height="42" rx="5" fill="#f4c91c"/>
+  <path d="M23 20h20v7H31v5h10v7H31v9h-8z" fill="#20385f"/>
+</svg>
