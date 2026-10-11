@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-48', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-49', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -514,6 +514,12 @@ const copyingSequences = [
   ]
 ];
 
+const copyingExtraParagraphs = [
+  'Al finalizar la actividad, cada alumno revisó su trabajo con calma. Leer de nuevo ayuda a descubrir pequeños detalles y a mejorar la presentación.',
+  'Después compartieron sus ideas y escucharon las explicaciones de los demás. Aprender también consiste en observar, preguntar y colaborar.',
+  'Antes de guardar la ficha, comprobaron que todo estaba completo y ordenado. El esfuerzo diario permite avanzar paso a paso.'
+];
+
 const calligraphySamples = {
   letters: ['a  a  a  a  a', 'e  e  e  e  e', 'i  i  i  i  i', 'o  o  o  o  o', 'u  u  u  u  u', 'm  m  m  m  m', 'p  p  p  p  p', 's  s  s  s  s', 'l  l  l  l  l', 't  t  t  t  t', 'n  n  n  n  n', 'r  r  r  r  r', 'd  d  d  d  d', 'c  c  c  c  c'],
   syllables: ['ma  me  mi  mo  mu', 'pa  pe  pi  po  pu', 'la  le  li  lo  lu', 'sa  se  si  so  su', 'bra  bre  bri  bro  bru', 'pla  ple  pli  plo  plu', 'tra  tre  tri  tro  tru', 'cla  cle  cli  clo  clu', 'que  qui  qua  quo  cu', 'ña  ñe  ñi  ño  ñu'],
@@ -738,7 +744,8 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
     const available = copyingSequences.map((_, index) => index).filter(index => index !== lastCopyingSequence);
     const sequenceIndex = available[randomInt(0, available.length - 1)] ?? 0;
     lastCopyingSequence = sequenceIndex;
-    return copyingSequences[sequenceIndex].slice(0, paragraphs).map(text => ({ kind: 'copying', text }));
+    const sequence = [...copyingSequences[sequenceIndex], ...copyingExtraParagraphs];
+    return sequence.slice(0, paragraphs).map(text => ({ kind: 'copying', text }));
   }
   if (type === 'ortografia') {
     return Array.from({ length: count }, (_, index) => {
