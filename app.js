@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-36', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-38', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -857,6 +857,58 @@ const shareUrl = config => {
   return url.toString();
 };
 
+function downloadPdf(config, items, solutions = false) {
+  const PdfDocument = window.jspdf?.jsPDF;
+  if (!PdfDocument) return false;
+  const doc = new PdfDocument({ unit: 'mm', format: 'a4' });
+  const margin = 15;
+  const pageWidth = 210;
+  const pageHeight = 297;
+  let y = 17;
+  doc.setTextColor(32, 40, 63);
+  const ensureSpace = height => {
+    if (y + height <= pageHeight - margin) return;
+    doc.addPage();
+    y = margin;
+  };
+  const write = (text, size = 11, options = {}) => {
+    doc.setFont('helvetica', options.bold ? 'bold' : 'normal');
+    doc.setFontSize(size);
+    const lines = doc.splitTextToSize(String(text), pageWidth - margin * 2);
+    const lineHeight = size * 0.48 + 2;
+    ensureSpace(lines.length * lineHeight + (options.gap ?? 2));
+    doc.text(lines, margin, y);
+    y += lines.length * lineHeight + (options.gap ?? 2);
+  };
+  write(labels[config.type], 18, { bold: true, gap: 4 });
+  write(`Nombre: ${config.student || '________________________'}    Fecha: _______________`, 10, { gap: 7 });
+  items.forEach((item, index) => {
+    if (item.kind === 'reading') {
+      write(item.title, 14, { bold: true, gap: 2 });
+      write(item.text, 11, { gap: 3 });
+      item.questions.forEach((question, questionIndex) => {
+        write(`${questionIndex + 1}. ${question}`, 10, { gap: 1 });
+        write(solutions ? `Respuesta: ${item.answers[questionIndex]}` : '________________________________________________________________', 10, { gap: 3 });
+      });
+      return;
+    }
+    if (item.kind === 'copying') {
+      write(`${index + 1}. ${item.text}`, 12, { gap: 3 });
+      write('________________________________________________________________________________', 10, { gap: 2 });
+      write('________________________________________________________________________________', 10, { gap: 4 });
+      return;
+    }
+    const answer = solutions ? `  Respuesta: ${item.answer}` : '  ____________________';
+    write(`${index + 1}. ${item.question}${answer}`, 12, { gap: 4 });
+  });
+  doc.save(`FichasFacil-${labels[config.type].toLowerCase().replaceAll(' ', '-')}.pdf`);
+  return true;
+}
+
+function isMobileDevice() {
+  return window.matchMedia?.('(pointer: coarse)').matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 function createSheets(config) {
   const items = makeContent(config.type, config.count, config.difficulty, config.level, config.operands, config.firstDigits, config.secondDigits, config.paragraphs, config);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
@@ -914,7 +966,7 @@ function createSheets(config) {
       return false;
     }
   };
-  return { worksheet, answerSheet, print };
+  return { worksheet, answerSheet, print, items };
 }
 
 document.querySelector('#share-direct').addEventListener('click', async () => {
@@ -941,12 +993,13 @@ form.addEventListener('submit', event => {
   submitButton.disabled = true;
   const config = readConfig();
   form.setAttribute('aria-busy', 'true');
-  const { worksheet, answerSheet, print } = createSheets(config);
-  const printed = print(worksheet);
+  const { worksheet, answerSheet, print, items } = createSheets(config);
+  const mobile = isMobileDevice();
+  const printed = mobile ? downloadPdf(config, items) : print(worksheet);
   setTimeout(() => { submitButton.disabled = false; form.setAttribute('aria-busy', 'false'); }, 500);
   const contentSummary = ['copiado', 'caligrafia'].includes(config.type)
     ? `${config.paragraphs} ${config.paragraphs === 1 ? 'párrafo' : 'párrafos'}`
     : config.type === 'lectura' ? '1 lectura' : `${config.count} ejercicios`;
-  result.innerHTML = `<div class="success-box"><strong>${printed ? 'Ficha lista para imprimir' : 'Permite las ventanas emergentes'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}` : 'El navegador ha bloqueado la ventana de impresión.'}</span>${config.solutions ? '<button class="solutions-link" id="print-solutions" type="button">Imprimir soluciones</button>' : ''}</div>`;
-  document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
+  result.innerHTML = `<div class="success-box"><strong>${printed ? (mobile ? 'PDF descargado' : 'Ficha lista para imprimir') : 'No se ha podido preparar la ficha'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}${mobile ? ' · Abre el PDF para imprimirlo o compartirlo.' : ''}` : (mobile ? 'El navegador no ha podido generar el PDF.' : 'El navegador ha bloqueado la ventana de impresión.')}</span>${config.solutions ? `<button class="solutions-link" id="print-solutions" type="button">${mobile ? 'Descargar soluciones' : 'Imprimir soluciones'}</button>` : ''}</div>`;
+  document.querySelector('#print-solutions')?.addEventListener('click', () => mobile ? downloadPdf(config, items, true) : print(answerSheet));
 });
