@@ -30,7 +30,7 @@
     <link rel="icon" href="favicon.svg?v=20261011-15" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="pwa-icon.svg?v=20261011-15" />
-    <link rel="stylesheet" href="styles.css?v=20261011-22" />
+    <link rel="stylesheet" href="styles.css?v=20261011-23" />
   </head>
   <body>
     <a class="skip-link" href="#actividades">Saltar a las actividades</a>
@@ -43,12 +43,20 @@
 
     <main id="inicio" class="page-shell">
       <section class="intro">
-        <p class="kicker">FichasFácil · generador de fichas PDF</p>
-        <h1>Genera fichas educativas.<br /><span>Listas para imprimir.</span></h1>
-        <p class="intro-copy">Matemáticas y comprensión lectora para practicar en casa o en el aula, sin registro y en unos segundos.</p>
-        <div class="intro-meta" aria-label="Ventajas de FichasFácil"><span>PDF en A4</span><span>Sin registro</span><span>Imprime o comparte</span></div>
-        <div class="hero-actions"><a class="hero-cta" href="#actividades">Crear una ficha PDF <span>✦</span></a><a class="hero-secondary" href="#como-funciona">Ver cómo funciona <span>↓</span></a></div>
-        <button id="install-app" class="install-button" type="button" hidden>Instalar FichasFácil en este dispositivo</button>
+        <div class="intro-inner">
+          <div class="hero-copy">
+            <p class="kicker">FichasFácil · generador educativo</p>
+            <h1>Fichas listas para usar.<br /><span>Creadas en segundos.</span></h1>
+            <p class="intro-copy">Elige una actividad, ajusta la dificultad y prepara una ficha para imprimir o compartir. Sin registro y sin complicaciones.</p>
+            <div class="hero-actions"><a class="hero-cta" href="#actividades">Crear una ficha <span>→</span></a><a class="hero-secondary" href="#como-funciona">Cómo funciona <span>↓</span></a></div>
+            <div class="intro-meta" aria-label="Ventajas de FichasFácil"><span>PDF en A4</span><span>Sin registro</span><span>Imprime o comparte</span></div>
+            <button id="install-app" class="install-button" type="button" hidden>Instalar FichasFácil en este dispositivo</button>
+          </div>
+          <div class="hero-preview" aria-label="Ejemplo de una ficha educativa">
+            <div class="preview-sheet"><div class="preview-sheet-top"><span>FichasFácil</span><b>Ficha de matemáticas</b></div><div class="preview-line preview-title"></div><div class="preview-rows"><div><i></i><i></i><i></i></div><div><i></i><i></i><i></i></div><div><i></i><i></i><i></i></div><div><i></i><i></i><i></i></div></div><div class="preview-footer"><span></span><span></span><span></span></div></div>
+            <span class="preview-badge">Lista para imprimir</span>
+          </div>
+        </div>
       </section>
 
       <section id="actividades" class="activities" aria-labelledby="activities-title">
