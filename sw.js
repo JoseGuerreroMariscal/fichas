@@ -1,9 +1,9 @@
-const CACHE_NAME = 'fichasfacil-v18';
+const CACHE_NAME = 'fichasfacil-v19';
 const APP_SHELL = [
   './',
   './index.html',
-  './styles.css?v=20261011-23',
-  './app.js?v=20261011-14',
+  './styles.css?v=20261011-24',
+  './app.js?v=20261011-15',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-16',
   './pwa-icon.svg?v=20261011-16',
@@ -24,10 +24,17 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const requestUrl = new URL(event.request.url);
   if (requestUrl.origin !== self.location.origin) return;
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-    if (!response || response.status !== 200 || response.type === 'opaque') return response;
-    const copy = response.clone();
-    caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-    return response;
-  }).catch(() => event.request.mode === 'navigate' ? caches.match('./index.html') : Response.error())));
+  event.respondWith((async () => {
+    try {
+      const response = await fetch(event.request, { cache: 'no-store' });
+      if (response && response.status === 200 && response.type !== 'opaque') {
+        const copy = response.clone();
+        event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)));
+      }
+      return response;
+    } catch (error) {
+      const cached = await caches.match(event.request);
+      return cached || (event.request.mode === 'navigate' ? caches.match('./index.html') : Response.error());
+    }
+  })());
 });
