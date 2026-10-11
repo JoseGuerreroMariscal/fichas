@@ -690,7 +690,13 @@ const additionalPracticalActivities = {
     ['Observa la figura. ¿Qué cuadrilátero tiene dos lados largos y dos cortos?', 'El rectángulo.'],
     ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Octógono.'],
     ['Observa la línea. ¿Tiene principio o final?', 'No, es una línea recta infinita.'],
-    ['Observa la figura. ¿Cuántos vértices tiene el pentágono?', '5 vértices.']
+    ['Observa la figura. ¿Cuántos vértices tiene el pentágono?', '5 vértices.'],
+    ['Observa la figura. ¿Cuántos lados tiene el hexágono?', '6 lados.'],
+    ['Observa la figura. ¿Cómo se llama el polígono que tiene ocho lados?', 'Octógono.'],
+    ['Observa la figura. ¿Cuántos lados paralelos tiene el rectángulo?', 'Tiene dos pares de lados paralelos.'],
+    ['Observa la figura. ¿Cómo se llama un triángulo que tiene sus tres lados iguales?', 'Triángulo equilátero.'],
+    ['Observa el ángulo. ¿Cómo se llama si forma una esquina como la de un cuadrado?', 'Ángulo recto.'],
+    ['Observa la figura. ¿Qué diferencia hay entre un círculo y una circunferencia?', 'El círculo es la superficie interior y la circunferencia es su línea exterior.']
   ],
   vocabulario: [
     ['Escribe un sinónimo de “bonito”.', 'Hermoso.'],
@@ -760,8 +766,13 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
     });
   }
   if (practicalActivities[type]) {
+    const order = Array.from({ length: practicalActivities[type].length }, (_, index) => index);
+    for (let index = order.length - 1; index > 0; index -= 1) {
+      const swapIndex = randomInt(0, index);
+      [order[index], order[swapIndex]] = [order[swapIndex], order[index]];
+    }
     return Array.from({ length: count }, (_, index) => {
-      const item = practicalActivities[type][index % practicalActivities[type].length];
+      const item = practicalActivities[type][order[index % order.length]];
       return { question: item[0], answer: item[1], ...(type === 'geometria' ? { figure: geometryFigureFor(item[0]) } : {}) };
     });
   }
