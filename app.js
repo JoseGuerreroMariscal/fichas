@@ -80,8 +80,9 @@ form.addEventListener('submit', event => {
   event.preventDefault();
   const config = { type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), theme: document.querySelector('#theme').value };
   const items = makeContent(config.type, config.count, config.difficulty);
+  const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const preparePrint = html => html
-    .replace('<style>', '<style>@page{size:A4;margin:0}')
+    .replace('<style>', `<style>@page{size:A4;margin:0}${simpleMath ? '.worksheet-header,h1,h2,.foot{display:none!important}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 24px}.arithmetic{min-height:108px;justify-content:center;padding:0}.print-row .number{display:none}.operation{width:fit-content;min-width:58px}.top-number,.bottom-number{padding-right:0}.operation-rule{margin-top:5px}.answer-space{height:30px}' : ''}`)
     .replaceAll('@media(max-width:650px)', '@media screen and (max-width:650px)');
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
