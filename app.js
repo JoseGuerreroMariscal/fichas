@@ -111,6 +111,12 @@ function escapeHtml(value) {
 }
 
 function makeOperation(type, difficulty) {
+  if (type === 'multiplicaciones') {
+    const ranges = difficulty === 'Tranquila' ? [10, 99, 2, 9] : difficulty === 'Estándar' ? [100, 999, 2, 9] : [1000, 9999, 10, 99];
+    const a = randomInt(ranges[0], ranges[1]);
+    const b = randomInt(ranges[2], ranges[3]);
+    return { question: `${a} × ${b} =`, answer: a * b };
+  }
   const max = difficulty === 'Tranquila' ? 20 : difficulty === 'Estándar' ? 99 : 999;
   let a = randomInt(1, max), b = randomInt(1, max);
   if (type === 'restas' && b > a) [a, b] = [b, a];
@@ -162,12 +168,10 @@ function exerciseMarkup(config, item, index, solutions) {
 
 function printableHtml(config, items, solutions) {
   const name = config.student.trim();
-  const course = config.level.trim();
   const title = labels[config.type];
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const rows = items.map((item, index) => exerciseMarkup(config, item, index, solutions)).join('');
-  const worksheetFields = [name && `<div>Nombre:<span>${escapeHtml(name)}</span></div>`, course && `<div>Curso:<span>${escapeHtml(course)}</span></div>`].filter(Boolean).join('');
-  const worksheetHeader = worksheetFields ? `<div class="worksheet-header">${worksheetFields}</div>` : '';
+  const worksheetHeader = `<div class="worksheet-header"><div>Nombre:<span>${name ? escapeHtml(name) : ''}</span></div><div>Fecha:<span></span></div></div>`;
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${escapeHtml(title)} · FichasFácil</title><style>
 *{box-sizing:border-box}body{font-family:ui-rounded,'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;color:#20283f;margin:0;padding:20mm 15mm;max-width:210mm;min-height:297mm}h1{text-align:center;font-size:28px;margin:0 0 14px;color:#20283f}h2{text-align:center;font-size:14px;font-weight:normal;margin:0 0 18px;color:#697772}.worksheet-header{display:flex;justify-content:flex-start;gap:30px;border-bottom:1.5px solid #20283f;padding-bottom:11px;margin-bottom:24px;font-size:13px;font-weight:700}.worksheet-header span{display:inline-block;min-width:145px;border-bottom:1px solid #20283f;margin-left:6px;height:16px}.exercise-grid{display:grid;gap:15px 20px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.text-grid{grid-template-columns:1fr}.print-row{break-inside:avoid}.arithmetic{display:flex;align-items:flex-start;gap:5px;min-height:102px;padding:4px 2px}.print-row .number{font-size:11px;color:#6b7486;padding-top:3px}.operation{width:100%;font-size:22px;font-weight:700;line-height:1.05}.top-number{text-align:right;padding-right:5px;letter-spacing:5px;min-height:28px}.bottom-number{display:grid;grid-template-columns:1fr auto;gap:6px;text-align:right;padding-right:5px}.bottom-number span:first-child{text-align:left;font-weight:400}.operation-rule{border-bottom:1.5px solid #20283f;margin-top:4px}.answer-space{height:28px;border-bottom:1px solid #7f8998}.solution{font-size:20px;text-align:right;color:#ef8e69;padding:6px 5px 0}.text-exercise{display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto 25px;align-items:end;gap:5px 7px;min-height:78px;padding:8px 4px;border-bottom:1px solid #e4ebe5}.text-exercise strong{font-size:19px;line-height:1.25}.text-exercise i{display:block;border-bottom:1.5px solid #82958b;height:22px}.text-exercise b{font-size:20px;color:#ef8e69;grid-column:2}.foot{position:fixed;bottom:8mm;font-size:10px;color:#89958f}@media print{body{padding:13mm 12mm}.exercise-grid{gap:13px 18px}}@media(max-width:650px){body{padding:18px 14px;max-width:none;min-height:0;overflow-x:hidden}h1{font-size:24px}.worksheet-header{font-size:11px;gap:12px}.worksheet-header span{min-width:90px}.math-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}.arithmetic{min-height:105px}.operation{font-size:22px}}</style></head><body><h1>${title}</h1>${worksheetHeader}<div class="exercise-grid ${arithmetic ? 'math-grid' : 'text-grid'}">${rows}</div></body></html>`;
 }
@@ -186,7 +190,7 @@ function createSheets(config) {
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const textStyles = '.text-exercise i{grid-column:2;width:100%}.text-exercise strong{font-size:17px;line-height:1.35}.reading-sheet{max-width:180mm;margin:0 auto}.reading-sheet h3{font-size:24px;margin:0 0 14px}.reading-text{font-size:16px;line-height:1.55;margin:0 0 20px}.reading-sheet h4{font-size:14px;margin:0 0 10px}.reading-question{display:grid;grid-template-columns:22px 1fr;gap:5px 7px;min-height:53px;align-items:start;margin-bottom:7px}.reading-question span{font-weight:700}.reading-question strong{font-size:15px;line-height:1.35}.reading-question i{grid-column:2;height:25px;border-bottom:1px solid #82958b}.reading-question b{grid-column:2;color:#275fac}';
   const preparePrint = html => html
-    .replace('<style>', `<style>@page{size:A4;margin:0}${simpleMath ? '.worksheet-header,h2,.foot{display:none!important}h1{display:block!important;font-size:24px;margin:0 0 16px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 24px;min-height:250mm;grid-auto-rows:minmax(0,1fr);align-items:center}.arithmetic{min-height:0;justify-content:center;padding:0}.print-row .number{display:none}.operation{width:58px;min-width:58px;max-width:58px;font-size:26px}.top-number{padding-right:0;letter-spacing:0;font-variant-numeric:tabular-nums}.bottom-number{grid-template-columns:17px 1fr;gap:0;padding-right:0;font-variant-numeric:tabular-nums}.bottom-number span:first-child{text-align:center}.bottom-number span:last-child{text-align:right}.operation-rule{width:58px;margin-top:6px}.answer-space{width:58px;height:36px}' : textStyles}`)
+    .replace('<style>', `<style>@page{size:A4;margin:0}${simpleMath ? 'h1{display:block!important;font-size:15px;letter-spacing:0;margin:0 0 22px}.worksheet-header{display:flex!important;justify-content:space-between;gap:20px;margin-bottom:24px;padding:0 8px;border:0;font-size:10px}.worksheet-header span{min-width:100px;height:13px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr));gap:0 22px;min-height:242mm;align-items:center}.arithmetic{min-height:0;justify-content:center;padding:0}.print-row .number{display:none}.operation{width:76px;min-width:76px;max-width:76px;font-size:17px;line-height:1.1}.top-number{padding-right:0;letter-spacing:5px;font-variant-numeric:tabular-nums;white-space:nowrap}.bottom-number{grid-template-columns:17px 1fr;gap:0;padding-right:0;font-variant-numeric:tabular-nums;white-space:nowrap}.bottom-number span:first-child{text-align:center;letter-spacing:0}.bottom-number span:last-child{text-align:right;letter-spacing:5px}.operation-rule{width:76px;margin-top:5px}.answer-space{display:none}' : textStyles}`)
     .replaceAll('@media(max-width:650px)', '@media screen and (max-width:650px)');
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
