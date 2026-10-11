@@ -103,6 +103,8 @@ input::placeholder{color:#8995a8;opacity:1}
   .form-actions .print-button,.form-actions .share-button{min-height:52px}
 }
 .close-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.hidden-field{display:none!important}
+.card-teal{background:#d9f0ee}
 .modal-close{display:grid;place-items:center;width:42px;height:42px;border-radius:50%}
 .modal-close:hover,.modal-close:focus-visible{background:#eef3f8}
 .activity-card:focus-visible{box-shadow:0 0 0 4px #f4c91c66,0 8px 20px #1e2d4916}
