@@ -6,6 +6,7 @@ const labels = {
   sumas: 'Sumas', restas: 'Restas', multiplicaciones: 'Multiplicaciones',
   divisiones: 'Divisiones', problemas: 'Problemas matemáticos', lectura: 'Lectura comprensiva'
 };
+let lastTrigger = null;
 
 const countSelect = document.querySelector('#count');
 if (countSelect && !countSelect.querySelector('option[value="20"]')) {
@@ -14,23 +15,35 @@ if (countSelect && !countSelect.querySelector('option[value="20"]')) {
 }
 
 const openGenerator = type => {
+  lastTrigger = document.querySelector(`[data-type="${type}"]`);
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
   activity.value = type;
   result.innerHTML = '';
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
-  document.querySelectorAll('.activity-card').forEach(card => card.classList.toggle('is-selected', card.dataset.type === type));
+  document.querySelectorAll('.activity-card').forEach(card => {
+    const selected = card.dataset.type === type;
+    card.classList.toggle('is-selected', selected);
+    card.setAttribute('aria-pressed', String(selected));
+  });
   setTimeout(() => activity.focus(), 50);
 };
 
 document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('click', () => openGenerator(card.dataset.type)));
 document.querySelector('.modal-close').addEventListener('click', () => {
-  modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true');
+  closeGenerator();
 });
 modal.addEventListener('click', event => {
-  if (event.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+  if (event.target === modal) closeGenerator();
 });
-document.addEventListener('keydown', event => { if (event.key === 'Escape') modal.classList.remove('open'); });
+function closeGenerator() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  lastTrigger?.focus();
+}
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) closeGenerator(); });
 
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
@@ -53,14 +66,29 @@ function makeContent(type, count, difficulty) {
   if (['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(type)) {
     return Array.from({ length: count }, () => makeOperation(type, difficulty));
   }
-  if (type === 'lectura') return [{ question: 'Lee el texto y responde a las preguntas.', answer: 'El texto se ha preparado para trabajar la comprensión lectora.' }];
-  return Array.from({ length: count }, (_, i) => ({
-    question: `En una actividad hay ${i + 2} grupos con ${i + 3} elementos. ¿Cuántos elementos hay en total?`,
-    answer: (i + 2) * (i + 3)
-  }));
+  if (type === 'lectura') return [{
+    kind: 'reading',
+    title: 'La caja de semillas',
+    text: 'El sábado, Nora ayudó a su abuelo a preparar el huerto. Juntos llenaron tres macetas con tierra y plantaron semillas de tomate. Después, Nora regó las plantas y colocó las macetas cerca de la ventana para que recibieran luz. Antes de terminar, escribió la fecha en una etiqueta para recordar cuándo las había plantado.',
+    questions: ['¿Con quién preparó Nora el huerto?', '¿Qué semillas plantaron?', '¿Dónde colocaron las macetas?', '¿Para qué escribió Nora la fecha?'],
+    answers: ['Con su abuelo.', 'Semillas de tomate.', 'Cerca de la ventana.', 'Para recordar cuándo las había plantado.']
+  }];
+  const people = ['Lucía', 'Mario', 'Sara', 'Leo', 'Amina'];
+  const objects = ['pegatinas', 'lápices', 'canicas', 'cromos', 'libros'];
+  return Array.from({ length: count }, (_, i) => {
+    const first = i + 2;
+    const second = i + 3;
+    const person = people[i % people.length];
+    const object = objects[i % objects.length];
+    return { question: `${person} tiene ${first} cajas con ${second} ${object} en cada una. ¿Cuántos ${object} tiene en total?`, answer: first * second };
+  });
 }
 
 function exerciseMarkup(config, item, index, solutions) {
+  if (item.kind === 'reading') {
+    const questions = item.questions.map((question, questionIndex) => `<div class="reading-question"><span>${questionIndex + 1}.</span><strong>${question}</strong>${solutions ? `<b>${item.answers[questionIndex]}</b>` : '<i aria-label="espacio para responder"></i>'}</div>`).join('');
+    return `<article class="reading-sheet"><h3>${item.title}</h3><p class="reading-text">${item.text}</p><h4>Responde a las preguntas</h4>${questions}</article>`;
+  }
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   if (arithmetic) {
     const match = item.question.match(/^(\d+)\s+([+−×÷])\s+(\d+)\s*=/);
@@ -83,8 +111,9 @@ form.addEventListener('submit', event => {
   const config = { type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), theme: document.querySelector('#theme').value, solutions: document.querySelector('#solutions')?.checked };
   const items = makeContent(config.type, config.count, config.difficulty);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
+  const textStyles = '.text-exercise i{grid-column:2;width:100%}.text-exercise strong{font-size:17px;line-height:1.35}.reading-sheet{max-width:180mm;margin:0 auto}.reading-sheet h3{font-size:24px;margin:0 0 14px}.reading-text{font-size:16px;line-height:1.55;margin:0 0 20px}.reading-sheet h4{font-size:14px;margin:0 0 10px}.reading-question{display:grid;grid-template-columns:22px 1fr;gap:5px 7px;min-height:53px;align-items:start;margin-bottom:7px}.reading-question span{font-weight:700}.reading-question strong{font-size:15px;line-height:1.35}.reading-question i{grid-column:2;height:25px;border-bottom:1px solid #82958b}.reading-question b{grid-column:2;color:#275fac}';
   const preparePrint = html => html
-    .replace('<style>', `<style>@page{size:A4;margin:0}${simpleMath ? '.worksheet-header,h1,h2,.foot{display:none!important}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 24px}.arithmetic{min-height:108px;justify-content:center;padding:0}.print-row .number{display:none}.operation{width:fit-content;min-width:58px}.top-number,.bottom-number{padding-right:0}.operation-rule{margin-top:5px}.answer-space{height:30px}' : ''}`)
+    .replace('<style>', `<style>@page{size:A4;margin:0}${simpleMath ? '.worksheet-header,h1,h2,.foot{display:none!important}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 24px}.arithmetic{min-height:108px;justify-content:center;padding:0}.print-row .number{display:none}.operation{width:fit-content;min-width:58px}.top-number,.bottom-number{padding-right:0}.operation-rule{margin-top:5px}.answer-space{height:30px}' : textStyles}`)
     .replaceAll('@media(max-width:650px)', '@media screen and (max-width:650px)');
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
