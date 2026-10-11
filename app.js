@@ -64,9 +64,11 @@ const updateDigitLabels = () => {
 };
 const updateActivityFields = () => {
   const isMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(activity.value);
+  const usesMultipleTerms = ['sumas', 'restas'].includes(activity.value);
   const isCopying = activity.value === 'copiado';
   const isReading = activity.value === 'lectura';
-  ['operands-field', 'first-digits-field', 'second-digits-field'].forEach(id => document.querySelector(`#${id}`).classList.toggle('hidden-field', !isMath));
+  document.querySelector('#operands-field').classList.toggle('hidden-field', !usesMultipleTerms);
+  ['first-digits-field', 'second-digits-field'].forEach(id => document.querySelector(`#${id}`).classList.toggle('hidden-field', !isMath));
   document.querySelector('#count-field').classList.toggle('hidden-field', isReading || isCopying);
   document.querySelector('#paragraphs-field').classList.toggle('hidden-field', !isCopying);
   document.querySelector('#solutions-field').classList.toggle('hidden-field', isCopying);
