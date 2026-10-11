@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-41', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-42', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -880,12 +880,6 @@ function downloadPdf(config, items, solutions = false) {
     doc.line(margin + 16, 17.5, 135, 17.5);
     doc.text('Fecha:', 166, 17);
     doc.line(180, 17.5, pageWidth - margin, 17.5);
-    doc.setFillColor(178, 178, 178);
-    doc.roundedRect(margin, 25, 26, 11, 5, 5, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.text('1 de 1', margin + 5, 32);
     doc.setTextColor(32, 40, 63);
     doc.setFontSize(15);
     doc.text(title, pageWidth / 2, 32, { align: 'center' });
