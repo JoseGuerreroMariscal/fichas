@@ -3,17 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Crea fichas educativas de matemáticas y lengua para practicar en casa o en el aula. Genera, imprime y comparte fichas gratis con FichasFácil." />
+    <meta name="description" content="Crea fichas educativas gratis de matemáticas, lectura y escritura para imprimir o compartir. FichasFácil es fácil, rápido y sin registro." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://joseguerreromariscal.github.io/fichas/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content="FichasFácil · Generador de fichas educativas" />
+    <meta property="og:description" content="Genera fichas de matemáticas, lectura y escritura listas para imprimir o compartir." />
+    <meta property="og:url" content="https://joseguerreromariscal.github.io/fichas/" />
+    <meta property="og:site_name" content="FichasFácil" />
+    <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#20385f" />
     <title>FichasFácil · Generador de fichas</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=20261011-3" />
+    <link rel="stylesheet" href="styles.css?v=20261011-6" />
   </head>
   <body>
     <a class="skip-link" href="#actividades">Saltar a las actividades</a>
     <noscript><div class="noscript-note">Activa JavaScript para poder generar tus fichas.</div></noscript>
     <header class="site-header">
       <a class="brand" href="#inicio" aria-label="FichasFácil, inicio"><span class="brand-mark" aria-hidden="true">✎</span> FichasFácil</a>
+      <nav class="header-nav" aria-label="Navegación principal"><a href="#actividades">Actividades</a><a href="blog.html">Blog</a></nav>
       <a class="header-action" href="#actividades">Ver actividades <span>↓</span></a>
     </header>
 
@@ -96,6 +106,20 @@
         </div>
       </section>
 
+      <section class="blog-preview" aria-labelledby="blog-preview-title">
+        <div class="content-heading">
+          <p class="kicker">Ideas para aprender</p>
+          <h2 id="blog-preview-title">Consejos para usar mejor tus fichas</h2>
+          <p>Ideas prácticas para familias y docentes: cómo elegir ejercicios, acompañar la lectura y preparar actividades que tengan sentido.</p>
+        </div>
+        <div class="blog-preview-grid">
+          <article class="blog-card"><span class="blog-tag">Matemáticas</span><h3>Cómo preparar fichas de matemáticas para primaria</h3><p>Una guía sencilla para elegir dificultad, cantidad de ejercicios y tiempo de trabajo.</p><a href="blog.html#fichas-matematicas-primaria">Leer artículo <span aria-hidden="true">→</span></a></article>
+          <article class="blog-card"><span class="blog-tag">Lectura</span><h3>Actividades de comprensión lectora para casa</h3><p>Propuestas breves para leer, comprender y responder sin convertirlo en una tarea pesada.</p><a href="blog.html#comprension-lectora-casa">Leer artículo <span aria-hidden="true">→</span></a></article>
+          <article class="blog-card"><span class="blog-tag">Escritura</span><h3>Copiado con pauta: para qué sirve y cómo hacerlo</h3><p>Descubre cómo usar una pauta tipo Lamela para practicar una escritura más ordenada.</p><a href="blog.html#copiado-pauta-lamela">Leer artículo <span aria-hidden="true">→</span></a></article>
+        </div>
+        <a class="blog-more" href="blog.html">Ver todos los artículos <span aria-hidden="true">↗</span></a>
+      </section>
+
       <section class="other-projects" aria-labelledby="other-projects-title">
         <p class="kicker">También puedes visitar</p>
         <h2 id="other-projects-title">Otros proyectos</h2>
@@ -107,7 +131,7 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>FichasFácil</span><span>Fichas educativas para practicar, imprimir y compartir.</span><nav aria-label="Enlaces de la página"><a href="#recursos">Recursos</a><a href="#preguntas">Preguntas frecuentes</a></nav></footer>
+    <footer class="site-footer"><span>FichasFácil</span><span>Fichas educativas para practicar, imprimir y compartir.</span><nav aria-label="Enlaces de la página"><a href="#recursos">Recursos</a><a href="#preguntas">Preguntas frecuentes</a><a href="blog.html">Blog educativo</a></nav></footer>
 
     <div class="modal-backdrop" id="generator" aria-hidden="true">
       <section class="generator-modal" role="dialog" aria-modal="true" aria-labelledby="generator-title" aria-describedby="generator-help">
@@ -132,5 +156,11 @@
       </section>
     </div>
     <script src="app.js?v=20261011-5"></script>
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"WebSite","name":"FichasFácil","url":"https://joseguerreromariscal.github.io/fichas/","description":"Generador gratuito de fichas educativas para imprimir y compartir.","inLanguage":"es-ES","potentialAction":{"@type":"SearchAction","target":"https://joseguerreromariscal.github.io/fichas/blog.html?q={search_term_string}","query-input":"required name=search_term_string"}}
+    </script>
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Tengo que registrarme?","acceptedAnswer":{"@type":"Answer","text":"No. Puedes elegir una actividad y generar una ficha sin crear una cuenta."}},{"@type":"Question","name":"¿Puedo imprimir la ficha?","acceptedAnswer":{"@type":"Answer","text":"Sí. La ficha se prepara en formato A4 para imprimirla desde el navegador o guardarla como PDF."}},{"@type":"Question","name":"¿Puedo compartirla?","acceptedAnswer":{"@type":"Answer","text":"Sí. Puedes compartir la ficha desde tu dispositivo después de generarla."}}]}
+    </script>
   </body>
 </html>
