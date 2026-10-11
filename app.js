@@ -146,11 +146,9 @@ function printableHtml(config, items, solutions) {
 *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#20283f;margin:0;padding:20mm 15mm;max-width:210mm;min-height:297mm}h1{text-align:center;font-size:28px;margin:0 0 14px;color:#20283f}h2{text-align:center;font-size:14px;font-weight:normal;margin:0 0 18px;color:#697772}.worksheet-header{display:flex;justify-content:flex-start;gap:30px;border-bottom:1.5px solid #20283f;padding-bottom:11px;margin-bottom:24px;font-size:13px;font-weight:700}.worksheet-header span{display:inline-block;min-width:145px;border-bottom:1px solid #20283f;margin-left:6px;height:16px}.exercise-grid{display:grid;gap:15px 20px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.text-grid{grid-template-columns:1fr}.print-row{break-inside:avoid}.arithmetic{display:flex;align-items:flex-start;gap:5px;min-height:102px;padding:4px 2px}.print-row .number{font-size:11px;color:#6b7486;padding-top:3px}.operation{width:100%;font-size:22px;font-weight:700;line-height:1.05}.top-number{text-align:right;padding-right:5px;letter-spacing:5px;min-height:28px}.bottom-number{display:grid;grid-template-columns:1fr auto;gap:6px;text-align:right;padding-right:5px}.bottom-number span:first-child{text-align:left;font-weight:400}.operation-rule{border-bottom:1.5px solid #20283f;margin-top:4px}.answer-space{height:28px;border-bottom:1px solid #7f8998}.solution{font-size:20px;text-align:right;color:#ef8e69;padding:6px 5px 0}.text-exercise{display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto 25px;align-items:end;gap:5px 7px;min-height:78px;padding:8px 4px;border-bottom:1px solid #e4ebe5}.text-exercise strong{font-size:19px;line-height:1.25}.text-exercise i{display:block;border-bottom:1.5px solid #82958b;height:22px}.text-exercise b{font-size:20px;color:#ef8e69;grid-column:2}.foot{position:fixed;bottom:8mm;font-size:10px;color:#89958f}@media print{body{padding:13mm 12mm}.exercise-grid{gap:13px 18px}}@media(max-width:650px){body{padding:18px 14px;max-width:none;min-height:0;overflow-x:hidden}h1{font-size:24px}.worksheet-header{font-size:11px;gap:12px}.worksheet-header span{min-width:90px}.math-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}.arithmetic{min-height:105px}.operation{font-size:22px}}</style></head><body><h1>${title}</h1>${worksheetHeader}<div class="exercise-grid ${arithmetic ? 'math-grid' : 'text-grid'}">${rows}</div></body></html>`;
 }
 
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  const submitButton = form.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
-  const config = { type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked };
+const readConfig = () => ({ type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
+
+function createSheets(config) {
   const items = makeContent(config.type, config.count, config.difficulty);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const textStyles = '.text-exercise i{grid-column:2;width:100%}.text-exercise strong{font-size:17px;line-height:1.35}.reading-sheet{max-width:180mm;margin:0 auto}.reading-sheet h3{font-size:24px;margin:0 0 14px}.reading-text{font-size:16px;line-height:1.55;margin:0 0 20px}.reading-sheet h4{font-size:14px;margin:0 0 10px}.reading-question{display:grid;grid-template-columns:22px 1fr;gap:5px 7px;min-height:53px;align-items:start;margin-bottom:7px}.reading-question span{font-weight:700}.reading-question strong{font-size:15px;line-height:1.35}.reading-question i{grid-column:2;height:25px;border-bottom:1px solid #82958b}.reading-question b{grid-column:2;color:#275fac}';
@@ -160,18 +158,29 @@ form.addEventListener('submit', event => {
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
   const print = html => { const win = window.open('', '_blank'); if (!win) return false; win.document.write(html); win.document.close(); win.focus(); setTimeout(() => win.print(), 250); return true; };
+  return { worksheet, answerSheet, print };
+}
+
+document.querySelector('#share-direct').addEventListener('click', async () => {
+  const config = readConfig();
+  createSheets(config);
+  const shareText = `He preparado una ficha de ${labels[config.type]} con FichasFácil.`;
+  const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: `${window.location.href.split('#')[0]}#actividades` };
+  try {
+    if (navigator.share) await navigator.share(shareData);
+    else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = `<div class="success-box"><strong>Ficha preparada para compartir</strong><span class="print-hint">Enlace copiado para compartirla.</span></div>`; }
+    else result.innerHTML = `<div class="success-box"><strong>Ficha preparada</strong><span class="print-hint">Copia el enlace de esta página para compartirla.</span></div>`;
+  } catch (error) { if (error.name !== 'AbortError') result.innerHTML = '<div class="success-box"><strong>No se ha podido compartir</strong><span class="print-hint">Puedes probar de nuevo o imprimir la ficha.</span></div>'; }
+});
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  const submitButton = document.querySelector('#print-direct');
+  submitButton.disabled = true;
+  const config = readConfig();
+  const { worksheet, answerSheet, print } = createSheets(config);
+  const printed = print(worksheet);
   setTimeout(() => { submitButton.disabled = false; }, 500);
-  result.innerHTML = `<div class="success-box"><strong>La ficha está lista</strong><span class="print-hint">Puedes imprimirla o compartirla desde aquí.</span>${labels[config.type]} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir ficha</button><button id="share-sheet">Compartir ficha</button>${config.solutions ? '<button id="print-solutions">Imprimir soluciones</button>' : ''}<button id="new-sheet">Crear otra</button></div></div>`;
-  document.querySelector('#print-sheet').onclick = () => print(worksheet);
-  document.querySelector('#share-sheet').onclick = async () => {
-    const shareText = `He preparado una ficha de ${labels[config.type]} con FichasFácil.`;
-    const shareData = { title: `${labels[config.type]} · FichasFácil`, text: shareText, url: `${window.location.href.split('#')[0]}#actividades` };
-    try {
-      if (navigator.share) await navigator.share(shareData);
-      else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.querySelector('.print-hint').textContent = 'Enlace copiado para compartir la ficha.'; }
-      else result.querySelector('.print-hint').textContent = 'Copia el enlace de esta página para compartirla.';
-    } catch (error) { if (error.name !== 'AbortError') result.querySelector('.print-hint').textContent = 'No se ha podido abrir el menú de compartir.'; }
-  };
+  result.innerHTML = `<div class="success-box"><strong>${printed ? 'Ficha lista para imprimir' : 'Permite las ventanas emergentes'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${config.count} ejercicios` : 'El navegador ha bloqueado la ventana de impresión.'}</span>${config.solutions ? '<button class="solutions-link" id="print-solutions" type="button">Imprimir soluciones</button>' : ''}</div>`;
   document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
-  document.querySelector('#new-sheet').onclick = () => { result.innerHTML = ''; document.querySelector('#student').focus(); };
 });

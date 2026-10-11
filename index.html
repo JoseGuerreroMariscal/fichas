@@ -111,8 +111,7 @@
     <div class="modal-backdrop" id="generator" aria-hidden="true">
       <section class="generator-modal" role="dialog" aria-modal="true" aria-labelledby="generator-title" aria-describedby="generator-help">
         <button class="modal-close" aria-label="Cerrar" aria-keyshortcuts="Escape"><span aria-hidden="true">×</span><span class="close-label">Cerrar</span></button>
-        <div class="modal-header"><p class="kicker">Crea tu ficha PDF</p><div class="activity-summary"><span class="summary-dot" aria-hidden="true"></span><span id="activity-summary">Sumas</span></div><h2 id="generator-title">Prepara una ficha</h2><p id="generator-help">Elige la actividad, ajusta las opciones y genera tu ficha.</p><p class="configuration-summary" id="configuration-summary" role="status">Sin curso · Tranquila · 20 ejercicios</p></div>
-        <ol class="generator-steps" aria-label="Pasos para crear una ficha"><li><span>1</span>Elige</li><li><span>2</span>Ajusta</li><li><span>3</span>Genera</li></ol>
+        <div class="modal-header"><p class="kicker">Crea tu ficha PDF</p><div class="activity-summary"><span class="summary-dot" aria-hidden="true"></span><span id="activity-summary">Sumas</span></div><h2 id="generator-title">Prepara una ficha</h2><p id="generator-help">Ajusta las opciones y elige si quieres imprimir o compartir.</p><p class="configuration-summary" id="configuration-summary" role="status">Sin curso · Tranquila · 20 ejercicios</p></div>
         <form id="generator-form">
           <div class="form-grid">
             <label>Actividad<select id="activity"><option value="sumas">Sumas</option><option value="restas">Restas</option><option value="multiplicaciones">Multiplicaciones</option><option value="divisiones">Divisiones</option><option value="problemas">Problemas matemáticos</option><option value="lectura">Lectura comprensiva</option></select></label>
@@ -123,7 +122,7 @@
           </div>
           <p class="modal-note">Puedes cambiar estas opciones antes de generar la ficha.</p>
           <label class="check-label"><input id="solutions" type="checkbox" /> <span>Incluir soluciones</span></label>
-          <div class="form-actions"><button class="reset-button" id="reset-options" type="button">Restablecer</button><button class="generate-button" type="submit">Generar ficha <span>→</span></button></div>
+          <div class="form-actions"><button class="reset-button" id="reset-options" type="button">Restablecer</button><button class="print-button" id="print-direct" type="submit">Imprimir ficha</button><button class="share-button" id="share-direct" type="button">Compartir ficha</button></div>
         </form>
         <div class="preview-result" id="preview-result" role="status" aria-live="polite"></div>
       </section>
