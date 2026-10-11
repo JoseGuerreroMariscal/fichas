@@ -1,4 +1,4 @@
-# Fichalia
+# FichasFácil
 
 MVP de una herramienta educativa para crear fichas imprimibles de Matemáticas y Lengua para Infantil y Primaria.
 
