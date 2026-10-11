@@ -146,7 +146,7 @@
           <div class="form-grid">
             <label for="activity">Actividad<select id="activity"><option value="sumas">Sumas</option><option value="restas">Restas</option><option value="multiplicaciones">Multiplicaciones</option><option value="divisiones">Divisiones</option><option value="problemas">Problemas matemáticos</option><option value="lectura">Lectura comprensiva</option><option value="copiado">Copiado</option></select></label>
             <label for="difficulty">Dificultad<select id="difficulty"><option>Tranquila</option><option>Estándar</option><option>Un poquito más</option></select></label>
-            <label for="count">N.º de ejercicios<select id="count"><option value="10">10 ejercicios</option><option value="15">15 ejercicios</option><option value="20" selected>20 ejercicios</option></select></label>
+            <label id="count-field" for="count">N.º de ejercicios<select id="count"><option value="10">10 ejercicios</option><option value="15">15 ejercicios</option><option value="20" selected>20 ejercicios</option></select></label>
             <label id="operands-field" for="operands">Números por operación<select id="operands"><option value="2" selected>2 números</option><option value="3">3 números</option></select></label>
             <label id="first-digits-field" for="firstDigits"><span id="first-digits-label">Primer número</span><select id="firstDigits"><option value="auto" selected>Según la dificultad</option><option value="1">1 cifra</option><option value="2">2 cifras</option><option value="3">3 cifras</option><option value="4">4 cifras</option><option value="5">5 cifras</option><option value="6">6 cifras</select></label>
             <label id="second-digits-field" for="secondDigits"><span id="second-digits-label">Segundo número</span><select id="secondDigits"><option value="auto" selected>Según la dificultad</option><option value="1">1 cifra</option><option value="2">2 cifras</option><option value="3">3 cifras</option><option value="4">4 cifras</option><option value="5">5 cifras</option><option value="6">6 cifras</select></label>
@@ -154,7 +154,7 @@
             <label class="full-field" for="student">Nombre (opcional)<input id="student" type="text" placeholder="Nombre del alumno" maxlength="36" autocomplete="name" /></label>
           </div>
           <p class="modal-note" id="modal-note">Puedes cambiar estas opciones antes de imprimir o compartir la ficha.</p>
-          <label class="check-label"><input id="solutions" type="checkbox" /> <span>Incluir soluciones</span></label>
+          <label id="solutions-field" class="check-label"><input id="solutions" type="checkbox" /> <span>Incluir soluciones</span></label>
           <div class="form-actions"><button class="reset-button" id="reset-options" type="button">Restablecer</button><button class="print-button" id="print-direct" type="submit">Imprimir ficha</button><button class="share-button" id="share-direct" type="button">Compartir ficha</button></div>
         </form>
         <div class="preview-result" id="preview-result" role="status" aria-live="polite"></div>

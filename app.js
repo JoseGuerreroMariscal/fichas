@@ -23,9 +23,11 @@ const updateConfigurationSummary = () => {
   if (summary) {
     const first = document.querySelector('#firstDigits').value;
     const second = document.querySelector('#secondDigits').value;
-    const digits = first === 'auto' && second === 'auto' ? 'Según la dificultad' : `${first === 'auto' ? 'dificultad' : `${first} cifras`} / ${second === 'auto' ? 'dificultad' : `${second} cifras`}`;
+    const isMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(activity.value);
+    const digits = isMath ? (first === 'auto' && second === 'auto' ? 'Según la dificultad' : `${first === 'auto' ? 'dificultad' : `${first} cifras`} / ${second === 'auto' ? 'dificultad' : `${second} cifras`}`) : '';
+    const countSummary = ['lectura', 'copiado'].includes(activity.value) ? '' : ` · ${document.querySelector('#count').selectedOptions[0].textContent}`;
     const paragraphSummary = activity.value === 'copiado' ? ` · ${document.querySelector('#paragraphs').selectedOptions[0].textContent}` : '';
-    summary.textContent = `${document.querySelector('#difficulty').value} · ${document.querySelector('#count').selectedOptions[0].textContent} · ${digits}${paragraphSummary}`;
+    summary.textContent = `${document.querySelector('#difficulty').value}${countSummary}${digits ? ` · ${digits}` : ''}${paragraphSummary}`;
   }
 };
 const updateDigitLabels = () => {
@@ -34,9 +36,13 @@ const updateDigitLabels = () => {
   document.querySelector('#second-digits-label').textContent = names[1];
 };
 const updateActivityFields = () => {
+  const isMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(activity.value);
   const isCopying = activity.value === 'copiado';
-  ['operands-field', 'first-digits-field', 'second-digits-field'].forEach(id => document.querySelector(`#${id}`).classList.toggle('hidden-field', isCopying));
+  const isReading = activity.value === 'lectura';
+  ['operands-field', 'first-digits-field', 'second-digits-field'].forEach(id => document.querySelector(`#${id}`).classList.toggle('hidden-field', !isMath));
+  document.querySelector('#count-field').classList.toggle('hidden-field', isReading || isCopying);
   document.querySelector('#paragraphs-field').classList.toggle('hidden-field', !isCopying);
+  document.querySelector('#solutions-field').classList.toggle('hidden-field', isCopying);
 };
 const savePreferences = () => {
   try { localStorage.setItem(preferenceKey, JSON.stringify(Object.fromEntries(preferenceIds.map(id => [id, document.querySelector(`#${id}`).value])))); } catch (error) { /* almacenamiento opcional */ }
@@ -76,6 +82,7 @@ const openGenerator = type => {
   document.querySelector('#activity-summary').textContent = labels[type];
   document.querySelector('#modal-note').textContent = activityDescriptions[type];
   updateDigitLabels();
+  updateConfigurationSummary();
   updateActivityFields();
   document.querySelectorAll('.activity-card').forEach(card => {
     const selected = card.dataset.type === type;
