@@ -1,8 +1,8 @@
 # FichasFácil
 
-> Generador gratuito de fichas educativas en español para imprimir o compartir.
+> Generador gratuito de fichas educativas en español para Primaria: matemáticas, lengua, lectura, escritura y lógica, para imprimir o compartir.
 
-FichasFácil permite crear fichas de matemáticas, lectura y escritura sin registro. Está pensado para familias, docentes y profesionales que necesitan preparar una actividad breve en formato A4.
+FichasFácil permite crear fichas de matemáticas, lengua, lectura, escritura y lógica sin registro. Está pensado para familias y docentes que necesitan preparar una actividad breve en formato A4 o guardarla como PDF desde el navegador.
 
 ## Sitio principal
 
@@ -19,10 +19,21 @@ FichasFácil permite crear fichas de matemáticas, lectura y escritura sin regis
 - Problemas matemáticos: situaciones breves para leer, elegir una operación y responder.
 - Comprensión lectora: texto breve con preguntas de comprensión.
 - Copiado: uno a cinco párrafos con pauta de escritura tipo Lamela.
+- Ortografía: completar palabras y practicar b/v, g/j, h, c/z, ll/y, r/rr, mayúsculas y tildes.
+- Lógica: series numéricas y patrones.
+- Horas y reloj: lectura de horas y problemas sencillos de tiempo.
+- Dinero: monedas, compras y cambios.
+- Medidas: longitud, capacidad, peso y conversiones básicas.
+- Fracciones: partes de un todo y fracciones sencillas.
+- Geometría: figuras, lados y vértices.
+- Vocabulario: sinónimos, antónimos, significado y familias de palabras.
+- Ordenar frases: construir oraciones a partir de palabras desordenadas.
+- Caligrafía: letras, sílabas, palabras y frases con pauta.
+- Ficha mixta y ficha diaria: repaso combinado y práctica breve de cinco minutos.
 
 ## Opciones del generador
 
-- Dificultad: Tranquila, Estándar o Un poquito más.
+- Dificultad: Inicial, Medio o Avanzado.
 - Cantidad: 10, 15 o 20 ejercicios cuando la actividad lo permite.
 - Cifras: configuración automática o número de cifras específico.
 - Nombre del alumno: opcional; si se deja vacío, no aparece en la ficha.

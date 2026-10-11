@@ -7,7 +7,7 @@ FichasFácil es una herramienta web en español que ayuda a preparar actividades
 ## Flujo recomendado
 
 1. Abrir el generador en https://joseguerreromariscal.github.io/fichas/.
-2. Elegir una de las siete actividades.
+2. Elegir una de las actividades disponibles.
 3. Ajustar dificultad, cantidad y cifras cuando estén disponibles.
 4. Elegir “Imprimir ficha” para abrir la vista de impresión o “Compartir enlace” para compartir la configuración.
 
@@ -17,9 +17,13 @@ FichasFácil es una herramienta web en español que ayuda a preparar actividades
 
 Sumas, restas, multiplicaciones y divisiones se presentan en vertical, con cifras alineadas y espacio para que el alumno escriba. En sumas y restas se puede elegir trabajar con dos o tres números. En multiplicaciones se pueden definir por separado las cifras del multiplicando y del multiplicador. En divisiones se pueden definir las cifras del dividendo y del divisor.
 
-### Lengua
+### Lengua y escritura
 
-Comprensión lectora ofrece un texto breve y preguntas. Copiado permite seleccionar de uno a cinco párrafos y proporciona una pauta de escritura tipo Lamela debajo de cada modelo.
+Comprensión lectora ofrece un texto breve y preguntas. Ortografía propone completar palabras. Vocabulario trabaja sinónimos, antónimos y significado. Ordenar frases ayuda a construir oraciones. Copiado permite seleccionar de uno a cinco párrafos y proporciona una pauta de escritura tipo Lamela debajo de cada modelo. Caligrafía permite practicar letras, sílabas, palabras o frases.
+
+### Actividades prácticas
+
+Horas y reloj, dinero, medidas, fracciones, geometría y lógica ofrecen ejercicios breves para reforzar contenidos habituales de Primaria. Ficha mixta combina varias áreas y Ficha diaria prepara una práctica de cinco minutos.
 
 ### Problemas
 
