@@ -1,11 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
   <title id="title">FichasFácil</title>
   <rect width="512" height="512" rx="116" fill="#20385f"/>
-  <path d="M128 80h200l56 56v296H128z" fill="#fffdf8"/>
-  <path d="M328 80v64h56" fill="#f4c91c"/>
-  <path d="M328 80v64h56" fill="none" stroke="#20385f" stroke-width="10" stroke-linejoin="round"/>
-  <path d="M192 256h160M192 328h112" fill="none" stroke="#20385f" stroke-width="20" stroke-linecap="round"/>
-  <circle cx="200" cy="400" r="16" fill="#ff9b78"/>
-  <circle cx="256" cy="400" r="16" fill="#8bd1aa"/>
-  <circle cx="312" cy="400" r="16" fill="#b7a8ff"/>
+  <rect x="80" y="80" width="152" height="152" rx="35" fill="#f4c91c"/>
+  <rect x="280" y="80" width="152" height="152" rx="35" fill="#ed7e35"/>
+  <rect x="80" y="280" width="152" height="152" rx="35" fill="#7eb9ff"/>
+  <rect x="280" y="280" width="152" height="152" rx="35" fill="#8bd1aa"/>
 </svg>
