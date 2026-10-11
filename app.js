@@ -14,21 +14,14 @@ if (countSelect && !countSelect.querySelector('option[value="20"]')) {
 }
 
 const openGenerator = type => {
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden', 'false');
+  modal.classList.add('has-selection');
   activity.value = type;
   result.innerHTML = '';
-  setTimeout(() => activity.focus(), 50);
+  document.querySelectorAll('.quick-type').forEach(button => button.classList.toggle('is-selected', button.dataset.type === type));
 };
 
 document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('click', () => openGenerator(card.dataset.type)));
-document.querySelector('.modal-close').addEventListener('click', () => {
-  modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true');
-});
-modal.addEventListener('click', event => {
-  if (event.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
-});
-document.addEventListener('keydown', event => { if (event.key === 'Escape') modal.classList.remove('open'); });
+document.addEventListener('keydown', event => { if (event.key === 'Escape') modal.classList.remove('has-selection'); });
 
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
@@ -78,7 +71,7 @@ function printableHtml(config, items, solutions) {
 
 form.addEventListener('submit', event => {
   event.preventDefault();
-  const config = { type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), theme: document.querySelector('#theme').value };
+  const config = { type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), theme: document.querySelector('#theme').value, solutions: document.querySelector('#solutions')?.checked };
   const items = makeContent(config.type, config.count, config.difficulty);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const preparePrint = html => html
@@ -86,9 +79,9 @@ form.addEventListener('submit', event => {
     .replaceAll('@media(max-width:650px)', '@media screen and (max-width:650px)');
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
-  result.innerHTML = `<div class="success-box"><strong>¡Tu ficha está lista!</strong>${labels[config.type]} · ${config.level} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir ficha</button><button id="print-solutions">Imprimir soluciones</button><button id="new-sheet">Crear otra</button></div></div>`;
+  result.innerHTML = `<div class="success-box"><strong>La ficha está lista</strong>${labels[config.type]} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir ficha</button>${config.solutions ? '<button id="print-solutions">Imprimir soluciones</button>' : ''}<button id="new-sheet">Crear otra</button></div></div>`;
   const print = html => { const win = window.open('', '_blank'); win.document.write(html); win.document.close(); win.focus(); setTimeout(() => win.print(), 250); };
   document.querySelector('#print-sheet').onclick = () => print(worksheet);
-  document.querySelector('#print-solutions').onclick = () => print(answerSheet);
+  document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
   document.querySelector('#new-sheet').onclick = () => { result.innerHTML = ''; document.querySelector('#student').focus(); };
 });
