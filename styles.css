@@ -2,6 +2,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+.noscript-note{padding:12px 16px;background:#f4cc6b;color:#111;font-size:13px;text-align:center}
 .skip-link{position:absolute;left:16px;top:-60px;z-index:10;padding:10px 14px;background:var(--accent);color:#111;border-radius:4px;font-size:13px;font-weight:700}.skip-link:focus{top:16px}
 a{color:inherit;text-decoration:none}
 button,select,input{font:inherit}
@@ -12,6 +13,7 @@ button,select,input{font:inherit}
 .page-shell{width:min(900px,calc(100% - 48px));margin:auto;padding:102px 0 90px}
 .intro{max-width:670px;margin-bottom:92px}.kicker{text-transform:uppercase;letter-spacing:.13em;font-size:10px;color:var(--muted);margin:0 0 20px}.intro h1{font-size:clamp(48px,7vw,84px);line-height:.97;letter-spacing:-.07em;margin:0 0 25px;font-weight:700}.intro h1 span{color:var(--muted)}.intro-copy{color:var(--muted);font-size:17px;margin:0;line-height:1.5}
 .activities{scroll-margin-top:90px}.section-label{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:14px}.section-label span:last-child{color:#55555d}
+.section-help{margin:-3px 0 14px;color:#777780;font-size:12px}
 .activity-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.activity-card{position:relative;display:grid;grid-template-columns:45px 1fr 22px;align-items:center;gap:12px;min-height:106px;padding:18px 20px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);text-align:left;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}.activity-card:hover,.activity-card.is-selected{background:var(--panel-2);border-color:#55555d;transform:translateY(-2px)}.activity-card:focus-visible{outline:2px solid var(--ink);outline-offset:3px}.card-symbol{font-size:30px;font-weight:300;color:var(--card-color);line-height:1}.activity-card strong{display:block;font-size:16px;margin-bottom:6px}.activity-card small{font-size:12px;color:var(--muted)}.activity-card b{align-self:start;color:#66666e;font-size:18px;font-weight:400}.card-blue{--card-color:var(--blue)}.card-lilac{--card-color:var(--lilac)}.card-yellow{--card-color:var(--yellow)}.card-green{--card-color:var(--green)}.card-coral{--card-color:var(--coral)}.card-pink{--card-color:var(--pink)}
 .how-it-works{display:flex;align-items:center;max-width:410px;margin:70px 0 0;color:var(--muted)}.how-it-works div{display:flex;align-items:center;gap:9px;white-space:nowrap}.how-it-works span{font-size:10px;color:#55555d}.how-it-works p{font-size:12px;margin:0;color:var(--ink)}.how-it-works i{height:1px;background:var(--line);flex:1;margin:0 17px}
 .site-footer{width:min(1040px,calc(100% - 48px));margin:auto;border-top:1px solid var(--line);padding:22px 0 28px;display:flex;justify-content:space-between;color:#66666e;font-size:11px}.site-footer span:first-child{color:var(--ink);font-weight:700}
@@ -25,8 +27,11 @@ button,select,input{font:inherit}
 .activity-card strong{color:#111318}.activity-card small{color:#30343d}.activity-card b{color:#17191e}.card-symbol{color:#111318}
 .card-blue{background:#7eb9ff}.card-lilac{background:#b7a8ff}.card-yellow{background:#f4cc6b}.card-green{background:#8bd1aa}.card-coral{background:#ff9b78}.card-pink{background:#f29ab9}
 .section-label{color:#b9b9c1}.section-label span:last-child{color:#777780}
+.print-hint{display:block;margin-bottom:7px;color:#8bd1aa;font-size:12px}
 .intro-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}.intro-meta span{padding:8px 11px;border:1px solid var(--line);border-radius:999px;color:#b9b9c1;font-size:11px}.intro-meta span::before{content:'✓';color:#8bd1aa;margin-right:6px}
 .modal-open{overflow:hidden}
+.generate-button:disabled{opacity:.55;cursor:wait}
 .activity-summary{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;color:var(--ink);font-weight:700}.summary-dot{width:8px;height:8px;border-radius:50%;background:#f4cc6b;box-shadow:0 0 0 4px #f4cc6b22}
+.modal-note{margin:18px 0 -7px;color:#777780;font-size:11px}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #f4cc6b;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

@@ -9,6 +9,7 @@
   </head>
   <body>
     <a class="skip-link" href="#actividades">Saltar a las actividades</a>
+    <noscript><div class="noscript-note">Activa JavaScript para poder generar tus fichas.</div></noscript>
     <header class="site-header">
       <a class="brand" href="#inicio" aria-label="Fichalia, inicio"><span class="brand-mark">F</span> fichalia</a>
       <a class="header-action" href="#actividades">Ver actividades <span>↓</span></a>
@@ -24,13 +25,14 @@
 
       <section id="actividades" class="activities" aria-labelledby="activities-title">
         <div class="section-label"><span id="activities-title">Elige una actividad</span><span>01 / 06</span></div>
+        <p class="section-help">Pulsa una tarjeta para empezar a configurarla.</p>
         <div class="activity-grid">
-          <button class="activity-card card-blue" data-type="sumas"><span class="card-symbol">＋</span><span><strong>Sumas</strong><small>Cálculo básico</small></span><b>↗</b></button>
-          <button class="activity-card card-lilac" data-type="restas"><span class="card-symbol">−</span><span><strong>Restas</strong><small>Cálculo básico</small></span><b>↗</b></button>
-          <button class="activity-card card-yellow" data-type="multiplicaciones"><span class="card-symbol">×</span><span><strong>Multiplicaciones</strong><small>Tablas y práctica</small></span><b>↗</b></button>
-          <button class="activity-card card-green" data-type="divisiones"><span class="card-symbol">÷</span><span><strong>Divisiones</strong><small>Resolver paso a paso</small></span><b>↗</b></button>
-          <button class="activity-card card-coral" data-type="problemas"><span class="card-symbol">?</span><span><strong>Problemas</strong><small>Leer y razonar</small></span><b>↗</b></button>
-          <button class="activity-card card-pink" data-type="lectura"><span class="card-symbol">Aa</span><span><strong>Comprensión lectora</strong><small>Leer y responder</small></span><b>↗</b></button>
+          <button class="activity-card card-blue" data-type="sumas" aria-pressed="false"><span class="card-symbol">＋</span><span><strong>Sumas</strong><small>Cálculo básico</small></span><b>↗</b></button>
+          <button class="activity-card card-lilac" data-type="restas" aria-pressed="false"><span class="card-symbol">−</span><span><strong>Restas</strong><small>Cálculo básico</small></span><b>↗</b></button>
+          <button class="activity-card card-yellow" data-type="multiplicaciones" aria-pressed="false"><span class="card-symbol">×</span><span><strong>Multiplicaciones</strong><small>Tablas y práctica</small></span><b>↗</b></button>
+          <button class="activity-card card-green" data-type="divisiones" aria-pressed="false"><span class="card-symbol">÷</span><span><strong>Divisiones</strong><small>Resolver paso a paso</small></span><b>↗</b></button>
+          <button class="activity-card card-coral" data-type="problemas" aria-pressed="false"><span class="card-symbol">?</span><span><strong>Problemas</strong><small>Leer y razonar</small></span><b>↗</b></button>
+          <button class="activity-card card-pink" data-type="lectura" aria-pressed="false"><span class="card-symbol">Aa</span><span><strong>Comprensión lectora</strong><small>Leer y responder</small></span><b>↗</b></button>
         </div>
       </section>
 
@@ -54,6 +56,7 @@
             <label class="full-field">Nombre (opcional)<input id="student" type="text" placeholder="Nombre del alumno" maxlength="36" /></label>
             <label class="full-field">Temática<select id="theme"><option>Arcoíris y colores</option><option>Animales</option><option>Espacio</option><option>Dinosaurios</option><option>Fútbol</option><option>Naturaleza</option></select></label>
           </div>
+          <p class="modal-note">Puedes cambiar estas opciones antes de generar la ficha.</p>
           <label class="check-label"><input id="solutions" type="checkbox" /> <span>Incluir soluciones</span></label>
           <button class="generate-button" type="submit">Generar e imprimir ficha <span>↗</span></button>
         </form>
