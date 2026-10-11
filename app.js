@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-38', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-39', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -866,6 +866,57 @@ function downloadPdf(config, items, solutions = false) {
   const pageHeight = 297;
   let y = 17;
   doc.setTextColor(32, 40, 63);
+  const mathTypes = ['sumas', 'restas', 'multiplicaciones', 'divisiones'];
+  const isMath = mathTypes.includes(config.type);
+  const mathTitle = config.type === 'restas' && config.carryMode === 'no'
+    ? 'Restas sin llevadas'
+    : config.type === 'restas' && config.carryMode === 'yes'
+      ? 'Restas con llevadas'
+      : labels[config.type];
+  const drawHeader = title => {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Nombre:', margin, 17);
+    doc.line(margin + 16, 17.5, 135, 17.5);
+    doc.text('Fecha:', 166, 17);
+    doc.line(180, 17.5, pageWidth - margin, 17.5);
+    doc.setFillColor(178, 178, 178);
+    doc.roundedRect(margin, 25, 26, 11, 5, 5, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('1 de 1', margin + 5, 32);
+    doc.setTextColor(32, 40, 63);
+    doc.setFontSize(15);
+    doc.text(title, pageWidth / 2, 32, { align: 'center' });
+  };
+  const drawMathOperation = (item, x, topY) => {
+    const division = item.question.match(/^(\d+)\s+÷\s+(\d+)\s*=/);
+    const operation = item.question.match(/^(\d+)\s+([+−×])\s+(\d+)(?:\s+([+−])\s+(\d+))?\s*=/);
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(12);
+    if (division) {
+      doc.text(`${division[1]} ÷ ${division[2]}`, x, topY, { align: 'center' });
+      doc.line(x - 14, topY + 3, x + 14, topY + 3);
+      if (solutions) doc.text(String(item.answer), x, topY + 10, { align: 'center' });
+      return;
+    }
+    if (!operation) return;
+    const first = operation[1];
+    const second = operation[3];
+    const operator = operation[2];
+    const third = operation[5];
+    const width = Math.max(first.length, second.length, third ? third.length : 0);
+    doc.text(first.padStart(width), x + 12, topY, { align: 'right' });
+    doc.text(`${operator} ${second.padStart(width)}`, x + 12, topY + 7, { align: 'right' });
+    let lineY = topY + 9;
+    if (third) {
+      doc.text(`${operation[4]} ${third.padStart(width)}`, x + 12, topY + 14, { align: 'right' });
+      lineY = topY + 16;
+    }
+    doc.line(x - 13, lineY, x + 14, lineY);
+    if (solutions) doc.text(String(item.answer), x + 12, lineY + 8, { align: 'right' });
+  };
   const ensureSpace = height => {
     if (y + height <= pageHeight - margin) return;
     doc.addPage();
@@ -880,9 +931,21 @@ function downloadPdf(config, items, solutions = false) {
     doc.text(lines, margin, y);
     y += lines.length * lineHeight + (options.gap ?? 2);
   };
-  write(labels[config.type], 18, { bold: true, gap: 4 });
-  write(`Nombre: ${config.student || '________________________'}    Fecha: _______________`, 10, { gap: 7 });
-  items.forEach((item, index) => {
+  if (isMath) {
+    drawHeader(mathTitle);
+    const columns = 4;
+    const columnWidth = (pageWidth - margin * 2) / columns;
+    const startY = 55;
+    const rowHeight = 43;
+    items.forEach((item, index) => {
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      drawMathOperation(item, margin + columnWidth * (column + 0.5), startY + row * rowHeight);
+    });
+  } else {
+    write(labels[config.type], 18, { bold: true, gap: 4 });
+    write(`Nombre: ${config.student || '________________________'}    Fecha: _______________`, 10, { gap: 7 });
+    items.forEach((item, index) => {
     if (item.kind === 'reading') {
       write(item.title, 14, { bold: true, gap: 2 });
       write(item.text, 11, { gap: 3 });
@@ -900,7 +963,8 @@ function downloadPdf(config, items, solutions = false) {
     }
     const answer = solutions ? `  Respuesta: ${item.answer}` : '  ____________________';
     write(`${index + 1}. ${item.question}${answer}`, 12, { gap: 4 });
-  });
+    });
+  }
   doc.save(`FichasFacil-${labels[config.type].toLowerCase().replaceAll(' ', '-')}.pdf`);
   return true;
 }
