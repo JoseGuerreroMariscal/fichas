@@ -80,8 +80,11 @@ form.addEventListener('submit', event => {
   event.preventDefault();
   const config = { type: activity.value, level: document.querySelector('#level').value, difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), student: document.querySelector('#student').value.trim(), theme: document.querySelector('#theme').value };
   const items = makeContent(config.type, config.count, config.difficulty);
-  const worksheet = printableHtml(config, items, false);
-  const answerSheet = printableHtml(config, items, true);
+  const preparePrint = html => html
+    .replace('<style>', '<style>@page{size:A4;margin:0}')
+    .replaceAll('@media(max-width:650px)', '@media screen and (max-width:650px)');
+  const worksheet = preparePrint(printableHtml(config, items, false));
+  const answerSheet = preparePrint(printableHtml(config, items, true));
   result.innerHTML = `<div class="success-box"><strong>¡Tu ficha está lista!</strong>${labels[config.type]} · ${config.level} · ${config.count} ejercicios<div class="download-actions"><button id="print-sheet">Imprimir ficha</button><button id="print-solutions">Imprimir soluciones</button><button id="new-sheet">Crear otra</button></div></div>`;
   const print = html => { const win = window.open('', '_blank'); win.document.write(html); win.document.close(); win.focus(); setTimeout(() => win.print(), 250); };
   document.querySelector('#print-sheet').onclick = () => print(worksheet);
