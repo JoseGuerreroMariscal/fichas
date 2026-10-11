@@ -35,3 +35,23 @@ button,select,input{font:inherit}
 .modal-note{margin:18px 0 -7px;color:#777780;font-size:11px}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #f4cc6b;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Dirección visual clara: fondo luminoso, azul de acción y colores suaves por actividad. */
+:root{--bg:#f7f7f3;--panel:#ffffff;--panel-2:#ffffff;--ink:#1d2b49;--muted:#66728a;--line:#dfe4eb;--accent:#2563d9}
+body{background:var(--bg);color:var(--ink)}
+.site-header{border-bottom-color:#dfe4eb;background:#f7f7f3}
+.brand-mark{background:#2563d9;color:#fff;border-radius:50%}
+.header-action{color:#66728a}.header-action span{color:#2563d9}
+.intro h1 span{color:#2563d9}
+.intro h1{text-transform:uppercase}
+.kicker,.section-label,.section-label span:last-child{color:#66728a}
+.section-help{color:#66728a}
+.activity-card{border-color:#e0e4eb;background:#fff;box-shadow:0 5px 18px #1d2b490d}
+.activity-card:hover,.activity-card.is-selected{border-color:#2563d9;background:#fff;box-shadow:0 10px 25px #1d2b4918}
+.activity-card strong{color:#1d2b49}.activity-card small{color:#66728a}.activity-card b{color:#7c879b}.card-symbol{color:var(--card-color)}
+.card-blue{background:#dff0ff}.card-lilac{background:#eeeaff}.card-yellow{background:#fff3c8}.card-green{background:#e0f4e8}.card-coral{background:#ffe5dc}.card-pink{background:#fbe3ec}
+.how-it-works{color:#66728a}.how-it-works i{background:#dfe4eb}.how-it-works p{color:#1d2b49}.how-it-works span{color:#8b96a9}
+.site-footer{border-top-color:#dfe4eb;color:#7b8799}.site-footer span:first-child{color:#1d2b49}
+.modal-backdrop{background:#1d2b4966}.generator-modal{background:#fff;border-color:#e0e4eb;box-shadow:0 25px 80px #1d2b4933}.modal-close{color:#66728a}.modal-close:hover{color:#1d2b49}.modal-header h2{color:#1d2b49}.modal-header>p:last-child{color:#66728a}
+label{color:#4e5b72}select,input{background:#fff;border-color:#cfd7e3;color:#1d2b49}select:focus,input:focus{border-color:#2563d9;box-shadow:0 0 0 3px #2563d91c}.check-label{color:#66728a}.check-label input{accent-color:#2563d9}.generate-button{background:#2563d9;color:#fff}.generate-button:hover{background:#174cae}.success-box{background:#eef5ff;border-color:#cbdcf7;color:#2b4c86}.success-box strong{color:#1d2b49}.print-hint{color:#267b52}.download-actions button{background:#fff;border-color:#b9c9e5;color:#2b4c86}.download-actions button:hover{background:#eef5ff}
+.skip-link{background:#2563d9;color:#fff}
