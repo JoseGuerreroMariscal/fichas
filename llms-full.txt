@@ -38,3 +38,7 @@ Los problemas presentan situaciones cotidianas breves y un espacio de respuesta.
 - Blog: https://joseguerreromariscal.github.io/fichas/blog.html
 - Robots: https://joseguerreromariscal.github.io/fichas/robots.txt
 - Sitemap: https://joseguerreromariscal.github.io/fichas/sitemap.xml
+
+## Integración MCP
+
+FichasFácil no expone todavía un servidor MCP remoto. Un servidor futuro debería ofrecer un endpoint HTTPS `POST /mcp` y herramientas como `describe_worksheet_types` y `build_worksheet_link`, sin almacenar datos personales de alumnos.
