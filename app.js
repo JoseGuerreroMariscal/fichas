@@ -338,15 +338,22 @@ function createSheets(config) {
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
   const print = html => {
-    const blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
-    const win = window.open(blobUrl, '_blank');
-    if (!win) { URL.revokeObjectURL(blobUrl); return false; }
-    try { win.opener = null; } catch (error) { /* protección opcional del navegador */ }
+    const win = window.open('', '_blank');
+    if (!win) return false;
+    try {
+      win.opener = null;
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+    } catch (error) {
+      try { win.close(); } catch (closeError) { /* cierre opcional del navegador */ }
+      return false;
+    }
     let printed = false;
     const triggerPrint = () => {
       if (printed) return;
       printed = true;
-      try { win.focus(); win.print(); } finally { setTimeout(() => URL.revokeObjectURL(blobUrl), 1000); }
+      try { win.focus(); win.print(); } catch (error) { /* impresión opcional del navegador */ }
     };
     win.addEventListener('load', triggerPrint, { once: true });
     setTimeout(triggerPrint, 1500);
