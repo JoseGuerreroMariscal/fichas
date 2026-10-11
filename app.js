@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-40', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-41', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -897,7 +897,7 @@ function downloadPdf(config, items, solutions = false) {
     doc.setFont('courier', 'normal');
     doc.setFontSize(12);
     if (division) {
-      doc.text(`${division[1]} ÷ ${division[2]}`, x, topY, { align: 'center' });
+      doc.text(`${division[1]} : ${division[2]}`, x, topY, { align: 'center' });
       doc.line(x - 14, topY + 3, x + 14, topY + 3);
       if (solutions) doc.text(String(item.answer), x, topY + 10, { align: 'center' });
       return;
@@ -905,18 +905,21 @@ function downloadPdf(config, items, solutions = false) {
     if (!operation) return;
     const first = operation[1];
     const second = operation[3];
-    const operator = operation[2];
+    const operator = operation[2] === '−' ? '-' : operation[2] === '×' ? 'x' : operation[2];
     const third = operation[5];
-    const width = Math.max(first.length, second.length, third ? third.length : 0);
-    doc.text(first.padStart(width), x + 12, topY, { align: 'right' });
-    doc.text(`${operator} ${second.padStart(width)}`, x + 12, topY + 7, { align: 'right' });
+    const numberRight = x + 11;
+    const operatorX = x - 9;
+    doc.text(first, numberRight, topY, { align: 'right' });
+    doc.text(operator, operatorX, topY + 7, { align: 'center' });
+    doc.text(second, numberRight, topY + 7, { align: 'right' });
     let lineY = topY + 9;
     if (third) {
-      doc.text(`${operation[4]} ${third.padStart(width)}`, x + 12, topY + 14, { align: 'right' });
+      doc.text(operation[4], operatorX, topY + 14, { align: 'center' });
+      doc.text(third, numberRight, topY + 14, { align: 'right' });
       lineY = topY + 16;
     }
     doc.line(x - 13, lineY, x + 14, lineY);
-    if (solutions) doc.text(String(item.answer), x + 12, lineY + 8, { align: 'right' });
+    if (solutions) doc.text(String(item.answer), numberRight, lineY + 8, { align: 'right' });
   };
   const ensureSpace = height => {
     if (y + height <= pageHeight - margin) return;
