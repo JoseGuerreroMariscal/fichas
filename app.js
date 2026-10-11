@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-43', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-45', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -596,15 +596,15 @@ const practicalActivities = {
     ['¿Qué es menor: 1/3 o 1/2?', '1/3.']
   ],
   geometria: [
-    ['¿Cuántos lados tiene un triángulo?', '3 lados.'],
-    ['¿Cuántos vértices tiene un cuadrado?', '4 vértices.'],
-    ['¿Qué figura tiene todos sus puntos a la misma distancia del centro?', 'El círculo.'],
-    ['¿Cómo se llama un polígono de 5 lados?', 'Pentágono.'],
-    ['¿Cuántos lados tiene un rectángulo?', '4 lados.'],
-    ['¿Cómo se llama un polígono de 6 lados?', 'Hexágono.'],
-    ['¿Cuántos lados tiene un pentágono?', '5 lados.'],
-    ['¿Qué figura tiene cuatro lados iguales?', 'El cuadrado.'],
-    ['¿Cómo se llama un ángulo menor que uno recto?', 'Ángulo agudo.']
+    ['Observa la figura. ¿Cuántos lados y vértices tiene este triángulo?', '3 lados y 3 vértices.'],
+    ['Observa la figura. ¿Cuántos vértices tiene el cuadrado? ¿Son todos sus lados iguales?', '4 vértices. Sí, sus lados son iguales.'],
+    ['Observa la figura redonda. ¿Cómo se llama y qué característica tienen sus puntos respecto al centro?', 'El círculo. Todos sus puntos están a la misma distancia del centro.'],
+    ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Pentágono.'],
+    ['Observa la figura. ¿Cuántos lados tiene el rectángulo y cómo son sus lados opuestos?', '4 lados. Los lados opuestos son iguales.'],
+    ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Hexágono.'],
+    ['Observa la figura. ¿Cuántos lados y vértices tiene el pentágono?', '5 lados y 5 vértices.'],
+    ['Observa la figura. ¿Qué nombre recibe y qué puedes decir de sus cuatro lados?', 'Cuadrado. Sus cuatro lados son iguales.'],
+    ['Observa el ángulo. ¿Es menor, igual o mayor que un ángulo recto? ¿Cómo se llama?', 'Es menor que un ángulo recto: ángulo agudo.']
   ],
   vocabulario: [
     ['Escribe un sinónimo de “contento”.', 'Feliz.'],
@@ -680,11 +680,11 @@ const additionalPracticalActivities = {
     ['¿Qué es mayor: 2/3 o 1/3?', '2/3.']
   ],
   geometria: [
-    ['¿Cuántos ángulos tiene un triángulo?', '3 ángulos.'],
-    ['¿Qué figura tiene dos lados largos y dos cortos?', 'El rectángulo.'],
-    ['¿Cómo se llama un polígono de 8 lados?', 'Octógono.'],
-    ['¿Qué línea no tiene principio ni final?', 'La línea recta infinita.'],
-    ['¿Cuántos vértices tiene un pentágono?', '5 vértices.']
+    ['Observa la figura. ¿Cuántos ángulos tiene el triángulo?', '3 ángulos.'],
+    ['Observa la figura. ¿Qué cuadrilátero tiene dos lados largos y dos cortos?', 'El rectángulo.'],
+    ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Octógono.'],
+    ['Observa la línea. ¿Tiene principio o final?', 'No, es una línea recta infinita.'],
+    ['Observa la figura. ¿Cuántos vértices tiene el pentágono?', '5 vértices.']
   ],
   vocabulario: [
     ['Escribe un sinónimo de “bonito”.', 'Hermoso.'],
@@ -702,6 +702,20 @@ const additionalPracticalActivities = {
   ]
 };
 Object.entries(additionalPracticalActivities).forEach(([type, items]) => practicalActivities[type].push(...items));
+
+const geometryFigureFor = question => {
+  const text = question.toLowerCase();
+  if (text.includes('triángulo')) return 'triangle';
+  if (text.includes('cuadrado')) return 'square';
+  if (text.includes('círculo') || text.includes('redonda')) return 'circle';
+  if (text.includes('rectángulo')) return 'rectangle';
+  if (text.includes('pentágono')) return 'pentagon';
+  if (text.includes('hexágono')) return 'hexagon';
+  if (text.includes('octógono')) return 'octagon';
+  if (text.includes('ángulo')) return 'angle';
+  if (text.includes('línea')) return 'line';
+  return 'square';
+};
 
 function randomReadingActivity(difficulty) {
   const level = difficulty === 'Inicial' || difficulty === 'Tranquila' ? 'Inicial' : difficulty === 'Medio' || difficulty === 'Estándar' ? 'Medio' : 'Avanzado';
@@ -741,7 +755,7 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
   if (practicalActivities[type]) {
     return Array.from({ length: count }, (_, index) => {
       const item = practicalActivities[type][index % practicalActivities[type].length];
-      return { question: item[0], answer: item[1] };
+      return { question: item[0], answer: item[1], ...(type === 'geometria' ? { figure: geometryFigureFor(item[0]) } : {}) };
     });
   }
   if (type === 'mixta' || type === 'diaria') {
@@ -786,12 +800,30 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
 
 const digitMarkup = value => `<span class="digit-value">${String(value).split('').map(digit => `<b>${digit}</b>`).join('')}</span>`;
 
+const geometrySvg = figure => {
+  const common = 'width="76" height="58" viewBox="0 0 76 58" aria-hidden="true" style="display:block;flex:0 0 76px"';
+  const stroke = 'fill="none" stroke="#315c9b" stroke-width="2.4" stroke-linejoin="round"';
+  const shapes = {
+    triangle: `<polygon points="38,7 8,51 68,51" ${stroke}/>`,
+    square: `<rect x="13" y="10" width="48" height="38" ${stroke}/>`,
+    rectangle: `<rect x="6" y="16" width="64" height="27" ${stroke}/>`,
+    circle: `<circle cx="38" cy="29" r="21" ${stroke}/><circle cx="38" cy="29" r="2.5" fill="#ef8e69"/>`,
+    pentagon: `<polygon points="38,6 67,27 56,53 20,53 9,27" ${stroke}/>`,
+    hexagon: `<polygon points="20,7 56,7 70,29 56,51 20,51 6,29" ${stroke}/>`,
+    octagon: `<polygon points="22,5 54,5 70,21 70,37 54,53 22,53 6,37 6,21" ${stroke}/>`,
+    angle: `<path d="M12 47 L12 14 M12 47 L62 47" ${stroke}/><path d="M12 33 A14 14 0 0 1 26 47" stroke="#ef8e69" stroke-width="2" fill="none"/>`,
+    line: `<path d="M8 29 H68" stroke="#315c9b" stroke-width="2.4"/><path d="M8 20 V38 M68 20 V38" stroke="#ef8e69" stroke-width="2"/>`
+  };
+  return `<svg ${common}>${shapes[figure] || shapes.square}</svg>`;
+};
+
 function exerciseMarkup(config, item, index, solutions) {
   if (item.kind === 'copying') return `<article class="copying-sheet"><p class="copying-text">${item.text}</p></article>`;
   if (item.kind === 'reading') {
     const questions = item.questions.map((question, questionIndex) => `<div class="reading-question"><span>${questionIndex + 1}.</span><strong>${question}</strong>${solutions ? `<b>${item.answers[questionIndex]}</b>` : '<i aria-label="espacio para responder"></i>'}</div>`).join('');
     return `<article class="reading-sheet"><h3>${item.title}</h3><p class="reading-text">${item.text}</p><h4>Responde a las preguntas</h4>${questions}</article>`;
   }
+  if (config.type === 'geometria') return `<div class="geometry-exercise" style="display:flex;align-items:flex-start;gap:10px;min-height:118px;padding:10px 4px;break-inside:avoid;page-break-inside:avoid"><span style="font-size:11px;color:#6b7486;padding-top:3px;flex:0 0 18px">${index + 1}.</span>${geometrySvg(item.figure)}<div style="flex:1;font-size:15px;line-height:1.35"><strong style="display:block">${item.question}</strong>${solutions ? `<b style="display:block;margin-top:8px;color:#275fac">${item.answer}</b>` : '<span aria-label="espacio para responder" style="display:block;height:46px;margin-top:8px;background:linear-gradient(to bottom,transparent 0,transparent 10px,#7890af 10px,#7890af 11px,transparent 11px,transparent 24px,#b7c4d2 24px,#b7c4d2 25px,transparent 25px,transparent 38px,#ef9b9b 38px,#ef9b9b 39px)"></span>'}</div></div>`;
   const arithmetic = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   if (arithmetic) {
     if (config.type === 'divisiones') {
@@ -915,6 +947,40 @@ function downloadPdf(config, items, solutions = false) {
     doc.line(x - 13, lineY, x + 14, lineY);
     if (solutions) doc.text(String(item.answer), numberRight, lineY + 8, { align: 'right' });
   };
+  const drawGeometryFigure = (figure, x, topY) => {
+    doc.setDrawColor(49, 92, 155);
+    doc.setLineWidth(0.8);
+    if (figure === 'circle') {
+      doc.circle(x, topY + 9, 9);
+      doc.setFillColor(239, 142, 105);
+      doc.circle(x, topY + 9, 1.2, 'F');
+    } else if (figure === 'triangle') {
+      doc.line(x, topY, x - 10, topY + 17);
+      doc.line(x - 10, topY + 17, x + 10, topY + 17);
+      doc.line(x + 10, topY + 17, x, topY);
+    } else if (figure === 'rectangle') {
+      doc.rect(x - 12, topY + 3, 24, 12);
+    } else if (figure === 'pentagon' || figure === 'hexagon' || figure === 'octagon') {
+      const sides = figure === 'pentagon' ? 5 : figure === 'hexagon' ? 6 : 8;
+      const points = Array.from({ length: sides }, (_, index) => {
+        const angle = -Math.PI / 2 + (index * Math.PI * 2) / sides;
+        return [x + Math.cos(angle) * 10, topY + 9 + Math.sin(angle) * 10];
+      });
+      points.forEach((point, index) => {
+        const next = points[(index + 1) % points.length];
+        doc.line(point[0], point[1], next[0], next[1]);
+      });
+    } else if (figure === 'angle') {
+      doc.line(x - 10, topY + 16, x - 10, topY);
+      doc.line(x - 10, topY + 16, x + 11, topY + 16);
+      doc.setDrawColor(239, 142, 105);
+      doc.arc?.(x - 10, topY + 16, 6, 270, 360);
+    } else {
+      doc.rect(x - 9, topY, 18, 18);
+    }
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.2);
+  };
   const ensureSpace = height => {
     if (y + height <= pageHeight - margin) return;
     doc.addPage();
@@ -959,6 +1025,18 @@ function downloadPdf(config, items, solutions = false) {
   } else {
     drawHeader(labels[config.type]);
     items.forEach((item, index) => {
+    if (config.type === 'geometria') {
+      const questionLines = doc.splitTextToSize(`${index + 1}. ${item.question}`, pageWidth - margin * 2 - 34);
+      ensureSpace(42);
+      drawGeometryFigure(item.figure, margin + 12, y + 2);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(questionLines, margin + 30, y + 5);
+      y += questionLines.length * 6 + 8;
+      if (solutions) write(`Respuesta: ${item.answer}`, 10, { gap: 5 });
+      else writeAnswerLines(2);
+      return;
+    }
     if (item.kind === 'reading') {
       write(item.title, 14, { bold: true, gap: 3 });
       write(item.text, 11, { gap: 5 });
