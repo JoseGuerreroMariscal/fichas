@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" role="img" aria-labelledby="title desc">
+  <title id="title">Ejemplos de fichas imprimibles de FichasFácil</title>
+  <desc id="desc">Composición de fichas escolares de matemáticas, geometría, lectura y caligrafía.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#102747" flood-opacity=".28"/></filter>
+    <style>
+      .paper{fill:#fff;stroke:#dfe6ee;stroke-width:2}.ink{fill:#20385f}.muted{fill:#718198}.rule{stroke:#9eacbc;stroke-width:1}.blue{stroke:#315c9b;stroke-width:2;fill:none}.red{stroke:#ef9b9b;stroke-width:1.5}.dash{stroke:#b7c4d2;stroke-width:1;stroke-dasharray:3 3}.small{font:10px Arial,sans-serif}.body{font:12px Arial,sans-serif}.bold{font-weight:700}.label{font:700 9px Arial,sans-serif;letter-spacing:1.5px;fill:#9b6b00}.math{font:13px monospace;fill:#20385f}
+    </style>
+  </defs>
+  <g opacity=".94" transform="translate(68 58) rotate(-7 170 220)" filter="url(#shadow)">
+    <rect class="paper" width="300" height="424" rx="5"/>
+    <text class="label" x="150" y="27" text-anchor="middle">FICHASFÁCIL</text><text class="ink bold" x="150" y="49" text-anchor="middle" font-size="17">Lectura comprensiva</text>
+    <line class="rule" x1="25" y1="69" x2="275" y2="69"/><text class="small muted" x="24" y="61">Nombre:</text><line class="rule" x1="62" y1="61" x2="190" y2="61"/><text class="small muted" x="213" y="61">Fecha:</text><line class="rule" x1="243" y1="61" x2="275" y2="61"/>
+    <rect x="27" y="88" width="246" height="68" rx="3" fill="#f4f7fb"/><text class="ink bold body" x="40" y="108">El paseo de la clase</text><text class="muted small" x="40" y="126">La clase salió al patio para observar</text><text class="muted small" x="40" y="140">las formas y los colores de las plantas.</text>
+    <text class="ink bold body" x="28" y="180">1. ¿Qué observó la clase?</text><line class="blue" x1="31" y1="201" x2="270" y2="201"/><line class="dash" x1="31" y1="214" x2="270" y2="214"/><line class="red" x1="31" y1="227" x2="270" y2="227"/>
+    <text class="ink bold body" x="28" y="257">2. Escribe una idea del texto.</text><line class="blue" x1="31" y1="278" x2="270" y2="278"/><line class="dash" x1="31" y1="291" x2="270" y2="291"/><line class="red" x1="31" y1="304" x2="270" y2="304"/>
+    <text class="ink bold body" x="28" y="334">3. Completa la respuesta.</text><line class="blue" x1="31" y1="355" x2="270" y2="355"/><line class="dash" x1="31" y1="368" x2="270" y2="368"/><line class="red" x1="31" y1="381" x2="270" y2="381"/>
+  </g>
+  <g opacity=".97" transform="translate(390 28) rotate(6 170 220)" filter="url(#shadow)">
+    <rect class="paper" width="300" height="424" rx="5"/>
+    <text class="label" x="150" y="27" text-anchor="middle">FICHASFÁCIL · MATEMÁTICAS</text><text class="ink bold" x="150" y="49" text-anchor="middle" font-size="17">Restas sin llevadas</text>
+    <line class="rule" x1="25" y1="69" x2="190" y2="69"/><text class="small muted" x="24" y="61">Nombre:</text><line class="rule" x1="62" y1="61" x2="190" y2="61"/><text class="small muted" x="213" y="61">Fecha:</text><line class="rule" x1="243" y1="61" x2="275" y2="61"/>
+    <g class="math" text-anchor="end"><text x="73" y="105">49</text><text x="73" y="122">− 21</text><line class="blue" x1="40" y1="129" x2="78" y2="129"/><text x="143" y="105">87</text><text x="143" y="122">− 34</text><line class="blue" x1="110" y1="129" x2="148" y2="129"/><text x="213" y="105">91</text><text x="213" y="122">− 20</text><line class="blue" x1="180" y1="129" x2="218" y2="129"/><text x="283" y="105">76</text><text x="283" y="122">− 15</text><line class="blue" x1="250" y1="129" x2="288" y2="129"/>
+      <text x="73" y="181">58</text><text x="73" y="198">− 26</text><line class="blue" x1="40" y1="205" x2="78" y2="205"/><text x="143" y="181">63</text><text x="143" y="198">− 12</text><line class="blue" x1="110" y1="205" x2="148" y2="205"/><text x="213" y="181">95</text><text x="213" y="198">− 43</text><line class="blue" x1="180" y1="205" x2="218" y2="205"/><text x="283" y="181">88</text><text x="283" y="198">− 57</text><line class="blue" x1="250" y1="205" x2="288" y2="205"/>
+      <text x="73" y="257">72</text><text x="73" y="274">− 31</text><line class="blue" x1="40" y1="281" x2="78" y2="281"/><text x="143" y="257">84</text><text x="143" y="274">− 42</text><line class="blue" x1="110" y1="281" x2="148" y2="281"/><text x="213" y="257">67</text><text x="213" y="274">− 25</text><line class="blue" x1="180" y1="281" x2="218" y2="281"/><text x="283" y="257">99</text><text x="283" y="274">− 64</text><line class="blue" x1="250" y1="281" x2="288" y2="281"/>
+      <text x="73" y="333">46</text><text x="73" y="350">− 24</text><line class="blue" x1="40" y1="357" x2="78" y2="357"/><text x="143" y="333">75</text><text x="143" y="350">− 13</text><line class="blue" x1="110" y1="357" x2="148" y2="357"/><text x="213" y="333">86</text><text x="213" y="350">− 41</text><line class="blue" x1="180" y1="357" x2="218" y2="357"/><text x="283" y="333">54</text><text x="283" y="350">− 22</text><line class="blue" x1="250" y1="357" x2="288" y2="357"/></g>
+    <text class="muted small" x="150" y="402" text-anchor="middle">Ficha A4 lista para imprimir</text>
+  </g>
+  <g transform="translate(298 336) rotate(-2 90 72)" filter="url(#shadow)">
+    <rect class="paper" width="180" height="144" rx="5"/><text class="label" x="90" y="22" text-anchor="middle">GEOMETRÍA</text><text class="ink bold body" x="18" y="43">Observa y responde</text><polygon points="55,60 28,101 82,101" fill="#e9f1fb" stroke="#315c9b" stroke-width="2"/><text class="muted small" x="103" y="72">¿Cuántos lados</text><text class="muted small" x="103" y="86">tiene la figura?</text><line class="blue" x1="103" y1="105" x2="160" y2="105"/><line class="dash" x1="103" y1="116" x2="160" y2="116"/>
+  </g>
+</svg>
