@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-39', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-40', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -889,6 +889,7 @@ function downloadPdf(config, items, solutions = false) {
     doc.setTextColor(32, 40, 63);
     doc.setFontSize(15);
     doc.text(title, pageWidth / 2, 32, { align: 'center' });
+    y = 48;
   };
   const drawMathOperation = (item, x, topY) => {
     const division = item.question.match(/^(\d+)\s+÷\s+(\d+)\s*=/);
@@ -931,6 +932,16 @@ function downloadPdf(config, items, solutions = false) {
     doc.text(lines, margin, y);
     y += lines.length * lineHeight + (options.gap ?? 2);
   };
+  const writeAnswerLines = (count = 3) => {
+    doc.setDrawColor(150, 163, 177);
+    for (let line = 0; line < count; line += 1) {
+      ensureSpace(8);
+      doc.line(margin + 4, y, pageWidth - margin - 4, y);
+      y += 8;
+    }
+    doc.setDrawColor(0, 0, 0);
+    y += 3;
+  };
   if (isMath) {
     drawHeader(mathTitle);
     const columns = 4;
@@ -943,26 +954,27 @@ function downloadPdf(config, items, solutions = false) {
       drawMathOperation(item, margin + columnWidth * (column + 0.5), startY + row * rowHeight);
     });
   } else {
-    write(labels[config.type], 18, { bold: true, gap: 4 });
-    write(`Nombre: ${config.student || '________________________'}    Fecha: _______________`, 10, { gap: 7 });
+    drawHeader(labels[config.type]);
     items.forEach((item, index) => {
     if (item.kind === 'reading') {
-      write(item.title, 14, { bold: true, gap: 2 });
-      write(item.text, 11, { gap: 3 });
+      write(item.title, 14, { bold: true, gap: 3 });
+      write(item.text, 11, { gap: 5 });
       item.questions.forEach((question, questionIndex) => {
-        write(`${questionIndex + 1}. ${question}`, 10, { gap: 1 });
-        write(solutions ? `Respuesta: ${item.answers[questionIndex]}` : '________________________________________________________________', 10, { gap: 3 });
+        write(`${questionIndex + 1}. ${question}`, 11, { bold: true, gap: 2 });
+        if (solutions) write(`Respuesta: ${item.answers[questionIndex]}`, 10, { gap: 5 });
+        else writeAnswerLines(3);
       });
       return;
     }
     if (item.kind === 'copying') {
-      write(`${index + 1}. ${item.text}`, 12, { gap: 3 });
-      write('________________________________________________________________________________', 10, { gap: 2 });
-      write('________________________________________________________________________________', 10, { gap: 4 });
+      write(`${index + 1}. ${item.text}`, 12, { bold: true, gap: 4 });
+      if (solutions) write(`Respuesta: ${item.answer || item.text}`, 10, { gap: 4 });
+      else writeAnswerLines(4);
       return;
     }
-    const answer = solutions ? `  Respuesta: ${item.answer}` : '  ____________________';
-    write(`${index + 1}. ${item.question}${answer}`, 12, { gap: 4 });
+    write(`${index + 1}. ${item.question}`, 12, { bold: true, gap: 3 });
+    if (solutions) write(`Respuesta: ${item.answer}`, 10, { gap: 5 });
+    else writeAnswerLines(3);
     });
   }
   doc.save(`FichasFacil-${labels[config.type].toLowerCase().replaceAll(' ', '-')}.pdf`);
