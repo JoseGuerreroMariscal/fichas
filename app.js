@@ -526,6 +526,9 @@ form.addEventListener('submit', event => {
   const { worksheet, answerSheet, print } = createSheets(config);
   const printed = print(worksheet);
   setTimeout(() => { submitButton.disabled = false; form.setAttribute('aria-busy', 'false'); }, 500);
-  result.innerHTML = `<div class="success-box"><strong>${printed ? 'Ficha lista para imprimir' : 'Permite las ventanas emergentes'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${config.count} ejercicios` : 'El navegador ha bloqueado la ventana de impresión.'}</span>${config.solutions ? '<button class="solutions-link" id="print-solutions" type="button">Imprimir soluciones</button>' : ''}</div>`;
+  const contentSummary = config.type === 'copiado'
+    ? `${config.paragraphs} ${config.paragraphs === 1 ? 'párrafo' : 'párrafos'}`
+    : config.type === 'lectura' ? '1 lectura' : `${config.count} ejercicios`;
+  result.innerHTML = `<div class="success-box"><strong>${printed ? 'Ficha lista para imprimir' : 'Permite las ventanas emergentes'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}` : 'El navegador ha bloqueado la ventana de impresión.'}</span>${config.solutions ? '<button class="solutions-link" id="print-solutions" type="button">Imprimir soluciones</button>' : ''}</div>`;
   document.querySelector('#print-solutions')?.addEventListener('click', () => print(answerSheet));
 });
