@@ -24,6 +24,7 @@ button,select,input{font:inherit}
 .activity-card strong{color:#111318}.activity-card small{color:#30343d}.activity-card b{color:#17191e}.card-symbol{color:#111318}
 .card-blue{background:#7eb9ff}.card-lilac{background:#b7a8ff}.card-yellow{background:#f4cc6b}.card-green{background:#8bd1aa}.card-coral{background:#ff9b78}.card-pink{background:#f29ab9}
 .section-label{color:#b9b9c1}.section-label span:last-child{color:#777780}
+.intro-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}.intro-meta span{padding:8px 11px;border:1px solid var(--line);border-radius:999px;color:#b9b9c1;font-size:11px}.intro-meta span::before{content:'✓';color:#8bd1aa;margin-right:6px}
 .modal-open{overflow:hidden}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #f4cc6b;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
