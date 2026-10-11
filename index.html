@@ -111,13 +111,14 @@
     <div class="modal-backdrop" id="generator" aria-hidden="true">
       <section class="generator-modal" role="dialog" aria-modal="true" aria-labelledby="generator-title" aria-describedby="generator-help">
         <button class="modal-close" aria-label="Cerrar" aria-keyshortcuts="Escape"><span aria-hidden="true">×</span><span class="close-label">Cerrar</span></button>
-        <div class="modal-header"><p class="kicker">Crea tu ficha PDF</p><div class="activity-summary"><span class="summary-dot" aria-hidden="true"></span><span id="activity-summary">Sumas</span></div><h2 id="generator-title">Prepara una ficha</h2><p id="generator-help">Ajusta las opciones y elige si quieres imprimir o compartir.</p><p class="configuration-summary" id="configuration-summary" role="status">Sin curso · Tranquila · 20 ejercicios</p></div>
+        <div class="modal-header"><p class="kicker">Crea tu ficha PDF</p><div class="activity-summary"><span class="summary-dot" aria-hidden="true"></span><span id="activity-summary">Sumas</span></div><h2 id="generator-title">Prepara una ficha</h2><p id="generator-help">Ajusta las opciones y elige si quieres imprimir o compartir.</p><p class="configuration-summary" id="configuration-summary" role="status">Sin curso · Tranquila · 20 ejercicios · 2 números</p></div>
         <form id="generator-form">
           <div class="form-grid">
             <label for="activity">Actividad<select id="activity"><option value="sumas">Sumas</option><option value="restas">Restas</option><option value="multiplicaciones">Multiplicaciones</option><option value="divisiones">Divisiones</option><option value="problemas">Problemas matemáticos</option><option value="lectura">Lectura comprensiva</option></select></label>
             <label for="level">Curso (opcional)<select id="level"><option value="" selected>No indicar</option><option>Infantil</option><option>1.º Primaria</option><option>2.º Primaria</option><option>3.º Primaria</option><option>4.º Primaria</option><option>5.º Primaria</option><option>6.º Primaria</option></select></label>
             <label for="difficulty">Dificultad<select id="difficulty"><option>Tranquila</option><option>Estándar</option><option>Un poquito más</option></select></label>
             <label for="count">N.º de ejercicios<select id="count"><option value="10">10 ejercicios</option><option value="15">15 ejercicios</option><option value="20" selected>20 ejercicios</option></select></label>
+            <label for="operands">Números por operación<select id="operands"><option value="2" selected>2 números</option><option value="3">3 números</option></select></label>
             <label class="full-field" for="student">Nombre (opcional)<input id="student" type="text" placeholder="Nombre del alumno" maxlength="36" autocomplete="name" /></label>
           </div>
           <p class="modal-note" id="modal-note">Puedes cambiar estas opciones antes de imprimir o compartir la ficha.</p>
