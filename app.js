@@ -44,7 +44,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-24', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-25', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -502,26 +502,31 @@ function createSheets(config) {
   const worksheet = preparePrint(printableHtml(config, items, false));
   const answerSheet = preparePrint(printableHtml(config, items, true));
   const print = html => {
-    const win = window.open('', '_blank');
-    if (!win) return false;
+    const frame = document.createElement('iframe');
+    frame.title = 'Ficha preparada para imprimir';
+    frame.setAttribute('aria-hidden', 'true');
+    frame.tabIndex = -1;
+    frame.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;';
+    const removeFrame = () => { if (frame.isConnected) frame.remove(); };
     try {
-      win.opener = null;
-      win.document.open();
-      win.document.write(html);
-      win.document.close();
+      document.body.appendChild(frame);
+      const printWindow = frame.contentWindow;
+      const printDocument = frame.contentDocument;
+      if (!printWindow || !printDocument) { removeFrame(); return false; }
+      printDocument.open();
+      printDocument.write(html);
+      printDocument.close();
+      printWindow.addEventListener('afterprint', removeFrame, { once: true });
+      setTimeout(() => {
+        try { printWindow.focus(); printWindow.print(); }
+        catch (error) { removeFrame(); }
+      }, 250);
+      setTimeout(removeFrame, 300000);
+      return true;
     } catch (error) {
-      try { win.close(); } catch (closeError) { /* cierre opcional del navegador */ }
+      removeFrame();
       return false;
     }
-    let printed = false;
-    const triggerPrint = () => {
-      if (printed) return;
-      printed = true;
-      try { win.focus(); win.print(); } catch (error) { /* impresión opcional del navegador */ }
-    };
-    win.addEventListener('load', triggerPrint, { once: true });
-    setTimeout(triggerPrint, 1500);
-    return true;
   };
   return { worksheet, answerSheet, print };
 }
