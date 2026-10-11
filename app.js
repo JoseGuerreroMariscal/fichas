@@ -56,7 +56,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-35', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-36', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -890,7 +890,7 @@ function createSheets(config) {
     frame.title = 'Ficha preparada para imprimir';
     frame.setAttribute('aria-hidden', 'true');
     frame.tabIndex = -1;
-    frame.style.cssText = 'position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;';
+    frame.style.cssText = 'position:fixed;inset:0;z-index:2147483647;width:100%;height:100%;border:0;background:#fff;';
     let printed = false;
     const removeFrame = () => { if (frame.isConnected) frame.remove(); };
     const printFrame = () => {
@@ -904,10 +904,10 @@ function createSheets(config) {
       setTimeout(removeFrame, 300000);
     };
     try {
-      frame.addEventListener('load', () => setTimeout(printFrame, 100), { once: true });
+      frame.addEventListener('load', () => setTimeout(printFrame, 250), { once: true });
       frame.srcdoc = html;
       document.body.appendChild(frame);
-      setTimeout(printFrame, 1000);
+      setTimeout(printFrame, 1500);
       return true;
     } catch (error) {
       removeFrame();
