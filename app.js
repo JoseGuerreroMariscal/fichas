@@ -17,7 +17,7 @@ const activityDescriptions = {
 };
 let lastTrigger = null;
 const pageBackground = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')].filter(Boolean);
-const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs'];
+const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs', 'carryMode', 'tableNumber', 'specificDivisor', 'divisionMode'];
 const preferenceKey = 'fichalia-preferences';
 let installPrompt = null;
 let sharedActivity = '';
@@ -54,7 +54,8 @@ const updateConfigurationSummary = () => {
     const digits = isMath ? (first === 'auto' && second === 'auto' ? 'Según la dificultad' : `${first === 'auto' ? 'dificultad' : `${first} cifras`} / ${second === 'auto' ? 'dificultad' : `${second} cifras`}`) : '';
     const countSummary = ['lectura', 'copiado'].includes(activity.value) ? '' : ` · ${document.querySelector('#count').selectedOptions[0].textContent}`;
     const paragraphSummary = activity.value === 'copiado' ? ` · ${document.querySelector('#paragraphs').selectedOptions[0].textContent}` : '';
-    summary.textContent = `${document.querySelector('#difficulty').value}${countSummary}${digits ? ` · ${digits}` : ''}${paragraphSummary}`;
+    const extra = activity.value === 'sumas' || activity.value === 'restas' ? document.querySelector('#carryMode').selectedOptions[0].textContent : activity.value === 'multiplicaciones' ? document.querySelector('#tableNumber').value === 'all' ? 'Todas las tablas' : `Tabla del ${document.querySelector('#tableNumber').value}` : activity.value === 'divisiones' ? `${document.querySelector('#divisionMode').selectedOptions[0].textContent}${document.querySelector('#specificDivisor').value === 'all' ? '' : ` · entre ${document.querySelector('#specificDivisor').value}`}` : '';
+    summary.textContent = `${document.querySelector('#difficulty').value}${countSummary}${digits ? ` · ${digits}` : ''}${paragraphSummary}${extra ? ` · ${extra}` : ''}`;
   }
 };
 const updateDigitLabels = () => {
@@ -72,6 +73,10 @@ const updateActivityFields = () => {
   document.querySelector('#count-field').classList.toggle('hidden-field', isReading || isCopying);
   document.querySelector('#paragraphs-field').classList.toggle('hidden-field', !isCopying);
   document.querySelector('#solutions-field').classList.toggle('hidden-field', isCopying);
+  document.querySelector('#carry-field').classList.toggle('hidden-field', !['sumas', 'restas'].includes(activity.value));
+  document.querySelector('#table-field').classList.toggle('hidden-field', activity.value !== 'multiplicaciones');
+  document.querySelector('#specific-divisor-field').classList.toggle('hidden-field', activity.value !== 'divisiones' || document.querySelector('#secondDigits').value !== '1');
+  document.querySelector('#remainder-field').classList.toggle('hidden-field', activity.value !== 'divisiones');
 };
 const savePreferences = () => {
   try { localStorage.setItem(preferenceKey, JSON.stringify(Object.fromEntries(preferenceIds.map(id => [id, document.querySelector(`#${id}`).value])))); } catch (error) { /* almacenamiento opcional */ }
@@ -87,11 +92,12 @@ try {
   sharedSolutions = shared.get('soluciones') === '1';
   if (sharedSolutions) document.querySelector('#solutions').checked = true;
   preferenceIds.forEach(id => {
-    const parameter = id === 'difficulty' ? 'dificultad' : id === 'count' ? 'ejercicios' : id === 'operands' ? 'numeros' : id === 'firstDigits' ? 'cifras1' : id === 'secondDigits' ? 'cifras2' : 'parrafos';
+    const parameter = ({ difficulty: 'dificultad', count: 'ejercicios', operands: 'numeros', firstDigits: 'cifras1', secondDigits: 'cifras2', paragraphs: 'parrafos', carryMode: 'llevadas', tableNumber: 'tabla', specificDivisor: 'divisor', divisionMode: 'resto' })[id];
     const value = shared.get(parameter);
     if (value) setSelectValue(id, value);
   });
 } catch (error) { /* enlaces compartidos opcionales */ }
+if (document.querySelector('#tableNumber').value !== 'all' || document.querySelector('#specificDivisor').value !== 'all') document.querySelector('#secondDigits').value = '1';
 updateConfigurationSummary();
 updateDigitLabels();
 updateActivityFields();
@@ -135,13 +141,25 @@ activity.addEventListener('change', () => {
   updateConfigurationSummary();
   updateActivityFields();
 });
-preferenceIds.forEach(id => document.querySelector(`#${id}`).addEventListener('change', () => { updateConfigurationSummary(); savePreferences(); }));
+preferenceIds.forEach(id => document.querySelector(`#${id}`).addEventListener('change', () => {
+  if (id === 'tableNumber' && document.querySelector('#tableNumber').value !== 'all') document.querySelector('#secondDigits').value = '1';
+  if (id === 'specificDivisor' && document.querySelector('#specificDivisor').value !== 'all') document.querySelector('#secondDigits').value = '1';
+  if (id === 'secondDigits' && document.querySelector('#secondDigits').value !== '1') {
+    document.querySelector('#tableNumber').value = 'all';
+    document.querySelector('#specificDivisor').value = 'all';
+  }
+  updateConfigurationSummary(); updateActivityFields(); savePreferences();
+}));
 document.querySelector('#reset-options').addEventListener('click', () => {
   document.querySelector('#difficulty').value = 'Inicial';
   document.querySelector('#count').value = '20';
   document.querySelector('#operands').value = '2';
   document.querySelector('#firstDigits').value = 'auto';
   document.querySelector('#secondDigits').value = 'auto';
+  document.querySelector('#carryMode').value = 'any';
+  document.querySelector('#tableNumber').value = 'all';
+  document.querySelector('#specificDivisor').value = 'all';
+  document.querySelector('#divisionMode').value = 'exact';
   document.querySelector('#paragraphs').value = '1';
   document.querySelector('#student').value = '';
   document.querySelector('#solutions').checked = false;
@@ -198,7 +216,19 @@ function rangeForDigits(digits, fallback, minimum = 1) {
   return [size === 1 ? minimum : 10 ** (size - 1), 10 ** size - 1];
 }
 
-function makeOperation(type, difficulty, level = '', operands = 2, firstDigits = 'auto', secondDigits = 'auto') {
+const hasAdditionCarry = (...values) => {
+  let carry = 0;
+  const width = Math.max(...values.map(value => String(value).length));
+  for (let position = 0; position < width; position += 1) {
+    const column = values.reduce((sum, value) => sum + Number(String(value).at(-1 - position) || 0), carry);
+    if (column > 9) return true;
+    carry = Math.floor(column / 10);
+  }
+  return carry > 0;
+};
+const hasSubtractionBorrow = (minuend, subtrahend) => Array.from({ length: String(minuend).length }, (_, position) => Number(String(minuend).at(-1 - position) || 0) < Number(String(subtrahend).at(-1 - position) || 0)).some(Boolean);
+
+function makeOperation(type, difficulty, level = '', operands = 2, firstDigits = 'auto', secondDigits = 'auto', options = {}, attempt = 0) {
   const grade = level ? levelIndex(level) : difficultyIndex(difficulty);
   if (type === 'multiplicaciones') {
     const rangesByGrade = [[1, 9, 2, 5], [1, 20, 2, 5], [10, 99, 2, 9], [100, 999, 2, 9], [1000, 9999, 2, 9], [1000, 99999, 2, 12], [10000, 999999, 10, 99]];
@@ -207,7 +237,8 @@ function makeOperation(type, difficulty, level = '', operands = 2, firstDigits =
     const firstRange = rangeForDigits(firstDigits, ranges.slice(0, 2));
     const secondRange = rangeForDigits(secondDigits, ranges.slice(2, 4), 2);
     const a = randomInt(firstRange[0], firstRange[1]);
-    const b = randomInt(secondRange[0], secondRange[1]);
+    const table = options.tableNumber && options.tableNumber !== 'all' ? Number(options.tableNumber) : null;
+    const b = table && Number(secondDigits) === 1 ? table : randomInt(secondRange[0], secondRange[1]);
     return { question: `${a} × ${b} =`, answer: a * b };
   }
   const rangesByGrade = [[1, 9], [1, 20], [10, 99], [10, 999], [100, 9999], [1000, 99999], [10000, 999999]];
@@ -217,13 +248,18 @@ function makeOperation(type, difficulty, level = '', operands = 2, firstDigits =
   if (type === 'divisiones') {
     const dividendRange = rangeForDigits(firstDigits, [minimum, maximum]);
     const divisorRange = rangeForDigits(secondDigits, [2, grade >= 5 ? 12 : 9], 2);
+    const specificDivisor = options.specificDivisor && options.specificDivisor !== 'all' ? Number(options.specificDivisor) : null;
+    if (specificDivisor && Number(secondDigits) === 1) divisorRange[0] = divisorRange[1] = specificDivisor;
     for (let attempt = 0; attempt < 20; attempt += 1) {
       const divisor = randomInt(divisorRange[0], divisorRange[1]);
       const minQuotient = Math.ceil(dividendRange[0] / divisor);
-      const maxQuotient = Math.floor(dividendRange[1] / divisor);
+        const remainderMode = options.divisionMode === 'remainder';
+        const maxQuotient = Math.floor((dividendRange[1] - (remainderMode ? divisor - 1 : 0)) / divisor);
       if (minQuotient <= maxQuotient) {
         const quotient = randomInt(Math.max(1, minQuotient), Math.max(1, maxQuotient));
-        return { question: `${divisor * quotient} ÷ ${divisor} =`, answer: quotient };
+        const remainder = remainderMode ? randomInt(1, divisor - 1) : 0;
+        const dividend = divisor * quotient + remainder;
+        if (dividend <= dividendRange[1]) return { question: `${dividend} ÷ ${divisor} =`, answer: remainder ? `${quotient} · resto ${remainder}` : quotient };
       }
     }
     const fallbackDivisor = Math.max(2, Math.min(divisorRange[0], Math.floor(dividendRange[1] / 2)));
@@ -234,11 +270,19 @@ function makeOperation(type, difficulty, level = '', operands = 2, firstDigits =
   if (operands === 3 && ['sumas', 'restas'].includes(type)) {
     let c = randomInt(minimum, maximum);
     if (type === 'restas') [a, b, c] = [a, b, c].sort((first, second) => second - first);
+    if (attempt < 80 && options.carryMode && options.carryMode !== 'any') {
+      const carries = type === 'sumas' ? hasAdditionCarry(a, b, c) : hasSubtractionBorrow(a, b) || hasSubtractionBorrow(a - b, c);
+      if (carries !== (options.carryMode === 'yes')) return makeOperation(type, difficulty, level, operands, firstDigits, secondDigits, options, attempt + 1);
+    }
     const symbol = type === 'sumas' ? '+' : '−';
     const answer = type === 'sumas' ? a + b + c : a - b - c;
     return { question: `${a} ${symbol} ${b} ${symbol} ${c} =`, answer };
   }
   if (type === 'restas' && b > a) [a, b] = [b, a];
+  if (attempt < 80 && ['sumas', 'restas'].includes(type) && options.carryMode && options.carryMode !== 'any') {
+    const hasCarry = type === 'sumas' ? hasAdditionCarry(a, b) : hasSubtractionBorrow(a, b);
+    if (hasCarry !== (options.carryMode === 'yes')) return makeOperation(type, difficulty, level, operands, firstDigits, secondDigits, options, attempt + 1);
+  }
   const symbols = { sumas: '+', restas: '−', multiplicaciones: '×' };
   const answer = type === 'sumas' ? a + b : type === 'restas' ? a - b : a * b;
   return { question: `${a} ${symbols[type]} ${b} =`, answer };
@@ -388,9 +432,9 @@ function randomReadingActivity(difficulty) {
   return selected;
 }
 
-function makeContent(type, count, difficulty, level, operands, firstDigits, secondDigits, paragraphs = 1) {
+function makeContent(type, count, difficulty, level, operands, firstDigits, secondDigits, paragraphs = 1, options = {}) {
   if (['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(type)) {
-    return Array.from({ length: count }, () => makeOperation(type, difficulty, level, operands, firstDigits, secondDigits));
+    return Array.from({ length: count }, () => makeOperation(type, difficulty, level, operands, firstDigits, secondDigits, options));
   }
   if (type === 'lectura') return [{ kind: 'reading', ...randomReadingActivity(difficulty) }];
   if (type === 'copiado') {
@@ -473,17 +517,17 @@ function printableHtml(config, items, solutions) {
 *{box-sizing:border-box}html{background:#fff}body{font-family:ui-rounded,'Arial Rounded MT Bold','Trebuchet MS',Arial,sans-serif;color:#20283f;margin:0;padding:20mm 15mm;width:210mm;min-height:297mm;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}h1{text-align:center;font-size:28px;margin:0 0 14px;color:#20283f}h2{text-align:center;font-size:14px;font-weight:normal;margin:0 0 18px;color:#697772}.worksheet-header{display:flex;justify-content:flex-start;gap:30px;border-bottom:1.5px solid #20283f;padding-bottom:11px;margin-bottom:24px;font-size:13px;font-weight:700}.worksheet-header span{display:inline-block;min-width:145px;border-bottom:1px solid #20283f;margin-left:6px;height:16px}.exercise-grid{display:grid;gap:15px 20px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.text-grid{grid-template-columns:1fr}.print-row{break-inside:avoid;page-break-inside:avoid}.arithmetic{display:flex;align-items:flex-start;gap:5px;min-height:102px;padding:4px 2px}.print-row .number{font-size:11px;color:#6b7486;padding-top:3px}.operation{width:100%;font-size:22px;font-weight:700;line-height:1.05}.top-number,.extra-number{text-align:right;padding-right:5px;letter-spacing:5px;min-height:28px}.bottom-number{display:grid;grid-template-columns:1fr auto;gap:6px;text-align:right;padding-right:5px}.bottom-number span:first-child{text-align:left;font-weight:400}.operation-rule{border-bottom:1.5px solid #20283f;margin-top:4px}.answer-space{height:28px;border-bottom:1px solid #7f8998}.solution{font-size:20px;text-align:right;color:#ef8e69;padding:6px 5px 0}.text-exercise{display:grid;grid-template-columns:25px 1fr;grid-template-rows:auto 25px;align-items:end;gap:5px 7px;min-height:78px;padding:8px 4px;border-bottom:1px solid #e4ebe5}.text-exercise strong{font-size:19px;line-height:1.25}.text-exercise i{display:block;border-bottom:1.5px solid #82958b;height:22px}.text-exercise b{font-size:20px;color:#ef8e69;grid-column:2}.copying-sheet{break-inside:avoid;page-break-inside:avoid;margin:0 auto 9mm;max-width:180mm}.copying-text{font-size:17px;line-height:1.55;margin:0}.copying-final-guide{break-inside:avoid;page-break-inside:avoid;max-width:180mm;margin:7mm auto 0}.copying-final-guide h3{font-size:14px;margin:0 0 7px;color:#697772}.lamela-guide{height:108mm;border-top:1.2px solid #647b9b}.lamela-guide span,.lamela-guide div{display:block;height:9mm;border-bottom:1px solid #9aaabd}.lamela-line-0{border-bottom:1.2px solid #7890af!important}.lamela-line-1{border-bottom:1px dashed #b7c4d2!important}.lamela-line-2{border-bottom:1.2px solid #ef9b9b!important}.foot{position:fixed;bottom:8mm;font-size:10px;color:#89958f}@page{size:A4;margin:0}@media print{body{padding:13mm 12mm}.exercise-grid{gap:13px 18px}}@media(max-width:650px){body{padding:18px 14px;max-width:none;min-height:0;overflow-x:hidden}h1{font-size:24px}.worksheet-header{font-size:11px;gap:12px}.worksheet-header span{min-width:90px}.math-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}.arithmetic{min-height:105px}.operation{font-size:22px}}</style></head><body><h1 align="center"><font face="Arial,Helvetica,sans-serif" size="4">${title}</font></h1>${worksheetHeader}${worksheetContent}</body></html>`;
 }
 
-const readConfig = () => ({ type: activity.value, level: '', difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), operands: Number(document.querySelector('#operands').value), firstDigits: document.querySelector('#firstDigits').value, secondDigits: document.querySelector('#secondDigits').value, paragraphs: Number(document.querySelector('#paragraphs').value), student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
+const readConfig = () => ({ type: activity.value, level: '', difficulty: document.querySelector('#difficulty').value, count: Number(document.querySelector('#count').value), operands: Number(document.querySelector('#operands').value), firstDigits: document.querySelector('#firstDigits').value, secondDigits: document.querySelector('#secondDigits').value, paragraphs: Number(document.querySelector('#paragraphs').value), carryMode: document.querySelector('#carryMode').value, tableNumber: document.querySelector('#tableNumber').value, specificDivisor: document.querySelector('#specificDivisor').value, divisionMode: document.querySelector('#divisionMode').value, student: document.querySelector('#student').value.trim(), solutions: document.querySelector('#solutions')?.checked });
 
 const shareUrl = config => {
   const url = new URL(window.location.href);
   url.hash = 'actividades';
-  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits, parrafos: String(config.paragraphs), ...(config.solutions ? { soluciones: '1' } : {}) }).toString();
+  url.search = new URLSearchParams({ actividad: config.type, dificultad: config.difficulty, ejercicios: String(config.count), numeros: String(config.operands), cifras1: config.firstDigits, cifras2: config.secondDigits, parrafos: String(config.paragraphs), llevadas: config.carryMode, tabla: config.tableNumber, divisor: config.specificDivisor, resto: config.divisionMode, ...(config.solutions ? { soluciones: '1' } : {}) }).toString();
   return url.toString();
 };
 
 function createSheets(config) {
-  const items = makeContent(config.type, config.count, config.difficulty, config.level, config.operands, config.firstDigits, config.secondDigits, config.paragraphs);
+  const items = makeContent(config.type, config.count, config.difficulty, config.level, config.operands, config.firstDigits, config.secondDigits, config.paragraphs, config);
   const simpleMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(config.type);
   const textStyles = '.text-exercise i{grid-column:2;width:100%}.text-exercise strong{font-size:17px;line-height:1.35}.reading-sheet{max-width:180mm;margin:0 auto}.reading-sheet h3{font-size:24px;margin:0 0 14px}.reading-text{font-size:16px;line-height:1.55;margin:0 0 20px}.reading-sheet h4{font-size:14px;margin:0 0 10px}.reading-question{display:grid;grid-template-columns:22px 1fr;gap:5px 7px;min-height:78px;align-items:start;margin-bottom:9px;break-inside:avoid;page-break-inside:avoid}.reading-question span{font-weight:700}.reading-question strong{font-size:15px;line-height:1.35}.reading-question i{grid-column:2;height:48px;border-bottom:1px solid #82958b;background:repeating-linear-gradient(to bottom,transparent 0,transparent 22px,#d9e2ea 22px,#d9e2ea 23px)}.reading-question b{grid-column:2;color:#275fac}.copying-sheet{break-inside:avoid;page-break-inside:avoid;margin:0 auto 9mm;max-width:180mm}.copying-text{font-size:17px;line-height:1.55;margin:0}.copying-final-guide{break-inside:avoid;page-break-inside:avoid;max-width:180mm;margin:7mm auto 0}.copying-final-guide h3{font-size:14px;margin:0 0 7px;color:#697772}.lamela-guide{height:108mm;border-top:1.2px solid #647b9b}.lamela-guide span{display:block;height:9mm;border-bottom:1px solid #9aaabd}.lamela-line-0{border-bottom:1.2px solid #7890af!important}.lamela-line-1{border-bottom:1px dashed #b7c4d2!important}.lamela-line-2{border-bottom:1.2px solid #ef9b9b!important}';
   const printPolish = '<style>html,body{width:210mm!important;min-width:210mm!important;max-width:210mm!important}body{font-family:ui-rounded,"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif!important;color:#20283f!important;background:#fff!important;padding:13mm 12mm!important;overflow:visible!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}h1{text-align:center!important;font-size:15px!important;font-weight:700!important;line-height:1.2!important;color:#20283f!important;margin:0 0 19px!important}.worksheet-header{display:flex!important;justify-content:space-between!important;gap:20px!important;margin-bottom:24px!important;padding:0 8px!important;border:0!important;font-size:10px!important;font-weight:700!important}.worksheet-header>div:first-child{flex:1}.worksheet-header>div:last-child{min-width:72px}.worksheet-header span{min-width:100px;height:13px}.worksheet-header>div:last-child span{min-width:62px}.math-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(5,minmax(0,1fr))!important;gap:0 22px!important;min-height:246mm!important;padding:0 2mm!important}.math-grid .arithmetic{width:100%!important;min-height:0!important;justify-content:center!important;align-items:center!important;padding:0!important}.math-grid .operation{display:block!important;flex:0 0 116px!important;width:116px!important;min-width:116px!important;max-width:116px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace!important;font-size:17px!important;line-height:1.15!important}.math-grid .digit-value{display:inline-flex!important;gap:3px!important;letter-spacing:0!important}.math-grid .digit-value b{letter-spacing:0!important}.math-grid .top-number,.math-grid .extra-number{padding-right:0!important;letter-spacing:0!important;min-height:23px!important;white-space:nowrap!important}.math-grid .bottom-number{grid-template-columns:18px 1fr!important;gap:0!important;padding-right:0!important;letter-spacing:0!important;line-height:1.15!important;white-space:nowrap!important}.math-grid .bottom-number .operator{text-align:center!important;letter-spacing:0!important}.math-grid .bottom-number .digit-value{justify-self:end!important}.math-grid .operation-rule{display:block!important;width:116px!important;max-width:116px!important;margin-top:5px!important}.math-grid .answer-space{display:none!important}@media print{h1{letter-spacing:-.02em}.worksheet-header{break-inside:avoid;page-break-inside:avoid}.text-exercise,.reading-question{break-inside:avoid;page-break-inside:avoid}.reading-sheet{break-inside:avoid;page-break-inside:avoid}.copying-sheet{break-inside:avoid;page-break-inside:avoid}p,h1,h2,h3,h4{orphans:3;widows:3}}</style>';
