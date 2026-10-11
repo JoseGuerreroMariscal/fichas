@@ -44,7 +44,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-22', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-23', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -447,13 +447,14 @@ function printableHtml(config, items, solutions) {
   if (arithmetic) {
     const cellsPerRow = 4;
     const operationRows = [];
-    const rowHeightMm = Math.min(90, Math.floor(238 / Math.ceil(items.length / cellsPerRow)));
+    const rowHeightMm = Math.min(90, Math.floor(230 / Math.ceil(items.length / cellsPerRow)));
+    const rowHeightPx = Math.round(rowHeightMm * 96 / 25.4);
     for (let start = 0; start < items.length; start += cellsPerRow) {
-      const cells = items.slice(start, start + cellsPerRow).map((item, offset) => `<td width="25%" height="${rowHeightMm}mm" align="center" valign="middle" style="padding:1mm 2mm">${exerciseMarkup(config, item, start + offset, solutions)}</td>`);
-      while (cells.length < cellsPerRow) cells.push(`<td width="25%" height="${rowHeightMm}mm">&nbsp;</td>`);
+      const cells = items.slice(start, start + cellsPerRow).map((item, offset) => `<td width="25%" height="${rowHeightPx}" align="center" valign="middle" style="padding:1mm 2mm">${exerciseMarkup(config, item, start + offset, solutions)}</td>`);
+      while (cells.length < cellsPerRow) cells.push(`<td width="25%" height="${rowHeightPx}">&nbsp;</td>`);
       operationRows.push(`<tr>${cells.join('')}</tr>`);
     }
-    worksheetContent = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout:fixed;border-collapse:collapse"><tbody>${operationRows.join('')}</tbody></table>`;
+    worksheetContent = `<table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="table-layout:fixed;border-collapse:collapse"><tbody><tr><td colspan="4" height="45">&nbsp;</td></tr>${operationRows.join('')}</tbody></table>`;
   } else {
     worksheetContent = `<div class="exercise-grid text-grid">${rows}</div>${copyingGuide}`;
   }
