@@ -42,6 +42,15 @@ document.querySelector('.modal-close').addEventListener('click', () => {
 modal.addEventListener('click', event => {
   if (event.target === modal) closeGenerator();
 });
+modal.addEventListener('keydown', event => {
+  if (event.key !== 'Tab' || !modal.classList.contains('open')) return;
+  const focusable = [...modal.querySelectorAll('button, select, input, [href], [tabindex]:not([tabindex="-1"])')].filter(element => !element.disabled);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+});
 function closeGenerator() {
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');

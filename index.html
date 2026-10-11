@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css?v=20261011-2" />
   </head>
   <body>
+    <a class="skip-link" href="#actividades">Saltar a las actividades</a>
     <header class="site-header">
       <a class="brand" href="#inicio" aria-label="Fichalia, inicio"><span class="brand-mark">F</span> fichalia</a>
       <a class="header-action" href="#actividades">Ver actividades <span>↓</span></a>
@@ -56,7 +57,7 @@
           <label class="check-label"><input id="solutions" type="checkbox" /> <span>Incluir soluciones</span></label>
           <button class="generate-button" type="submit">Generar e imprimir ficha <span>↗</span></button>
         </form>
-        <div class="preview-result" id="preview-result" aria-live="polite"></div>
+        <div class="preview-result" id="preview-result" role="status" aria-live="polite"></div>
       </section>
     </div>
     <script src="app.js?v=20261011-2"></script>
