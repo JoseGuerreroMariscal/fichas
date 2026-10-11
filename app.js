@@ -18,6 +18,8 @@ const openGenerator = type => {
   modal.setAttribute('aria-hidden', 'false');
   activity.value = type;
   result.innerHTML = '';
+  document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
+  document.querySelectorAll('.activity-card').forEach(card => card.classList.toggle('is-selected', card.dataset.type === type));
   setTimeout(() => activity.focus(), 50);
 };
 
