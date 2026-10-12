@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261011-49', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-50', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -141,8 +141,12 @@ const clearActivitySearch = document.querySelector('#clear-activity-search');
 const filterActivities = () => {
   const query = activitySearch.value.trim().toLocaleLowerCase('es');
   document.querySelectorAll('.activity-card').forEach(card => {
-    card.hidden = Boolean(query) && !card.textContent.toLocaleLowerCase('es').includes(query);
+    const matches = !query || card.textContent.toLocaleLowerCase('es').includes(query);
+    card.hidden = false;
+    const item = card.closest('.activity-card-wrap') || card;
+    item.hidden = !matches;
   });
+  if (clearActivitySearch) clearActivitySearch.hidden = !query;
 };
 activitySearch?.addEventListener('input', filterActivities);
 clearActivitySearch?.addEventListener('click', () => { activitySearch.value = ''; filterActivities(); activitySearch.focus(); });
@@ -155,10 +159,13 @@ const saveFavoriteActivities = favorites => {
 const favoriteActivities = readFavoriteActivities();
 document.querySelectorAll('.activity-card').forEach(card => {
   const type = card.dataset.type;
-  const favorite = document.createElement('span');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'activity-card-wrap';
+  card.parentNode.insertBefore(wrapper, card);
+  wrapper.append(card);
+  const favorite = document.createElement('button');
+  favorite.type = 'button';
   favorite.className = 'card-favorite';
-  favorite.setAttribute('role', 'button');
-  favorite.setAttribute('tabindex', '0');
   favorite.setAttribute('aria-label', `${favoriteActivities.has(type) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${labels[type]}`);
   favorite.textContent = favoriteActivities.has(type) ? '★' : '☆';
   favorite.addEventListener('click', event => {
@@ -169,8 +176,7 @@ document.querySelectorAll('.activity-card').forEach(card => {
     favorite.textContent = selected ? '★' : '☆';
     favorite.setAttribute('aria-label', `${selected ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${labels[type]}`);
   });
-  favorite.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); favorite.click(); } });
-  card.append(favorite);
+  wrapper.append(favorite);
 });
 const saveRecentActivity = type => {
   try { localStorage.setItem(recentActivityKey, JSON.stringify({ type, label: labels[type], savedAt: Date.now() })); } catch (error) { /* almacenamiento opcional */ }
@@ -186,6 +192,7 @@ if (countSelect && !countSelect.querySelector('option[value="20"]')) {
   countSelect.value = '20';
 }
 
+const generatorTitle = type => ({ mixta: 'Prepara tu ficha mixta', diaria: 'Prepara tu ficha diaria' }[type] || `Prepara tu ficha de ${labels[type].toLowerCase()}`);
 const openGenerator = type => {
   lastTrigger = document.querySelector(`[data-type="${type}"]`);
   document.querySelectorAll('[data-type]').forEach(card => card.setAttribute('aria-expanded', String(card === lastTrigger)));
@@ -196,7 +203,7 @@ const openGenerator = type => {
   activity.value = type;
   saveRecentActivity(type);
   result.innerHTML = '';
-  document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
+  document.querySelector('#generator-title').textContent = generatorTitle(type);
   document.querySelector('#activity-summary').textContent = labels[type];
   document.querySelector('#modal-note').textContent = activityDescriptions[type];
   updateDigitLabels();
@@ -216,7 +223,7 @@ document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('
 if (sharedActivity && labels[sharedActivity]) setTimeout(() => openGenerator(sharedActivity), 0);
 activity.addEventListener('change', () => {
   document.querySelector('#activity-summary').textContent = labels[activity.value];
-  document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[activity.value].toLowerCase()}`;
+  document.querySelector('#generator-title').textContent = generatorTitle(activity.value);
   document.querySelector('#modal-note').textContent = activityDescriptions[activity.value];
   updateDigitLabels();
   updateConfigurationSummary();
