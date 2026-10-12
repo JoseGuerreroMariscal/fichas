@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-55', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-56', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -1027,7 +1027,10 @@ function exerciseMarkup(config, item, index, solutions) {
       })();
     if (operationRows) return `<table role="presentation" width="120" align="center" border="0" cellspacing="0" cellpadding="0"><tbody>${operationRows}<tr><td colspan="2" align="center"><hr width="100%" size="1" color="#20283f" noshade></td></tr>${answerRows}</tbody></table>`;
   }
-  return `<div class="print-row text-exercise"><span class="number">${index + 1}.</span><strong>${item.question}</strong>${solutions ? `<b>${item.answer}</b>` : '<i aria-label="espacio para responder"></i>'}</div>`;
+  const answerSpace = solutions
+    ? `<b>${item.answer}</b>`
+    : `<div class="answer-lines" aria-label="espacio para responder" style="grid-column:2;display:grid;grid-template-rows:repeat(3,22px);gap:4px;width:100%;height:74px"><i></i><i></i><i></i></div>`;
+  return `<div class="print-row text-exercise" style="grid-template-rows:auto auto;min-height:110px;align-items:start"><span class="number">${index + 1}.</span><strong>${item.question}</strong>${answerSpace}</div>`;
 }
 
 function printableHtml(config, items, solutions) {
