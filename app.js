@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-87', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-89', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -516,8 +516,94 @@ const additionalReadingActivitiesByLevel = {
   ]
 };
 
+const readingExpansionByLevel = {
+  Inicial: [
+    ['El gorro de lana', 'Pablo se puso un gorro de lana antes de salir. Hacía frío y su madre le recordó que llevara también los guantes.', '¿Qué se puso Pablo?', 'Un gorro de lana.', '¿Qué tiempo hacía?', 'Hacía frío.', '¿Qué más debía llevar?', 'Los guantes.'],
+    ['La caja de galletas', 'Marta encontró una caja de galletas en la cocina. Preguntó antes de coger una y después dejó la caja en la mesa.', '¿Dónde encontró la caja?', 'En la cocina.', '¿Qué hizo antes de coger una?', 'Preguntó.', '¿Dónde dejó la caja?', 'En la mesa.'],
+    ['El lápiz verde', 'Álvaro perdió su lápiz verde durante la clase. Lo encontró debajo de la mesa y volvió a guardarlo en el estuche.', '¿De qué color era el lápiz?', 'Verde.', '¿Dónde lo encontró?', 'Debajo de la mesa.', '¿Dónde lo guardó?', 'En el estuche.'],
+    ['La visita al zoo', 'Elena visitó el zoo con su familia. Vieron elefantes, monos y una jirafa que comía hojas.', '¿Con quién fue Elena?', 'Con su familia.', '¿Qué animales vieron?', 'Elefantes, monos y una jirafa.', '¿Qué comía la jirafa?', 'Hojas.'],
+    ['El abrigo rojo', 'Nico dejó su abrigo rojo en el perchero del colegio. Al terminar la clase, lo encontró junto a su mochila.', '¿De qué color era el abrigo?', 'Rojo.', '¿Dónde lo dejó?', 'En el perchero.', '¿Junto a qué lo encontró?', 'Junto a su mochila.'],
+    ['La flor amarilla', 'Sara dibujó una flor amarilla en una hoja blanca. Después regaló el dibujo a su abuela.', '¿Qué dibujó Sara?', 'Una flor.', '¿De qué color era?', 'Amarilla.', '¿A quién regaló el dibujo?', 'A su abuela.']
+  ],
+  Medio: [
+    ['El huerto de aromáticas', 'El grupo plantó romero, menta y albahaca en tres espacios del huerto. Colocaron etiquetas para recordar el nombre de cada planta.', '¿Qué plantó el grupo?', 'Romero, menta y albahaca.', '¿Cuántos espacios utilizaron?', 'Tres.', '¿Para qué colocaron etiquetas?', 'Para recordar los nombres.'],
+    ['La biblioteca digital', 'La clase aprendió a buscar libros en el catálogo digital de la biblioteca. Practicaron con palabras clave y anotaron los resultados que les parecían más interesantes.', '¿Qué aprendió la clase?', 'A buscar libros en un catálogo digital.', '¿Qué practicaron?', 'El uso de palabras clave.', '¿Qué anotaron?', 'Los resultados interesantes.'],
+    ['La brújula del sendero', 'Durante una salida, el profesor entregó una brújula a cada equipo. Compararon la dirección del norte con el mapa antes de continuar por el sendero.', '¿Qué entregó el profesor?', 'Una brújula a cada equipo.', '¿Con qué compararon el norte?', 'Con el mapa.', '¿Cuándo continuaron?', 'Después de comparar la dirección.'],
+    ['El concurso de carteles', 'Los equipos prepararon carteles para recordar cómo separar los residuos. Antes de exponerlos, revisaron que los dibujos y las instrucciones fueran fáciles de entender.', '¿Para qué eran los carteles?', 'Para recordar cómo separar los residuos.', '¿Qué revisaron?', 'Los dibujos y las instrucciones.', '¿Cómo debían ser?', 'Fáciles de entender.'],
+    ['La maqueta del barrio', 'Irene y su equipo construyeron una maqueta del barrio con cartón. Añadieron calles, árboles y una plaza para representar los lugares más importantes.', '¿Con qué construyeron la maqueta?', 'Con cartón.', '¿Qué añadieron?', 'Calles, árboles y una plaza.', '¿Qué representaron?', 'Los lugares más importantes.'],
+    ['El diario del tiempo', 'Durante un mes, Hugo anotó si hacía sol, viento o lluvia. Al final contó los días de cada tipo y comparó los resultados con sus compañeros.', '¿Durante cuánto tiempo anotó Hugo?', 'Durante un mes.', '¿Qué registró?', 'El sol, el viento o la lluvia.', '¿Qué hizo al final?', 'Contó y comparó los resultados.']
+  ],
+  Avanzado: [
+    ['El archivo de fotografías', 'La biblioteca digitalizó fotografías antiguas del barrio. Para ordenarlas, el equipo anotó la fecha, el lugar y las personas que aparecían en cada imagen.', '¿Qué digitalizó la biblioteca?', 'Fotografías antiguas del barrio.', '¿Qué datos anotaron?', 'La fecha, el lugar y las personas.', '¿Para qué lo hicieron?', 'Para ordenar las imágenes.'],
+    ['El consumo de agua', 'Un grupo comparó el consumo de agua de varias familias durante una semana. Después propuso observar los momentos en que se gastaba más para buscar alternativas.', '¿Qué comparó el grupo?', 'El consumo de agua de varias familias.', '¿Durante cuánto tiempo?', 'Durante una semana.', '¿Qué propuso después?', 'Buscar alternativas al gasto mayor.'],
+    ['El debate del aula', 'La clase debatió si era mejor trabajar en silencio o compartir algunas ideas mientras resolvía un problema. Al final acordaron que dependía de la fase de la actividad.', '¿Sobre qué debatió la clase?', 'Sobre la forma de trabajar.', '¿Qué acuerdo alcanzaron?', 'Que dependía de la fase de la actividad.', '¿Qué hicieron para decidir?', 'Compartieron y valoraron ideas.'],
+    ['La ruta accesible', 'El ayuntamiento pidió al alumnado que señalara obstáculos para las personas con movilidad reducida. Los equipos recorrieron varias calles y propusieron mejoras concretas.', '¿Qué pidió el ayuntamiento?', 'Señalar obstáculos.', '¿Qué recorrieron los equipos?', 'Varias calles.', '¿Qué propusieron?', 'Mejoras concretas.'],
+    ['El experimento de sombras', 'Los estudiantes midieron la sombra de un palo a distintas horas. Observaron que cambiaba de longitud y dirección, y relacionaron los datos con la posición del sol.', '¿Qué midieron?', 'La sombra de un palo.', '¿Qué cambiaba?', 'Su longitud y dirección.', '¿Con qué relacionaron los datos?', 'Con la posición del sol.'],
+    ['La revista escolar', 'El equipo editorial decidió publicar una revista digital. Repartió las tareas, revisó las fuentes y estableció un calendario para que cada texto llegara a tiempo.', '¿Qué decidió publicar el equipo?', 'Una revista digital.', '¿Qué revisó?', 'Las fuentes.', '¿Para qué estableció un calendario?', 'Para entregar los textos a tiempo.']
+  ]
+};
+
 const readingActivities = Object.entries(readingActivitiesByLevel)
-  .flatMap(([level, activities]) => [...activities, ...(additionalReadingActivitiesByLevel[level] || [])].map(activity => makeReading(level, activity)));
+  .flatMap(([level, activities]) => [...activities, ...(additionalReadingActivitiesByLevel[level] || []), ...(readingExpansionByLevel[level] || [])].map(activity => makeReading(level, activity)));
+
+const buildShortReadings = (level, entries) => entries.map(([title, subject, action, object, place]) => makeReading(level, [
+  title,
+  `${subject} ${action} ${object} en ${place}. Después revisó la actividad y dejó todo preparado para el día siguiente.`,
+  '¿Quién realizó la actividad?', subject,
+  '¿Qué hizo?', `${action} ${object}.`,
+  '¿Dónde la realizó?', place + '.'
+]));
+
+readingActivities.push(
+  ...buildShortReadings('Inicial', [
+    ['La postal', 'Vera', 'dibujó', 'una postal', 'su habitación'], ['El tambor', 'Leo', 'guardó', 'un tambor', 'el armario'],
+    ['La cometa', 'Nora', 'preparó', 'una cometa', 'el patio'], ['El cuento', 'Hugo', 'eligió', 'un cuento', 'la biblioteca'],
+    ['La taza', 'Mía', 'lavó', 'una taza', 'la cocina'], ['El puzle', 'Álex', 'terminó', 'un puzle', 'la mesa'],
+    ['La gorra', 'Irene', 'encontró', 'una gorra', 'el banco'], ['El cuaderno', 'Bruno', 'ordenó', 'un cuaderno', 'la mochila'],
+    ['La pelota', 'Celia', 'compartió', 'una pelota', 'el parque'], ['El pañuelo', 'Dani', 'dobló', 'un pañuelo', 'su cajón'],
+    ['La semilla', 'Lola', 'plantó', 'una semilla', 'una maceta'], ['El dibujo', 'Mario', 'coloreó', 'un dibujo', 'la clase'],
+    ['La linterna', 'Sara', 'encendió', 'una linterna', 'la tienda'], ['El zumo', 'Pablo', 'preparó', 'un zumo', 'la merienda'],
+    ['La cuerda', 'Aina', 'recogió', 'una cuerda', 'el gimnasio'], ['El disfraz', 'Tomás', 'guardó', 'un disfraz', 'el baúl'],
+    ['La regla', 'Elena', 'utilizó', 'una regla', 'su escritorio'], ['El regalo', 'Nico', 'envolvió', 'un regalo', 'el salón'],
+    ['La hoja', 'Clara', 'recogió', 'una hoja', 'el jardín'], ['El cubo', 'Óscar', 'llenó', 'un cubo', 'el patio'],
+    ['La foto', 'Alicia', 'pegó', 'una foto', 'su álbum'], ['El botón', 'Mateo', 'cosió', 'un botón', 'la mesa'],
+    ['La canción', 'Julia', 'escuchó', 'una canción', 'su habitación'], ['El mapa', 'Diego', 'miró', 'un mapa', 'la clase'],
+    ['La caja', 'Emma', 'cerró', 'una caja', 'el dormitorio'], ['El vaso', 'Héctor', 'llenó', 'un vaso', 'la cocina'],
+    ['La planta', 'Olivia', 'regó', 'una planta', 'la ventana']
+  ]),
+  ...buildShortReadings('Medio', [
+    ['El plano del parque', 'Claudia', 'dibujó', 'un plano', 'la biblioteca'], ['La tabla de datos', 'Iván', 'completó', 'una tabla de datos', 'el aula'],
+    ['El cartel informativo', 'Marta', 'redactó', 'un cartel informativo', 'el pasillo'], ['La caja de muestras', 'Sergio', 'clasificó', 'una caja de muestras', 'el laboratorio'],
+    ['La entrevista', 'Lucía', 'preparó', 'una entrevista', 'el colegio'], ['El diario de campo', 'Adrián', 'escribió', 'un diario de campo', 'el sendero'],
+    ['La maqueta', 'Noa', 'construyó', 'una maqueta', 'el taller'], ['La encuesta', 'Valeria', 'revisó', 'una encuesta', 'la biblioteca'],
+    ['El experimento', 'Samuel', 'repitió', 'un experimento', 'el laboratorio'], ['La exposición', 'Carla', 'organizó', 'una exposición', 'el vestíbulo'],
+    ['El calendario', 'Raúl', 'actualizó', 'un calendario', 'la clase'], ['La brújula', 'Irene', 'comprobó', 'una brújula', 'el sendero'],
+    ['El inventario', 'Daniel', 'anotó', 'un inventario', 'el almacén'], ['La noticia', 'Ainhoa', 'contrastó', 'una noticia', 'la sala de lectura'],
+    ['El registro', 'Mario', 'completó', 'un registro', 'el huerto'], ['La colección', 'Nerea', 'ordenó', 'una colección', 'el museo'],
+    ['El itinerario', 'Lucas', 'calculó', 'un itinerario', 'el mapa'], ['La propuesta', 'Carmen', 'escribió', 'una propuesta', 'la reunión'],
+    ['El modelo', 'Hugo', 'mejoró', 'un modelo', 'el taller'], ['La observación', 'Vega', 'anotó', 'una observación', 'el cuaderno'],
+    ['El folleto', 'Pablo', 'diseñó', 'un folleto', 'la sala de informática'], ['La comparación', 'Elisa', 'preparó', 'una comparación', 'el aula'],
+    ['El recorrido', 'Álvaro', 'marcó', 'un recorrido', 'el plano'], ['La explicación', 'Sofía', 'ensayó', 'una explicación', 'el salón de actos'],
+    ['El informe', 'Gonzalo', 'revisó', 'un informe', 'la biblioteca'], ['La experiencia', 'Mara', 'describió', 'una experiencia', 'el cuaderno'],
+    ['El proyecto', 'Javier', 'presentó', 'un proyecto', 'la clase']
+  ]),
+  ...buildShortReadings('Avanzado', [
+    ['El informe energético', 'Lucía', 'analizó', 'un informe energético', 'el aula'], ['La propuesta vecinal', 'Mateo', 'defendió', 'una propuesta vecinal', 'la reunión'],
+    ['El archivo histórico', 'Sara', 'consultó', 'un archivo histórico', 'el museo'], ['La hipótesis', 'Nora', 'formuló', 'una hipótesis', 'el laboratorio'],
+    ['El mapa climático', 'Diego', 'interpretó', 'un mapa climático', 'la biblioteca'], ['La entrevista científica', 'Alicia', 'preparó', 'una entrevista científica', 'el estudio'],
+    ['El debate', 'Héctor', 'moderó', 'un debate', 'el salón de actos'], ['La investigación', 'Elena', 'documentó', 'una investigación', 'el cuaderno'],
+    ['El presupuesto', 'Bruno', 'calculó', 'un presupuesto', 'la oficina'], ['La campaña', 'Irene', 'planificó', 'una campaña', 'el centro juvenil'],
+    ['El prototipo', 'Óscar', 'probó', 'un prototipo', 'el taller'], ['La reseña', 'Clara', 'escribió', 'una reseña', 'la biblioteca'],
+    ['El análisis', 'Nico', 'comparó', 'un análisis', 'el laboratorio'], ['La cronología', 'Vera', 'ordenó', 'una cronología', 'el archivo'],
+    ['El acuerdo', 'Pablo', 'redactó', 'un acuerdo', 'la asamblea'], ['La encuesta pública', 'Marta', 'interpretó', 'una encuesta pública', 'el centro cívico'],
+    ['El diseño', 'Leo', 'revisó', 'un diseño', 'el estudio'], ['La conclusión', 'Emma', 'explicó', 'una conclusión', 'la clase'],
+    ['El recurso digital', 'Adrián', 'organizó', 'un recurso digital', 'la biblioteca'], ['La guía', 'Celia', 'editó', 'una guía', 'el equipo'],
+    ['El diagnóstico', 'Tomás', 'completó', 'un diagnóstico', 'el laboratorio'], ['La alternativa', 'Julia', 'valoró', 'una alternativa', 'la reunión'],
+    ['El registro de campo', 'Sergio', 'revisó', 'un registro de campo', 'el sendero'], ['La memoria oral', 'Noa', 'transcribió', 'una memoria oral', 'el archivo'],
+    ['El plan de mejora', 'Valeria', 'presentó', 'un plan de mejora', 'el consejo escolar'], ['La síntesis', 'Daniel', 'preparó', 'una síntesis', 'el aula'],
+    ['El resultado', 'Ainhoa', 'comunicó', 'un resultado', 'la exposición']
+  ])
+);
 
 const copyingSequences = [
   [
@@ -612,12 +698,23 @@ const copyingExtraParagraphs = [
   'Antes de guardar la ficha, comprobaron que todo estaba completo y ordenado. El esfuerzo diario permite avanzar paso a paso.'
 ];
 
+copyingSequences.push(
+  ['El grupo preparó una excursión al museo de ciencias. Primero consultaron el horario y decidieron qué salas querían visitar.', 'Cada alumno llevó una libreta para anotar preguntas. La profesora recordó que observar con atención era tan importante como leer los carteles.', 'En la sala de minerales descubrieron rocas de colores y formas diferentes. Después compararon sus notas por parejas.', 'En el descanso compartieron la merienda y comentaron qué objeto les había sorprendido más. A todos les interesó el meteorito.', 'Al volver a clase, organizaron las preguntas y prepararon un mural con lo aprendido.'],
+  ['La clase quiso construir un pequeño jardín vertical. Antes de empezar, midieron la pared y eligieron plantas que necesitaran poca agua.', 'Un equipo preparó los recipientes y otro mezcló la tierra. Todos trabajaron con cuidado para no romper las raíces.', 'Después colocaron las plantas a distintas alturas y escribieron sus nombres en unas etiquetas.', 'Durante las semanas siguientes se turnaron para revisar la humedad y retirar las hojas secas.', 'El jardín cambió el aspecto del pasillo y recordó a la clase que un proyecto necesita constancia.'],
+  ['Alicia decidió ordenar las fotografías de sus vacaciones. Las separó por lugares y escribió una fecha aproximada detrás de cada grupo.', 'Para no perder ninguna, guardó una copia digital en una carpeta con un nombre claro.', 'Su hermano le ayudó a reconocer una playa que habían visitado años antes. Juntos buscaron el nombre en un mapa.', 'Luego eligieron algunas imágenes para preparar un pequeño álbum familiar.', 'Alicia comprendió que ordenar la información facilita encontrarla más adelante.'],
+  ['El colegio organizó una jornada de juegos cooperativos. Cada equipo recibió una tarjeta con una prueba diferente.', 'Antes de comenzar, leyeron las reglas y repartieron las tareas para que todos pudieran participar.', 'En una de las pruebas tuvieron que construir una torre con piezas de cartón sin que se cayera.', 'Cuando algo no funcionaba, cambiaban la estrategia y volvían a intentarlo.', 'Al final comprobaron que escuchar las ideas de los demás les había ayudado a completar los retos.']
+);
+
 const calligraphySamples = {
   letters: ['a  a  a  a  a', 'e  e  e  e  e', 'i  i  i  i  i', 'o  o  o  o  o', 'u  u  u  u  u', 'm  m  m  m  m', 'p  p  p  p  p', 's  s  s  s  s', 'l  l  l  l  l', 't  t  t  t  t', 'n  n  n  n  n', 'r  r  r  r  r', 'd  d  d  d  d', 'c  c  c  c  c'],
   syllables: ['ma  me  mi  mo  mu', 'pa  pe  pi  po  pu', 'la  le  li  lo  lu', 'sa  se  si  so  su', 'bra  bre  bri  bro  bru', 'pla  ple  pli  plo  plu', 'tra  tre  tri  tro  tru', 'cla  cle  cli  clo  clu', 'que  qui  qua  quo  cu', 'ña  ñe  ñi  ño  ñu'],
   words: ['mariposa', 'pelota', 'camino', 'familia', 'escuela', 'ventana', 'primavera', 'biblioteca', 'montaña', 'elefante', 'cuaderno', 'amistad', 'jardín', 'aventura'],
   sentences: ['Mi casa tiene un jardín.', 'La rana salta junto al lago.', 'Hoy aprendemos algo nuevo.', 'Mi mochila está preparada.', 'Los amigos juegan en el parque.', 'Cuidamos juntos nuestro planeta.', 'La tortuga camina despacio.', 'Mi familia prepara la merienda.', 'El sol ilumina la ventana.', 'Compartir nos ayuda a aprender.', 'El tren llega a la estación.', 'Cada día practico un poco.']
 };
+calligraphySamples.letters.push('b  b  b  b  b', 'f  f  f  f  f', 'g  g  g  g  g', 'h  h  h  h  h', 'v  v  v  v  v', 'z  z  z  z  z', 'ñ  ñ  ñ  ñ  ñ');
+calligraphySamples.syllables.push('da  de  di  do  du', 'fa  fe  fi  fo  fu', 'ga  ge  gi  go  gu', 'ña  ñe  ñi  ño  ñu', 'va  ve  vi  vo  vu', 'za  ze  zi  zo  zu', 'cha  che  chi  cho  chu');
+calligraphySamples.words.push('naranja', 'mariposa', 'amistad', 'cuidadoso', 'camiseta', 'estrella', 'regadera');
+calligraphySamples.sentences.push('La estrella brilla por la noche.', 'Mi perro corre por el jardín.', 'La clase cuida los libros.', 'El barco navega despacio.', 'Preparamos juntos la mochila.', 'La lluvia moja las hojas.', 'Cada pregunta nos ayuda a aprender.');
 
 const spellingActivities = [
   ['Completa con b o v', 'La _icicleta de Bea es _erde.', 'La bicicleta de Bea es verde.'],
@@ -647,6 +744,35 @@ const logicActivities = [
   ['9, 18, 27, 36, __', '45'], ['40, 36, 32, 28, __', '24'], ['1, 4, 7, 10, __', '13'],
   ['2, 6, 18, 54, __', '162'], ['200, 180, 160, 140, __', '120']
 ];
+
+logicActivities.push(
+  ['13, 16, 19, 22, __', '25'], ['84, 77, 70, 63, __', '56'], ['1, 3, 6, 10, __', '15'],
+  ['9, 18, 36, 72, __', '144'], ['6, 10, 14, 18, __', '22'], ['150, 135, 120, 105, __', '90'],
+  ['2, 4, 8, 16, __', '32'], ['17, 22, 27, 32, __', '37'], ['49, 42, 35, 28, __', '21'],
+  ['3, 6, 9, 12, __', '15'], ['5, 10, 20, 40, __', '80'], ['36, 33, 30, 27, __', '24'],
+  ['2, 8, 14, 20, __', '26'], ['7, 11, 15, 19, __', '23'], ['100, 95, 90, 85, __', '80'],
+  ['4, 16, 64, 256, __', '1024'], ['1, 10, 19, 28, __', '37'], ['80, 72, 64, 56, __', '48'],
+  ['10, 13, 16, 19, __', '22'], ['200, 190, 180, 170, __', '160']
+);
+
+spellingActivities.push(
+  ['Completa con b o v', 'El _urro llevaba una _olsa.', 'El burro llevaba una bolsa.'],
+  ['Completa con g o j', 'La _elatina tiene sabor a _engibre.', 'La gelatina tiene sabor a jengibre.'],
+  ['Completa con h', 'Mi _ija _izo los deberes.', 'Mi hija hizo los deberes.'],
+  ['Completa con c o z', 'La _igüeña cruza la _ona húmeda.', 'La cigüeña cruza la zona húmeda.'],
+  ['Completa con ll o y', 'La _ave está cerca de la _egua.', 'La llave está cerca de la yegua.'],
+  ['Completa con r o rr', 'El pe_o siguió el ca_o.', 'El perro siguió el carro.'],
+  ['Completa con m o n', 'El i_vierno llegó con mucho _ieve.', 'El invierno llegó con mucha nieve.'],
+  ['Completa con mp o mb', 'La ta_bora sonó junto al ca_po.', 'La tambora sonó junto al campo.'],
+  ['Completa con güe o gue', 'El para_as está junto a la ci_eña.', 'El paraguas está junto a la cigüeña.'],
+  ['Completa con qu o c', 'El _ilómetro empieza junto al _amino.', 'El kilómetro empieza junto al camino.'],
+  ['Completa con s o x', 'La e_cursión pasó junto al e_tanque.', 'La excursión pasó junto al estanque.'],
+  ['Coloca las tildes', 'El lapiz quedo junto al sofa.', 'El lápiz quedó junto al sofá.'],
+  ['Coloca los signos', 'que dia tan bonito', '¡Qué día tan bonito!'],
+  ['Coloca las mayúsculas', 'ana vive en toledo y estudia musica.', 'Ana vive en Toledo y estudia música.'],
+  ['Completa con y o i', 'La _glesia tiene un ra_o en la torre.', 'La iglesia tiene un rayo en la torre.'],
+  ['Completa con b o v', 'La _entana tiene un _isillo.', 'La ventana tiene un visillo.']
+);
 
 const practicalActivities = {
   reloj: [
@@ -879,6 +1005,66 @@ const expandedPracticalActivities = {
   ]
 };
 Object.entries(expandedPracticalActivities).forEach(([type, items]) => practicalActivities[type].push(...items));
+
+const finalPracticalExpansion = {
+  reloj: [
+    ['Si son las 12:25, ¿qué hora será dentro de 35 minutos?', 'La una en punto.'],
+    ['Una actividad comienza a las 15:30 y dura 45 minutos. ¿Cuándo termina?', 'A las 16:15.'],
+    ['¿Cuántos minutos hay en tres cuartos de hora?', '45 minutos.'],
+    ['Si son las 20:10, ¿qué hora era hace 20 minutos?', 'Las 19:50.'],
+    ['¿Cuántos minutos tiene una hora y cuarto?', '75 minutos.'],
+    ['Una excursión sale a las 9:15 y llega a las 10:00. ¿Cuánto dura?', '45 minutos.']
+  ],
+  dinero: [
+    ['Una carpeta cuesta 2,50 € y un lápiz 0,50 €. ¿Cuánto pagas?', '3 €.'],
+    ['Tienes 12 € y gastas 7,50 €. ¿Cuánto te queda?', '4,50 €.'],
+    ['¿Cuántas monedas de 25 céntimos forman 1 €?', '4 monedas.'],
+    ['Tres entradas cuestan 4 € cada una. ¿Cuánto pagas?', '12 €.'],
+    ['Una merienda cuesta 2,80 € y pagas con 5 €. ¿Qué cambio recibes?', '2,20 €.'],
+    ['Un libro cuesta 9 € y una libreta 1,50 €. ¿Cuánto cuestan juntos?', '10,50 €.']
+  ],
+  medidas: [
+    ['¿Cuántos centímetros hay en 3 metros?', '300 centímetros.'],
+    ['¿Cuántos mililitros hay en medio litro?', '500 mililitros.'],
+    ['Una cuerda mide 5 metros y cortas 2 metros. ¿Cuánto queda?', '3 metros.'],
+    ['¿Cuántos kilogramos son 3000 gramos?', '3 kilogramos.'],
+    ['Una jarra tiene 1 litro y añades medio litro. ¿Cuánto contiene?', '1 litro y medio.'],
+    ['¿Qué unidad usarías para medir el peso de un lápiz?', 'Gramos.']
+  ],
+  fracciones: [
+    ['Una tableta tiene 12 trozos y comes 3. ¿Qué fracción comes?', '3/12.'],
+    ['¿Qué es mayor: 2/4 o 1/4?', '2/4.'],
+    ['De 9 partes iguales, 4 están coloreadas. ¿Qué fracción está coloreada?', '4/9.'],
+    ['¿Cuántos medios forman un entero?', '2 medios.'],
+    ['¿Qué es menor: 3/8 o 6/8?', '3/8.'],
+    ['Una pizza tiene 8 partes y quedan 5. ¿Qué fracción queda?', '5/8.']
+  ],
+  geometria: [
+    ['¿Cuántos lados tiene un octógono?', '8 lados.'],
+    ['¿Cuántos vértices tiene un rectángulo?', '4 vértices.'],
+    ['¿Cómo se llama una figura de cuatro lados iguales?', 'Cuadrado.'],
+    ['¿Qué figura tiene tres lados y tres vértices?', 'Triángulo.'],
+    ['¿Cuántos lados tiene un heptágono?', '7 lados.'],
+    ['¿Cómo se llama un ángulo mayor que uno recto?', 'Ángulo obtuso.']
+  ],
+  vocabulario: [
+    ['Escribe un sinónimo de “alegre”.', 'Contento.'],
+    ['Escribe un antónimo de “oscuro”.', 'Claro.'],
+    ['¿Qué significa “cuidar”?', 'Proteger o atender algo.'],
+    ['Escribe una palabra de la familia de “pan”.', 'Panadería, panadero o panecillo.'],
+    ['¿Cuál no pertenece al grupo: rojo, amarillo, correr, azul?', 'Correr.'],
+    ['Escribe un sinónimo de “comenzar”.', 'Empezar.']
+  ],
+  ordenar: [
+    ['Ordena: colegio / en / estudia / Marta / el.', 'Marta estudia en el colegio.'],
+    ['Ordena: la / ventana / cierra / Pablo.', 'Pablo cierra la ventana.'],
+    ['Ordena: despacio / río / corre / El.', 'El río corre despacio.'],
+    ['Ordena: prepara / Ana / ensalada / una.', 'Ana prepara una ensalada.'],
+    ['Ordena: leen / biblioteca / en la / Los niños.', 'Los niños leen en la biblioteca.'],
+    ['Ordena: una / tiene / bicicleta / Luis.', 'Luis tiene una bicicleta.']
+  ]
+};
+Object.entries(finalPracticalExpansion).forEach(([type, items]) => practicalActivities[type].push(...items));
 
 const geometryFigureFor = question => {
   const text = question.toLowerCase();
