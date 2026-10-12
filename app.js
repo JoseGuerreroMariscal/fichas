@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-56', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-58', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -693,9 +693,9 @@ const practicalActivities = {
     ['Observa la figura. ¿Cuántos lados y vértices tiene este triángulo?', '3 lados y 3 vértices.'],
     ['Observa la figura. ¿Cuántos vértices tiene el cuadrado? ¿Son todos sus lados iguales?', '4 vértices. Sí, sus lados son iguales.'],
     ['Observa la figura redonda. ¿Cómo se llama y qué característica tienen sus puntos respecto al centro?', 'El círculo. Todos sus puntos están a la misma distancia del centro.'],
-    ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Pentágono.'],
+    ['Observa el pentágono. ¿Cuántos lados tiene y cómo se llama?', '5 lados. Pentágono.'],
     ['Observa la figura. ¿Cuántos lados tiene el rectángulo y cómo son sus lados opuestos?', '4 lados. Los lados opuestos son iguales.'],
-    ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Hexágono.'],
+    ['Observa el hexágono. ¿Cuántos lados tiene y cómo se llama?', '6 lados. Hexágono.'],
     ['Observa la figura. ¿Cuántos lados y vértices tiene el pentágono?', '5 lados y 5 vértices.'],
     ['Observa la figura. ¿Qué nombre recibe y qué puedes decir de sus cuatro lados?', 'Cuadrado. Sus cuatro lados son iguales.'],
     ['Observa el ángulo. ¿Es menor, igual o mayor que un ángulo recto? ¿Cómo se llama?', 'Es menor que un ángulo recto: ángulo agudo.']
@@ -796,7 +796,7 @@ const additionalPracticalActivities = {
   geometria: [
     ['Observa la figura. ¿Cuántos ángulos tiene el triángulo?', '3 ángulos.'],
     ['Observa la figura. ¿Qué cuadrilátero tiene dos lados largos y dos cortos?', 'El rectángulo.'],
-    ['Cuenta los lados de la figura. ¿Cómo se llama este polígono?', 'Octógono.'],
+    ['Observa el octógono. ¿Cuántos lados tiene y cómo se llama?', '8 lados. Octógono.'],
     ['Observa la línea. ¿Tiene principio o final?', 'No, es una línea recta infinita.'],
     ['Observa la figura. ¿Cuántos vértices tiene el pentágono?', '5 vértices.'],
     ['Observa la figura. ¿Cuántos lados tiene el hexágono?', '6 lados.'],
@@ -879,13 +879,15 @@ Object.entries(expandedPracticalActivities).forEach(([type, items]) => practical
 const geometryFigureFor = question => {
   const text = question.toLowerCase();
   if (text.includes('triángulo')) return 'triangle';
+  if (text.includes('tres lados') || text.includes('tres ángulos')) return 'triangle';
+  if (text.includes('ángulo') && !text.includes('rectángulo')) return 'angle';
   if (text.includes('cuadrado')) return 'square';
   if (text.includes('círculo') || text.includes('redonda')) return 'circle';
-  if (text.includes('rectángulo')) return 'rectangle';
+  if (text.includes('rectángulo') || text.includes('cuadrilátero')) return 'rectangle';
   if (text.includes('pentágono')) return 'pentagon';
   if (text.includes('hexágono')) return 'hexagon';
-  if (text.includes('octógono')) return 'octagon';
-  if (text.includes('ángulo')) return 'angle';
+  if (text.includes('octógono') || text.includes('ocho lados')) return 'octagon';
+  if (text.includes('heptágono') || text.includes('siete lados')) return 'heptagon';
   if (text.includes('línea')) return 'line';
   return 'square';
 };
@@ -987,6 +989,7 @@ const geometrySvg = figure => {
     circle: `<circle cx="38" cy="29" r="21" ${stroke}/><circle cx="38" cy="29" r="2.5" fill="#ef8e69"/>`,
     pentagon: `<polygon points="38,6 67,27 56,53 20,53 9,27" ${stroke}/>`,
     hexagon: `<polygon points="20,7 56,7 70,29 56,51 20,51 6,29" ${stroke}/>`,
+    heptagon: `<polygon points="38,5 64,16 70,39 52,53 24,53 6,39 12,16" ${stroke}/>`,
     octagon: `<polygon points="22,5 54,5 70,21 70,37 54,53 22,53 6,37 6,21" ${stroke}/>`,
     angle: `<path d="M12 47 L12 14 M12 47 L62 47" ${stroke}/><path d="M12 33 A14 14 0 0 1 26 47" stroke="#ef8e69" stroke-width="2" fill="none"/>`,
     line: `<path d="M8 29 H68" stroke="#315c9b" stroke-width="2.4"/><path d="M8 20 V38 M68 20 V38" stroke="#ef8e69" stroke-width="2"/>`
@@ -1110,7 +1113,7 @@ function downloadPdf(config, items, solutions = false) {
     doc.setFont('courier', 'normal');
     doc.setFontSize(12);
     if (division) {
-      doc.text(`${division[1]} : ${division[2]}`, x, topY, { align: 'center' });
+      doc.text(`${division[1]} ÷ ${division[2]} =`, x, topY, { align: 'center' });
       doc.line(x - 14, topY + 3, x + 14, topY + 3);
       if (solutions) doc.text(String(item.answer), x, topY + 10, { align: 'center' });
       return;
@@ -1147,8 +1150,8 @@ function downloadPdf(config, items, solutions = false) {
       doc.line(x + 10, topY + 17, x, topY);
     } else if (figure === 'rectangle') {
       doc.rect(x - 12, topY + 3, 24, 12);
-    } else if (figure === 'pentagon' || figure === 'hexagon' || figure === 'octagon') {
-      const sides = figure === 'pentagon' ? 5 : figure === 'hexagon' ? 6 : 8;
+    } else if (figure === 'pentagon' || figure === 'hexagon' || figure === 'heptagon' || figure === 'octagon') {
+      const sides = figure === 'pentagon' ? 5 : figure === 'hexagon' ? 6 : figure === 'heptagon' ? 7 : 8;
       const points = Array.from({ length: sides }, (_, index) => {
         const angle = -Math.PI / 2 + (index * Math.PI * 2) / sides;
         return [x + Math.cos(angle) * 10, topY + 9 + Math.sin(angle) * 10];
@@ -1162,6 +1165,10 @@ function downloadPdf(config, items, solutions = false) {
       doc.line(x - 10, topY + 16, x + 11, topY + 16);
       doc.setDrawColor(239, 142, 105);
       doc.arc?.(x - 10, topY + 16, 6, 270, 360);
+    } else if (figure === 'line') {
+      doc.line(x - 12, topY + 14, x + 12, topY + 14);
+      doc.circle(x - 12, topY + 14, 1, 'F');
+      doc.circle(x + 12, topY + 14, 1, 'F');
     } else {
       doc.rect(x - 9, topY, 18, 18);
     }
@@ -1183,8 +1190,8 @@ function downloadPdf(config, items, solutions = false) {
     y += lines.length * lineHeight + (options.gap ?? 2);
   };
   const writeAnswerLines = (count = 3) => {
+    ensureSpace(count * 10 + 8);
     for (let row = 0; row < count; row += 1) {
-      ensureSpace(10);
       doc.setDrawColor(25, 35, 50);
       doc.line(margin + 4, y, pageWidth - margin - 4, y);
       doc.line(margin + 4, y + 6, pageWidth - margin - 4, y + 6);
@@ -1215,8 +1222,16 @@ function downloadPdf(config, items, solutions = false) {
       doc.setFontSize(11);
       doc.text(questionLines, margin + 30, y + 5);
       y += questionLines.length * 6 + 8;
-      if (solutions) write(`Respuesta: ${item.answer}`, 10, { gap: 5 });
-      else writeAnswerLines(2);
+      if (solutions) {
+        const answerLines = doc.splitTextToSize(`Respuesta: ${item.answer}`, pageWidth - margin * 2 - 34);
+        ensureSpace(answerLines.length * 5 + 5);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(39, 95, 172);
+        doc.text(answerLines, margin + 30, y);
+        doc.setTextColor(32, 40, 63);
+        y += answerLines.length * 5 + 5;
+      } else writeAnswerLines(2);
       return;
     }
     if (item.kind === 'reading') {
@@ -1235,9 +1250,15 @@ function downloadPdf(config, items, solutions = false) {
       else writeAnswerLines(4);
       return;
     }
+    const answerLineCount = config.type === 'problemas' ? 2 : 3;
+    if (!solutions) {
+      const questionLines = doc.splitTextToSize(`${index + 1}. ${item.question}`, pageWidth - margin * 2);
+      const questionHeight = questionLines.length * (12 * 0.48 + 2) + 3;
+      ensureSpace(Math.max(questionHeight + answerLineCount * 10 + 15, config.type === 'problemas' ? 70 : 0));
+    }
     write(`${index + 1}. ${item.question}`, 12, { bold: true, gap: 3 });
     if (solutions) write(`Respuesta: ${item.answer}`, 10, { gap: 5 });
-    else writeAnswerLines(3);
+    else writeAnswerLines(answerLineCount);
     });
   }
   const footerPages = doc.getNumberOfPages();
