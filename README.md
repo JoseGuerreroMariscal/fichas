@@ -69,6 +69,15 @@ git push origin main
 
 La configuración de Pages debe usar GitHub Actions como fuente de despliegue. Al publicar cambios en HTML, CSS o JavaScript, actualiza también las versiones de consulta (`?v=...`) en los documentos afectados y revisa la lista `APP_SHELL` de `sw.js` si cambia el conjunto de recursos esenciales. Así se evita que una caché antigua mantenga una combinación incompatible de archivos.
 
+### Avisos por Telegram
+
+La notificación de fichas generadas funciona en Vercel mediante `api/telegram-notify.js`. Configura en el proyecto de Vercel estas variables privadas:
+
+- `TELEGRAM_BOT_TOKEN`: token del bot creado con BotFather.
+- `TELEGRAM_CHAT_ID`: chat o grupo que recibirá los avisos.
+
+El navegador solo envía actividad, dificultad y número de ejercicios. El token, el chat y el nombre del alumno no se exponen ni se envían.
+
 ## Estructura relevante
 
 | Archivo | Responsabilidad |
