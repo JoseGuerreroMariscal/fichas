@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-51', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-52', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -1233,6 +1233,14 @@ function downloadPdf(config, items, solutions = false) {
     else writeAnswerLines(3);
     });
   }
+  const footerPages = doc.getNumberOfPages();
+  for (let page = 1; page <= footerPages; page += 1) {
+    doc.setPage(page);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(137, 149, 143);
+    doc.text('FichasFacil', pageWidth / 2, pageHeight - 8, { align: 'center' });
+  }
   const fileSuffix = solutions ? '-soluciones' : '';
   doc.save(`FichasFacil-${labels[config.type].toLowerCase().replaceAll(' ', '-')}${fileSuffix}.pdf`);
   return true;
@@ -1264,6 +1272,7 @@ function createSheets(config) {
       .replaceAll('class="operation-rule"', 'class="operation-rule" style="width:116px;border-bottom:1.5px solid #20283f;margin-top:5px"')
       .replaceAll('class="answer-space"', 'class="answer-space" style="display:block;height:20px;border-bottom:1px solid #9aaabd"');
     return inlineLayout
+    .replace('</body>', '<div aria-hidden="true" style="position:fixed;left:0;bottom:8mm;width:100%;text-align:center;font:10px Arial,sans-serif;color:#89958f">FichasFacil</div></body>')
     .replace('<style>', `<style>@page{size:A4;margin:0}${simpleMath ? 'h1{display:block!important;font-size:15px;letter-spacing:0;margin:0 0 19px}.worksheet-header{display:flex!important;justify-content:space-between;gap:20px;margin-bottom:24px;padding:0 8px;border:0;font-size:10px}.worksheet-header>div:first-child{flex:1}.worksheet-header>div:last-child{min-width:72px}.worksheet-header span{min-width:100px;height:13px}.worksheet-header>div:last-child span{min-width:62px}.math-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,1fr));gap:0 22px;min-height:246mm;align-items:center;padding:0 2mm}.arithmetic{width:100%;min-height:0;justify-content:center;align-items:center;padding:0}.arithmetic-three .operation{min-height:54px}.print-row .number{display:none}.arithmetic .operation{display:block!important;flex:0 0 116px!important;width:116px!important;min-width:116px!important;max-width:116px!important;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:17px;line-height:1.15}.digit-value{display:inline-flex;gap:3px;letter-spacing:0}.digit-value b{letter-spacing:0}.top-number,.extra-number{padding-right:0;letter-spacing:0;font-variant-numeric:tabular-nums;white-space:nowrap;min-height:23px}.bottom-number{grid-template-columns:18px 1fr;gap:0;padding-right:0;letter-spacing:0;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1.15}.bottom-number .operator{text-align:center;letter-spacing:0}.bottom-number .digit-value{justify-self:end}.arithmetic .operation-rule{display:block!important;width:116px!important;max-width:116px!important;margin-top:5px}.answer-space{display:none}' : textStyles}`)
     .replaceAll('@media(max-width:650px)', simpleMath ? '@media print and (max-width:0px)' : '@media screen and (max-width:650px)')
     .replace('</head>', `${printPolish}${screenLayout}${finalPdfLayout}</head>`);
