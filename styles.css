@@ -101,6 +101,7 @@ input::placeholder{color:#8995a8;opacity:1}
 .content-section,.use-section,.faq-section,.other-projects{content-visibility:auto;contain-intrinsic-size:500px}
 @media(prefers-contrast:more){.activity-card,.content-card,.project-links a{border-color:var(--navy)}.section-help,.content-card p,.project-links span{color:#394861}.kicker{color:#394861}}
 @media(max-width:650px){
+  .activity-tools{align-items:stretch}.activity-tools button{align-self:end;min-width:72px;padding-left:10px;padding-right:10px}.activity-tools input{font-size:16px}
   .modal-backdrop{align-items:flex-end;padding:0}
   .generator-modal{width:100%;max-height:calc(100vh - 18px);border-radius:22px 22px 0 0;padding:26px 18px calc(22px + env(safe-area-inset-bottom));overflow-x:hidden}
   .modal-close{right:16px;top:12px}
@@ -123,6 +124,7 @@ input::placeholder{color:#8995a8;opacity:1}
 .activity-card:focus-visible{box-shadow:0 0 0 4px #f4c91c66,0 8px 20px #1e2d4916}
 .check-label{min-height:28px}
 .print-button[disabled]{filter:grayscale(.25)}
+.activity-tools{display:flex;align-items:flex-end;gap:10px;margin:0 0 18px}.activity-tools label{flex:1;max-width:420px}.activity-tools input{margin-top:5px}.activity-tools button{min-height:44px;padding:10px 14px;border:1px solid #cbd5e2;border-radius:8px;background:#fff;color:var(--navy);font-size:12px;font-weight:800;cursor:pointer}.activity-tools button:hover{border-color:var(--navy);background:#f6f9fc}.generator-steps li{opacity:.55}.generator-steps li.is-current{opacity:1;color:var(--navy)}.generator-steps li.is-current span{background:var(--warm);font-weight:800}
 
 /* Un solo eje de alineación para que la portada no cambie de ancho entre secciones. */
 .site-header{padding-left:max(32px,calc((100% - 1200px)/2));padding-right:max(32px,calc((100% - 1200px)/2))}

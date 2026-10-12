@@ -31,6 +31,7 @@ let lastTrigger = null;
 const pageBackground = [document.querySelector('.site-header'), document.querySelector('main'), document.querySelector('.site-footer')].filter(Boolean);
 const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs', 'calligraphyMode', 'carryMode', 'tableNumber', 'specificDivisor', 'divisionMode'];
 const preferenceKey = 'fichalia-preferences';
+const recentActivityKey = 'fichalia-recent-activity';
 let installPrompt = null;
 let sharedActivity = '';
 let sharedSolutions = false;
@@ -115,6 +116,24 @@ updateConfigurationSummary();
 updateDigitLabels();
 updateActivityFields();
 
+const activitySearch = document.querySelector('#activity-search');
+const clearActivitySearch = document.querySelector('#clear-activity-search');
+const filterActivities = () => {
+  const query = activitySearch.value.trim().toLocaleLowerCase('es');
+  document.querySelectorAll('.activity-card').forEach(card => {
+    card.hidden = Boolean(query) && !card.textContent.toLocaleLowerCase('es').includes(query);
+  });
+};
+activitySearch?.addEventListener('input', filterActivities);
+clearActivitySearch?.addEventListener('click', () => { activitySearch.value = ''; filterActivities(); activitySearch.focus(); });
+const saveRecentActivity = type => {
+  try { localStorage.setItem(recentActivityKey, JSON.stringify({ type, label: labels[type], savedAt: Date.now() })); } catch (error) { /* almacenamiento opcional */ }
+};
+try {
+  const recent = JSON.parse(localStorage.getItem(recentActivityKey) || 'null');
+  if (recent?.label) document.querySelector('.section-help').textContent = `Pulsa una tarjeta para empezar a configurarla. Última: ${recent.label}.`;
+} catch (error) { /* historial opcional */ }
+
 const countSelect = document.querySelector('#count');
 if (countSelect && !countSelect.querySelector('option[value="20"]')) {
   countSelect.insertAdjacentHTML('beforeend', '<option value="20">20 ejercicios</option>');
@@ -129,6 +148,7 @@ const openGenerator = type => {
   document.body.classList.add('modal-open');
   pageBackground.forEach(element => { element.inert = true; element.setAttribute('aria-hidden', 'true'); });
   activity.value = type;
+  saveRecentActivity(type);
   result.innerHTML = '';
   document.querySelector('#generator-title').textContent = `Prepara tu ficha de ${labels[type].toLowerCase()}`;
   document.querySelector('#activity-summary').textContent = labels[type];
@@ -141,6 +161,8 @@ const openGenerator = type => {
     const selected = card.dataset.type === type;
     card.classList.toggle('is-selected', selected);
   });
+  document.querySelectorAll('.generator-steps li').forEach((step, index) => step.classList.toggle('is-current', index === 0));
+  document.querySelector('#print-direct').textContent = isMobileDevice() ? 'Descargar PDF' : 'Imprimir ficha';
   setTimeout(() => activity.focus(), 50);
 };
 
@@ -1251,6 +1273,7 @@ form.addEventListener('submit', event => {
   const config = readConfig();
   form.setAttribute('aria-busy', 'true');
   const { worksheet, answerSheet, print, items } = createSheets(config);
+  document.querySelectorAll('.generator-steps li').forEach((step, index) => step.classList.toggle('is-current', index === 1));
   const mobile = isMobileDevice();
   const printed = mobile ? downloadPdf(config, items) : print(worksheet);
   setTimeout(() => { submitButton.disabled = false; form.setAttribute('aria-busy', 'false'); }, 500);
@@ -1258,5 +1281,6 @@ form.addEventListener('submit', event => {
     ? `${config.paragraphs} ${config.paragraphs === 1 ? 'párrafo' : 'párrafos'}`
     : config.type === 'lectura' ? '1 lectura' : `${config.count} ejercicios`;
   result.innerHTML = `<div class="success-box"><strong>${printed ? (mobile ? 'PDF descargado' : 'Ficha lista para imprimir') : 'No se ha podido preparar la ficha'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}${mobile ? ' · Abre el PDF para imprimirlo o compartirlo.' : ''}` : (mobile ? 'El navegador no ha podido generar el PDF.' : 'El navegador ha bloqueado la ventana de impresión.')}</span>${config.solutions ? `<button class="solutions-link" id="print-solutions" type="button">${mobile ? 'Descargar soluciones' : 'Imprimir soluciones'}</button>` : ''}</div>`;
+  if (printed) document.querySelectorAll('.generator-steps li').forEach((step, index) => step.classList.toggle('is-current', index === 2));
   document.querySelector('#print-solutions')?.addEventListener('click', () => mobile ? downloadPdf(config, items, true) : print(answerSheet));
 });
