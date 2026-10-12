@@ -32,6 +32,7 @@ const pageBackground = [document.querySelector('.site-header'), document.querySe
 const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs', 'calligraphyMode', 'carryMode', 'tableNumber', 'specificDivisor', 'divisionMode'];
 const preferenceKey = 'fichalia-preferences';
 const recentActivityKey = 'fichalia-recent-activity';
+const lastConfigKey = 'fichalia-last-config';
 let installPrompt = null;
 let sharedActivity = '';
 let sharedSolutions = false;
@@ -57,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-85', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-87', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -157,10 +158,25 @@ clearActivitySearch?.addEventListener('click', () => { activitySearch.value = ''
 const saveRecentActivity = type => {
   try { localStorage.setItem(recentActivityKey, JSON.stringify({ type, label: labels[type], savedAt: Date.now() })); } catch (error) { /* almacenamiento opcional */ }
 };
+const repeatLastButton = document.querySelector('#repeat-last');
+const saveLastConfig = config => {
+  try {
+    const safeConfig = { ...config, student: '', solutions: false };
+    localStorage.setItem(lastConfigKey, JSON.stringify(safeConfig));
+    if (repeatLastButton) repeatLastButton.hidden = false;
+  } catch (error) { /* almacenamiento opcional */ }
+};
+const loadLastConfig = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(lastConfigKey) || 'null');
+    return saved?.type && labels[saved.type] ? saved : null;
+  } catch (error) { return null; }
+};
 try {
   const recent = JSON.parse(localStorage.getItem(recentActivityKey) || 'null');
   if (recent?.label) document.querySelector('.section-help').textContent = `Pulsa una tarjeta para empezar a configurarla. Última: ${recent.label}.`;
 } catch (error) { /* historial opcional */ }
+if (loadLastConfig() && repeatLastButton) repeatLastButton.hidden = false;
 
 const countSelect = document.querySelector('#count');
 if (countSelect && !countSelect.querySelector('option[value="20"]')) {
@@ -199,6 +215,18 @@ const openGenerator = type => {
   document.querySelector('#print-direct').textContent = isMobileDevice() ? 'Descargar PDF' : 'Imprimir ficha';
   setTimeout(() => activity.focus(), 50);
 };
+
+repeatLastButton?.addEventListener('click', () => {
+  const saved = loadLastConfig();
+  if (!saved) return;
+  openGenerator(saved.type);
+  preferenceIds.forEach(id => setSelectValue(id, saved[id]));
+  document.querySelector('#student').value = '';
+  document.querySelector('#solutions').checked = false;
+  updateDigitLabels();
+  updateConfigurationSummary();
+  updateActivityFields();
+});
 
 document.querySelectorAll('[data-type]').forEach(card => card.addEventListener('click', () => openGenerator(card.dataset.type)));
 if (sharedActivity && labels[sharedActivity]) setTimeout(() => openGenerator(sharedActivity), 0);
@@ -1383,7 +1411,10 @@ form.addEventListener('submit', event => {
   result.innerHTML = `<div class="success-box"><strong>${printed ? (mobile ? 'PDF descargado' : 'Ficha lista para imprimir') : 'No se ha podido preparar la ficha'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}${mobile ? ' · Abre el PDF para imprimirlo o compartirlo.' : ''}` : (mobile ? 'El navegador no ha podido generar el PDF.' : 'El navegador ha bloqueado la ventana de impresión.')}</span>${config.solutions ? `<button class="solutions-link" id="print-solutions" type="button">${mobile ? 'Descargar soluciones' : 'Imprimir soluciones'}</button>` : ''}${printed ? '<button class="solutions-link new-sheet" id="new-sheet" type="button">Crear otra ficha</button>' : ''}</div>`;
   if (printed) setGeneratorStep(2);
   document.querySelector('#print-solutions')?.addEventListener('click', () => mobile ? downloadPdf(config, items, true) : print(answerSheet));
-  if (printed) notifyTelegram(config);
+  if (printed) {
+    saveLastConfig(config);
+    notifyTelegram(config);
+  }
   document.querySelector('#new-sheet')?.addEventListener('click', () => {
     result.innerHTML = '';
     setGeneratorStep(0);
