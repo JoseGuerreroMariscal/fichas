@@ -664,6 +664,26 @@ logicActivities.push(
   ['8, 16, 24, 32, __', '40']
 );
 
+spellingActivities.push(
+  ['Completa con b o v', 'El _úho vive en un ár_ol.', 'El búho vive en un árbol.'],
+  ['Completa con g o j', 'La _elatina está en la nevera.', 'La gelatina está en la nevera.'],
+  ['Completa con h', 'El _ielo cubría la _ierba.', 'El hielo cubría la hierba.'],
+  ['Coloca las tildes', 'El camion paso junto al rio.', 'El camión pasó junto al río.'],
+  ['Coloca los signos', 'cuando comienza la pelicula', '¿Cuándo comienza la película?'],
+  ['Completa con ll o y', 'El _ate navega cerca de la _egua.', 'El yate navega cerca de la yegua.'],
+  ['Completa con r o rr', 'La to_uga cruza el ca_il.', 'La tortuga cruza el carril.'],
+  ['Coloca las mayúsculas', 'lucas viaja a madrid en verano.', 'Lucas viaja a Madrid en verano.'],
+  ['Completa con c o z', 'El _iervo corre por el bos_que.', 'El ciervo corre por el bosque.'],
+  ['Completa con qu o c', 'El _into tiene una _uerda.', 'El quinto tiene una cuerda.']
+);
+
+logicActivities.push(
+  ['14, 18, 22, 26, __', '30'], ['60, 55, 50, 45, __', '40'], ['3, 9, 27, 81, __', '243'],
+  ['2, 7, 12, 17, __', '22'], ['45, 40, 35, 30, __', '25'], ['6, 11, 16, 21, __', '26'],
+  ['4, 8, 16, 32, __', '64'], ['120, 110, 100, 90, __', '80'], ['1, 4, 9, 16, __', '25'],
+  ['7, 12, 17, 22, __', '27']
+);
+
 const additionalPracticalActivities = {
   reloj: [
     ['Un partido empieza a las 16:15 y dura una hora. ¿A qué hora termina?', 'A las 17:15.'],
@@ -722,6 +742,59 @@ const additionalPracticalActivities = {
   ]
 };
 Object.entries(additionalPracticalActivities).forEach(([type, items]) => practicalActivities[type].push(...items));
+
+const expandedPracticalActivities = {
+  reloj: [
+    ['Si son las 7:30, ¿qué hora será dentro de 45 minutos?', 'Las 8:15.'],
+    ['¿Cuántos minutos hay en dos horas?', '120 minutos.'],
+    ['Una clase empieza a las 10:15 y dura 30 minutos. ¿Cuándo termina?', 'A las 10:45.'],
+    ['¿Qué hora marca un reloj si la aguja corta está en el 12 y la larga en el 6?', 'Las doce y media.'],
+    ['Si son las 18:00, ¿qué hora era hace una hora?', 'Las 17:00.']
+  ],
+  dinero: [
+    ['Un lápiz cuesta 0,80 € y una goma 0,50 €. ¿Cuánto pagas?', '1,30 €.'],
+    ['Tienes 10 € y compras dos cuentos de 4 €. ¿Cuánto te sobra?', '2 €.'],
+    ['¿Cuántas monedas de 2 € necesitas para reunir 10 €?', '5 monedas.'],
+    ['Una camiseta cuesta 15 € y tiene una rebaja de 5 €. ¿Cuánto cuesta ahora?', '10 €.'],
+    ['Compras una regla de 1,20 € y pagas con 2 €. ¿Qué cambio recibes?', '0,80 €.']
+  ],
+  medidas: [
+    ['¿Cuántos centímetros hay en medio metro?', '50 centímetros.'],
+    ['Una botella contiene 2 litros y bebes medio litro. ¿Cuánto queda?', '1 litro y medio.'],
+    ['¿Cuántos gramos hay en medio kilogramo?', '500 gramos.'],
+    ['Una mesa mide 120 centímetros. ¿Cuántos metros y centímetros son?', '1 metro y 20 centímetros.'],
+    ['¿Qué unidad usarías para medir la distancia entre dos ciudades?', 'Kilómetros.']
+  ],
+  fracciones: [
+    ['Una tarta tiene 8 partes y comes 1. ¿Qué fracción comes?', '1/8.'],
+    ['¿Qué fracción es menor: 2/5 o 4/5?', '2/5.'],
+    ['De 6 partes iguales, 5 están coloreadas. ¿Qué fracción está coloreada?', '5/6.'],
+    ['¿Cuántos cuartos forman un entero?', '4 cuartos.'],
+    ['Una tableta tiene 10 trozos y quedan 3. ¿Qué fracción queda?', '3/10.']
+  ],
+  geometria: [
+    ['Observa la figura. ¿Cuántas diagonales puedes dibujar en un cuadrado?', '2 diagonales.'],
+    ['¿Cómo se llama un polígono de tres lados?', 'Triángulo.'],
+    ['Observa la figura redonda. ¿Qué figura tiene todos sus puntos a la misma distancia del centro?', 'La circunferencia.'],
+    ['¿Cuántos lados tiene un heptágono?', '7 lados.'],
+    ['Observa la figura. ¿Qué tipo de línea cambia de dirección formando esquinas?', 'Una línea quebrada.']
+  ],
+  vocabulario: [
+    ['Escribe un sinónimo de “enorme”.', 'Gigante.'],
+    ['Escribe un antónimo de “limpio”.', 'Sucio.'],
+    ['¿Qué significa “valiente”?', 'Que no tiene miedo ante una dificultad.'],
+    ['Escribe una palabra de la familia de “mar”.', 'Marea.'],
+    ['¿Cuál no pertenece al grupo: cuchara, tenedor, plato, montaña?', 'Montaña.']
+  ],
+  ordenar: [
+    ['Ordena: escuela / vamos / a / La.', 'Vamos a la escuela.'],
+    ['Ordena: rojo / tiene / Pedro / un / balón.', 'Pedro tiene un balón rojo.'],
+    ['Ordena: despacio / camina / tortuga / La.', 'La tortuga camina despacio.'],
+    ['Ordena: una / dibuja / estrella / Carla.', 'Carla dibuja una estrella.'],
+    ['Ordena: ventana / entra / por la / luz / La.', 'La luz entra por la ventana.']
+  ]
+};
+Object.entries(expandedPracticalActivities).forEach(([type, items]) => practicalActivities[type].push(...items));
 
 const geometryFigureFor = question => {
   const text = question.toLowerCase();
