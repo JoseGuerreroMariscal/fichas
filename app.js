@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-50', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-51', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -98,7 +98,8 @@ const updateDigitLabels = () => {
 };
 const updateActivityFields = () => {
   const isMath = ['sumas', 'restas', 'multiplicaciones', 'divisiones'].includes(activity.value);
-  const usesMultipleTerms = ['sumas', 'restas'].includes(activity.value);
+  const usesMultipleTerms = activity.value === 'sumas';
+  if (activity.value === 'restas') document.querySelector('#operands').value = '2';
   const isCopying = ['copiado', 'caligrafia'].includes(activity.value);
   const isReading = activity.value === 'lectura';
   document.querySelector('#operands-field').classList.toggle('hidden-field', !usesMultipleTerms);
