@@ -57,7 +57,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-80', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-82', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -169,6 +169,11 @@ if (countSelect && !countSelect.querySelector('option[value="20"]')) {
 }
 
 const generatorTitle = type => ({ mixta: 'Prepara tu ficha mixta', diaria: 'Prepara tu ficha diaria' }[type] || `Prepara tu ficha de ${labels[type].toLowerCase()}`);
+const setGeneratorStep = currentIndex => document.querySelectorAll('.generator-steps li').forEach((step, index) => {
+  step.classList.toggle('is-current', index === currentIndex);
+  if (index === currentIndex) step.setAttribute('aria-current', 'step');
+  else step.removeAttribute('aria-current');
+});
 const openGenerator = type => {
   lastTrigger = document.querySelector(`[data-type="${type}"]`);
   document.querySelectorAll('[data-type]').forEach(card => card.setAttribute('aria-expanded', String(card === lastTrigger)));
@@ -190,7 +195,7 @@ const openGenerator = type => {
     const selected = card.dataset.type === type;
     card.classList.toggle('is-selected', selected);
   });
-  document.querySelectorAll('.generator-steps li').forEach((step, index) => step.classList.toggle('is-current', index === 0));
+  setGeneratorStep(0);
   document.querySelector('#print-direct').textContent = isMobileDevice() ? 'Descargar PDF' : 'Imprimir ficha';
   setTimeout(() => activity.focus(), 50);
 };
@@ -1354,7 +1359,7 @@ form.addEventListener('submit', event => {
   const config = readConfig();
   form.setAttribute('aria-busy', 'true');
   const { worksheet, answerSheet, print, items } = createSheets(config);
-  document.querySelectorAll('.generator-steps li').forEach((step, index) => step.classList.toggle('is-current', index === 1));
+  setGeneratorStep(1);
   const mobile = isMobileDevice();
   const printed = mobile ? downloadPdf(config, items) : print(worksheet);
   setTimeout(() => { submitButton.disabled = false; form.setAttribute('aria-busy', 'false'); }, 500);
@@ -1362,6 +1367,6 @@ form.addEventListener('submit', event => {
     ? `${config.paragraphs} ${config.paragraphs === 1 ? 'párrafo' : 'párrafos'}`
     : config.type === 'lectura' ? '1 lectura' : `${config.count} ejercicios`;
   result.innerHTML = `<div class="success-box"><strong>${printed ? (mobile ? 'PDF descargado' : 'Ficha lista para imprimir') : 'No se ha podido preparar la ficha'}</strong><span class="print-hint">${printed ? `${labels[config.type]} · ${contentSummary}${mobile ? ' · Abre el PDF para imprimirlo o compartirlo.' : ''}` : (mobile ? 'El navegador no ha podido generar el PDF.' : 'El navegador ha bloqueado la ventana de impresión.')}</span>${config.solutions ? `<button class="solutions-link" id="print-solutions" type="button">${mobile ? 'Descargar soluciones' : 'Imprimir soluciones'}</button>` : ''}</div>`;
-  if (printed) document.querySelectorAll('.generator-steps li').forEach((step, index) => step.classList.toggle('is-current', index === 2));
+  if (printed) setGeneratorStep(2);
   document.querySelector('#print-solutions')?.addEventListener('click', () => mobile ? downloadPdf(config, items, true) : print(answerSheet));
 });
