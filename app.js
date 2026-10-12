@@ -207,6 +207,14 @@ function closeGenerator() {
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) closeGenerator(); });
 
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffledIndexes(length) {
+  const order = Array.from({ length }, (_, index) => index);
+  for (let index = order.length - 1; index > 0; index -= 1) {
+    const swapIndex = randomInt(0, index);
+    [order[index], order[swapIndex]] = [order[swapIndex], order[index]];
+  }
+  return order;
+}
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
@@ -754,23 +762,21 @@ function makeContent(type, count, difficulty, level, operands, firstDigits, seco
     return sequence.slice(0, paragraphs).map(text => ({ kind: 'copying', text }));
   }
   if (type === 'ortografia') {
+    const order = shuffledIndexes(spellingActivities.length);
     return Array.from({ length: count }, (_, index) => {
-      const item = spellingActivities[index % spellingActivities.length];
+      const item = spellingActivities[order[index % order.length]];
       return { question: `${item[0]}: ${item[1]}`, answer: item[2] };
     });
   }
   if (type === 'logica') {
+    const order = shuffledIndexes(logicActivities.length);
     return Array.from({ length: count }, (_, index) => {
-      const item = logicActivities[index % logicActivities.length];
+      const item = logicActivities[order[index % order.length]];
       return { question: `Completa la serie: ${item[0]}`, answer: item[1] };
     });
   }
   if (practicalActivities[type]) {
-    const order = Array.from({ length: practicalActivities[type].length }, (_, index) => index);
-    for (let index = order.length - 1; index > 0; index -= 1) {
-      const swapIndex = randomInt(0, index);
-      [order[index], order[swapIndex]] = [order[swapIndex], order[index]];
-    }
+    const order = shuffledIndexes(practicalActivities[type].length);
     return Array.from({ length: count }, (_, index) => {
       const item = practicalActivities[type][order[index % order.length]];
       return { question: item[0], answer: item[1], ...(type === 'geometria' ? { figure: geometryFigureFor(item[0]) } : {}) };
@@ -924,6 +930,12 @@ function downloadPdf(config, items, solutions = false) {
     : config.type === 'restas' && config.carryMode === 'yes'
       ? 'Restas con llevadas'
       : labels[config.type];
+  doc.setProperties({
+    title: `${mathTitle} · FichasFacil`,
+    subject: 'Ficha educativa imprimible en A4',
+    author: 'FichasFacil',
+    creator: 'FichasFacil'
+  });
   const drawHeader = title => {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
@@ -1072,7 +1084,8 @@ function downloadPdf(config, items, solutions = false) {
     else writeAnswerLines(3);
     });
   }
-  doc.save(`FichasFacil-${labels[config.type].toLowerCase().replaceAll(' ', '-')}.pdf`);
+  const fileSuffix = solutions ? '-soluciones' : '';
+  doc.save(`FichasFacil-${labels[config.type].toLowerCase().replaceAll(' ', '-')}${fileSuffix}.pdf`);
   return true;
 }
 

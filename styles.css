@@ -30,6 +30,7 @@ button,select,input{font:inherit}
 .print-hint{display:block;margin-bottom:7px;color:#8bd1aa;font-size:12px}
 .intro-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}.intro-meta span{padding:8px 11px;border:1px solid var(--line);border-radius:999px;color:#b9b9c1;font-size:11px}.intro-meta span::before{content:'✓';color:#8bd1aa;margin-right:6px}
 .modal-open{overflow:hidden}
+.generator-modal{overscroll-behavior:contain}
 .generate-button:disabled{opacity:.55;cursor:wait}
 .activity-summary{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12px;color:var(--ink);font-weight:700}.summary-dot{width:8px;height:8px;border-radius:50%;background:#f4cc6b;box-shadow:0 0 0 4px #f4cc6b22}
 .modal-note{margin:18px 0 -7px;color:#777780;font-size:11px}
@@ -90,7 +91,7 @@ body{background:var(--surface);color:var(--ink)}
 
 /* Ajustes de uso diario: más claridad, mejores toques y un generador cómodo en móvil. */
 html{scroll-padding-top:84px}
-body{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+body{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-text-size-adjust:100%;overscroll-behavior-x:none}
 .activity-card,.hero-cta,.header-action,.print-button,.share-button,.reset-button{min-height:48px}
 .activity-card:active,.hero-cta:active,.header-action:active,.print-button:active,.share-button:active{transform:translateY(1px)}
 .activity-card small{line-height:1.35}
@@ -101,7 +102,7 @@ input::placeholder{color:#8995a8;opacity:1}
 @media(prefers-contrast:more){.activity-card,.content-card,.project-links a{border-color:var(--navy)}.section-help,.content-card p,.project-links span{color:#394861}.kicker{color:#394861}}
 @media(max-width:650px){
   .modal-backdrop{align-items:flex-end;padding:0}
-  .generator-modal{width:100%;max-height:calc(100vh - 18px);border-radius:22px 22px 0 0;padding:26px 18px calc(22px + env(safe-area-inset-bottom))}
+  .generator-modal{width:100%;max-height:calc(100vh - 18px);border-radius:22px 22px 0 0;padding:26px 18px calc(22px + env(safe-area-inset-bottom));overflow-x:hidden}
   .modal-close{right:16px;top:12px}
   .modal-header{margin-bottom:21px}
   .form-actions{margin-left:-18px;margin-right:-18px;padding:14px 18px 0}
