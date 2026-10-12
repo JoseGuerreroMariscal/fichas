@@ -57,7 +57,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-83', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-84', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -1343,7 +1343,7 @@ document.querySelector('#share-direct').addEventListener('click', async () => {
   const fallbackMarkup = (message, linkLabel = 'Abrir enlace') => `<div class="success-box"><strong>Enlace listo para compartir</strong><span class="print-hint">${message}</span><a class="share-url" href="${escapeHtml(shareData.url)}">${linkLabel}</a></div>`;
   try {
     if (navigator.share) await navigator.share(shareData);
-    else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = `<div class="success-box"><strong>Enlace listo para compartir</strong><span class="print-hint">Hemos copiado el enlace con la configuración de esta ficha.</span></div>`; }
+    else if (navigator.clipboard) { await navigator.clipboard.writeText(`${shareText} ${shareData.url}`); result.innerHTML = fallbackMarkup('Hemos copiado el enlace con la configuración de esta ficha. También puedes abrirlo o copiarlo manualmente.'); }
     else result.innerHTML = fallbackMarkup('Copia o abre este enlace para compartir la configuración.');
   } catch (error) {
     if (error.name === 'AbortError') result.innerHTML = fallbackMarkup('Has cancelado la ventana de compartir. Puedes abrir el enlace directamente.');
