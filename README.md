@@ -54,7 +54,12 @@ En el navegador, prueba al menos una actividad matemática y una de texto, la im
 
 ## Publicación
 
-El repositorio se publica en GitHub Pages mediante [`.github/workflows/pages.yml`](.github/workflows/pages.yml). El workflow se ejecuta al hacer push a `main` y también se puede lanzar manualmente desde GitHub Actions.
+El repositorio está preparado para desplegarse en Vercel como sitio estático. En Vercel, importa este repositorio, usa `main` como rama de producción y deja vacío el comando de build: la raíz del repositorio contiene directamente `index.html` y los recursos públicos. El archivo `vercel.json` añade cabeceras de seguridad, caché de assets y la configuración de URLs limpias.
+
+Mientras el dominio propio no esté conectado, GitHub Pages sigue siendo la demo pública:
+
+- Demo actual: <https://joseguerreromariscal.github.io/fichas/>
+- Dominio previsto: <https://fichasfacil.es/>
 
 ```bash
 git add .
@@ -99,7 +104,7 @@ La configuración de Pages debe usar GitHub Actions como fuente de despliegue. A
 - También declaran una Permissions Policy que desactiva cámara, micrófono, geolocalización, pagos, USB y sensores que la aplicación no necesita.
 - El contenido introducido por el usuario se escapa antes de incorporarse a la ficha generada. Los enlaces externos abiertos en otra pestaña usan `noopener noreferrer`.
 - La web incluye títulos y descripciones por página, URLs canónicas, Open Graph, Twitter Cards, JSON-LD, breadcrumbs, `robots.txt` y `sitemap.xml`.
-- GitHub Pages no permite configurar cabeceras HTTP personalizadas desde este repositorio. Por eso las políticas compatibles con `<meta http-equiv>` están en cada documento; si se migra a un hosting con cabeceras, conviene trasladar allí CSP, `Permissions-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options` y `Referrer-Policy`.
+- En Vercel, `vercel.json` configura CSP, `Permissions-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` y caché de recursos. Las etiquetas meta se mantienen como respaldo para la demo de GitHub Pages.
 
 ## Licencia
 
