@@ -1,11 +1,11 @@
-# FichasFácil
+# FichasFacil
 
 Generador web gratuito de fichas educativas para Infantil y Primaria. Permite crear actividades de matemáticas, lengua, lectura, escritura y lógica, configurarlas en el navegador e imprimirlas en A4 o compartir su configuración mediante un enlace.
 
 ## Demo
 
 - Producción: <https://joseguerreromariscal.github.io/fichas/>
-- Páginas de contenido: [Blog](blog.html) · [Guía](guia.html)
+- Páginas de contenido: [Blog](blog.html) · [Guía](guia.html) · [Páginas SEO](sitemap.xml)
 
 ## Qué incluye
 
@@ -73,6 +73,8 @@ La configuración de Pages debe usar GitHub Actions como fuente de despliegue. A
 | `styles.css` | Interfaz, responsive, accesibilidad e impresión |
 | `blog.html` | Artículos educativos estáticos |
 | `guia.html` | Guía de uso |
+| `sumas.html` … `fracciones.html` | Landing pages SEO por actividad |
+| `404.html` | Página de error para enlaces no encontrados |
 | `manifest.webmanifest` | Metadatos de instalación PWA |
 | `sw.js` | Caché y fallback offline |
 | `robots.txt` / `sitemap.xml` | Rastreo e indexación |

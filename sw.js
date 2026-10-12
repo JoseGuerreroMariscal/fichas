@@ -1,7 +1,8 @@
-const CACHE_NAME = 'fichasfacil-v71';
+const CACHE_NAME = 'fichasfacil-v72';
 const APP_SHELL = [
   './',
   './index.html',
+  './404.html',
   './styles.css?v=20261012-42',
   './blog.html',
   './guia.html',
@@ -14,7 +15,7 @@ const APP_SHELL = [
   './caligrafia.html',
   './geometria.html',
   './fracciones.html',
-  './app.js?v=20261012-53',
+  './app.js?v=20261012-54',
   './assets/jspdf.umd.min.js?v=20261012-1',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-17',
@@ -48,7 +49,7 @@ self.addEventListener('fetch', event => {
       return response;
     } catch (error) {
       const cached = await caches.match(event.request);
-      return cached || (event.request.mode === 'navigate' ? caches.match('./index.html') : Response.error());
+      return cached || (event.request.mode === 'navigate' ? caches.match('./404.html') : Response.error());
     }
   })());
 });
