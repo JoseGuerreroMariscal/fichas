@@ -71,6 +71,25 @@ const updateConfigurationSummary = () => {
     const extra = activity.value === 'sumas' || activity.value === 'restas' ? document.querySelector('#carryMode').selectedOptions[0].textContent : activity.value === 'multiplicaciones' ? document.querySelector('#tableNumber').value === 'all' ? 'Todas las tablas' : `Tabla del ${document.querySelector('#tableNumber').value}` : activity.value === 'divisiones' ? `${document.querySelector('#divisionMode').selectedOptions[0].textContent}${document.querySelector('#specificDivisor').value === 'all' ? '' : ` · entre ${document.querySelector('#specificDivisor').value}`}` : '';
     summary.textContent = `${document.querySelector('#difficulty').value}${countSummary}${digits ? ` · ${digits}` : ''}${paragraphSummary}${extra ? ` · ${extra}` : ''}`;
   }
+  updateLivePreview();
+};
+const updateLivePreview = () => {
+  const previewTitle = document.querySelector('#live-preview-title');
+  const previewLevel = document.querySelector('#live-preview-level');
+  const previewExample = document.querySelector('#live-preview-example');
+  if (!previewTitle || !previewLevel || !previewExample) return;
+  const examples = {
+    sumas: '7 + 5 =', restas: '9 − 4 =', multiplicaciones: '6 × 3 =', divisiones: '24 ÷ 4 =',
+    problemas: 'Lee, piensa y responde.', lectura: 'Lee el texto y contesta.', copiado: 'El sábado salimos al parque.',
+    ortografia: 'La _icicleta es _erde.', logica: 'Completa la serie: 2, 4, 6, __', reloj: '¿Qué hora marca el reloj?',
+    dinero: '2 € + 1 € =', medidas: '1 m = __ cm', fracciones: '¿Qué fracción está coloreada?', geometria: '△ ¿Cuántos lados tiene?',
+    vocabulario: 'Sinónimo de “contento”: ______', ordenar: 'Ordena las palabras.', caligrafia: 'Mi familia prepara la merienda.',
+    mixta: 'Repaso de varias materias.', diaria: 'Práctica breve del día.'
+  };
+  previewTitle.textContent = labels[activity.value];
+  previewLevel.textContent = `Nivel ${document.querySelector('#difficulty').value} · ${document.querySelector('#count').value} ejercicios`;
+  previewExample.textContent = examples[activity.value] || 'Ficha preparada para imprimir.';
+  document.querySelector('.live-preview-sheet').classList.toggle('writing-preview', ['copiado', 'caligrafia'].includes(activity.value));
 };
 const updateDigitLabels = () => {
   const names = { multiplicaciones: ['Multiplicando', 'Multiplicador'], divisiones: ['Dividendo', 'Divisor'] }[activity.value] || ['Primer número', 'Segundo número'];
