@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fichasfacil-v76';
+const CACHE_NAME = 'fichasfacil-v77';
 const APP_SHELL = [
   './',
   './index.html',
@@ -16,7 +16,7 @@ const APP_SHELL = [
   './caligrafia.html',
   './geometria.html',
   './fracciones.html',
-  './app.js?v=20261012-58',
+  './app.js?v=20261012-59',
   './assets/jspdf.umd.min.js?v=20261012-1',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-17',

@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-58', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-59', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -1113,9 +1113,11 @@ function downloadPdf(config, items, solutions = false) {
     doc.setFont('courier', 'normal');
     doc.setFontSize(12);
     if (division) {
-      doc.text(`${division[1]} ÷ ${division[2]} =`, x, topY, { align: 'center' });
-      doc.line(x - 14, topY + 3, x + 14, topY + 3);
-      if (solutions) doc.text(String(item.answer), x, topY + 10, { align: 'center' });
+      doc.text(division[1], x - 9, topY, { align: 'right' });
+      doc.line(x + 2, topY - 7, x + 30, topY - 7);
+      doc.line(x + 2, topY - 7, x + 2, topY + 5);
+      doc.text(division[2], x + 16, topY, { align: 'center' });
+      if (solutions) doc.text(String(item.answer), x + 16, topY + 13, { align: 'center' });
       return;
     }
     if (!operation) return;
@@ -1202,15 +1204,32 @@ function downloadPdf(config, items, solutions = false) {
   };
   if (isMath) {
     drawHeader(mathTitle);
-    const columns = 4;
-    const columnWidth = (pageWidth - margin * 2) / columns;
-    const startY = 55;
-    const rowHeight = 43;
-    items.forEach((item, index) => {
-      const column = index % columns;
-      const row = Math.floor(index / columns);
-      drawMathOperation(item, margin + columnWidth * (column + 0.5), startY + row * rowHeight);
-    });
+    if (config.type === 'divisiones') {
+      const columns = 3;
+      const columnWidth = (pageWidth - margin * 2) / columns;
+      const startY = 55;
+      const rowHeight = 54;
+      items.forEach((item, index) => {
+        if (index > 0 && index % 10 === 0) {
+          doc.addPage();
+          drawHeader(mathTitle);
+        }
+        const localIndex = index % 10;
+        const column = localIndex % columns;
+        const row = Math.floor(localIndex / columns);
+        drawMathOperation(item, margin + columnWidth * (column + 0.5), startY + row * rowHeight);
+      });
+    } else {
+      const columns = 4;
+      const columnWidth = (pageWidth - margin * 2) / columns;
+      const startY = 55;
+      const rowHeight = 43;
+      items.forEach((item, index) => {
+        const column = index % columns;
+        const row = Math.floor(index / columns);
+        drawMathOperation(item, margin + columnWidth * (column + 0.5), startY + row * rowHeight);
+      });
+    }
   } else {
     drawHeader(labels[config.type]);
     items.forEach((item, index) => {
