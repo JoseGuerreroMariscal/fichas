@@ -58,7 +58,7 @@ installButton?.addEventListener('click', async () => {
   installButton.hidden = true;
 });
 window.addEventListener('appinstalled', () => { if (installButton) installButton.hidden = true; });
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-54', { updateViaCache: 'none' }).catch(() => {}));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=20261012-55', { updateViaCache: 'none' }).catch(() => {}));
 const updateConfigurationSummary = () => {
   const summary = document.querySelector('#configuration-summary');
   if (summary) {
@@ -139,15 +139,19 @@ updateActivityFields();
 
 const activitySearch = document.querySelector('#activity-search');
 const clearActivitySearch = document.querySelector('#clear-activity-search');
+const activityEmpty = document.querySelector('#activity-empty');
 const filterActivities = () => {
   const query = activitySearch.value.trim().toLocaleLowerCase('es');
+  let visibleCount = 0;
   document.querySelectorAll('.activity-card').forEach(card => {
     const matches = !query || card.textContent.toLocaleLowerCase('es').includes(query);
     card.hidden = false;
     const item = card.closest('.activity-card-wrap') || card;
     item.hidden = !matches;
+    if (matches) visibleCount += 1;
   });
   if (clearActivitySearch) clearActivitySearch.hidden = !query;
+  if (activityEmpty) activityEmpty.hidden = visibleCount > 0;
 };
 activitySearch?.addEventListener('input', filterActivities);
 clearActivitySearch?.addEventListener('click', () => { activitySearch.value = ''; filterActivities(); activitySearch.focus(); });
