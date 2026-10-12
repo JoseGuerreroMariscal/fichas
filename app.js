@@ -32,6 +32,7 @@ const pageBackground = [document.querySelector('.site-header'), document.querySe
 const preferenceIds = ['difficulty', 'count', 'operands', 'firstDigits', 'secondDigits', 'paragraphs', 'calligraphyMode', 'carryMode', 'tableNumber', 'specificDivisor', 'divisionMode'];
 const preferenceKey = 'fichalia-preferences';
 const recentActivityKey = 'fichalia-recent-activity';
+const favoriteActivitiesKey = 'fichalia-favorite-activities';
 let installPrompt = null;
 let sharedActivity = '';
 let sharedSolutions = false;
@@ -126,6 +127,32 @@ const filterActivities = () => {
 };
 activitySearch?.addEventListener('input', filterActivities);
 clearActivitySearch?.addEventListener('click', () => { activitySearch.value = ''; filterActivities(); activitySearch.focus(); });
+const readFavoriteActivities = () => {
+  try { return new Set(JSON.parse(localStorage.getItem(favoriteActivitiesKey) || '[]')); } catch (error) { return new Set(); }
+};
+const saveFavoriteActivities = favorites => {
+  try { localStorage.setItem(favoriteActivitiesKey, JSON.stringify([...favorites])); } catch (error) { /* almacenamiento opcional */ }
+};
+const favoriteActivities = readFavoriteActivities();
+document.querySelectorAll('.activity-card').forEach(card => {
+  const type = card.dataset.type;
+  const favorite = document.createElement('span');
+  favorite.className = 'card-favorite';
+  favorite.setAttribute('role', 'button');
+  favorite.setAttribute('tabindex', '0');
+  favorite.setAttribute('aria-label', `${favoriteActivities.has(type) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${labels[type]}`);
+  favorite.textContent = favoriteActivities.has(type) ? '★' : '☆';
+  favorite.addEventListener('click', event => {
+    event.stopPropagation();
+    if (favoriteActivities.has(type)) favoriteActivities.delete(type); else favoriteActivities.add(type);
+    saveFavoriteActivities(favoriteActivities);
+    const selected = favoriteActivities.has(type);
+    favorite.textContent = selected ? '★' : '☆';
+    favorite.setAttribute('aria-label', `${selected ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${labels[type]}`);
+  });
+  favorite.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); favorite.click(); } });
+  card.append(favorite);
+});
 const saveRecentActivity = type => {
   try { localStorage.setItem(recentActivityKey, JSON.stringify({ type, label: labels[type], savedAt: Date.now() })); } catch (error) { /* almacenamiento opcional */ }
 };

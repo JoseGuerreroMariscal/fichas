@@ -125,6 +125,7 @@ input::placeholder{color:#8995a8;opacity:1}
 .check-label{min-height:28px}
 .print-button[disabled]{filter:grayscale(.25)}
 .activity-tools{display:flex;align-items:flex-end;gap:10px;margin:0 0 18px}.activity-tools label{flex:1;max-width:420px}.activity-tools input{margin-top:5px}.activity-tools button{min-height:44px;padding:10px 14px;border:1px solid #cbd5e2;border-radius:8px;background:#fff;color:var(--navy);font-size:12px;font-weight:800;cursor:pointer}.activity-tools button:hover{border-color:var(--navy);background:#f6f9fc}.generator-steps li{opacity:.55}.generator-steps li.is-current{opacity:1;color:var(--navy)}.generator-steps li.is-current span{background:var(--warm);font-weight:800}
+.card-favorite{position:absolute;top:14px;right:16px;color:#a47700;font-size:22px;line-height:1;cursor:pointer;z-index:1}.card-favorite:hover,.card-favorite:focus-visible{color:#d49f00;transform:scale(1.12)}
 
 /* Un solo eje de alineación para que la portada no cambie de ancho entre secciones. */
 .site-header{padding-left:max(32px,calc((100% - 1200px)/2));padding-right:max(32px,calc((100% - 1200px)/2))}
