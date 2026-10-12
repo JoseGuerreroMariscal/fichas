@@ -1,8 +1,8 @@
-# FichasFácil · Información ampliada para asistentes
+# FichasFacil · Información ampliada para asistentes
 
 ## Propósito
 
-FichasFácil es una herramienta web en español que ayuda a preparar actividades educativas sencillas para imprimir o compartir. No requiere registro y no pide nombre del alumno ni curso: esos datos solo aparecen si la persona los escribe de forma opcional.
+FichasFacil es una herramienta web en español que ayuda a preparar actividades educativas sencillas para imprimir o compartir. No requiere registro y no pide nombre del alumno ni curso: esos datos solo aparecen si la persona los escribe de forma opcional.
 
 ## Flujo recomendado
 
@@ -45,4 +45,4 @@ Los problemas presentan situaciones cotidianas breves y un espacio de respuesta.
 
 ## Integración MCP
 
-FichasFácil no expone todavía un servidor MCP remoto. Un servidor futuro debería ofrecer un endpoint HTTPS `POST /mcp` y herramientas como `describe_worksheet_types` y `build_worksheet_link`, sin almacenar datos personales de alumnos.
+FichasFacil no expone todavía un servidor MCP remoto. Un servidor futuro debería ofrecer un endpoint HTTPS `POST /mcp` y herramientas como `describe_worksheet_types` y `build_worksheet_link`, sin almacenar datos personales de alumnos.
