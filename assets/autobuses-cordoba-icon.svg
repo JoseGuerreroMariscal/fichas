@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+
+  <!-- Fondo verde oscuro -->
+  <rect width="512" height="512" rx="88" fill="#1e5c35"/>
+
+  <!-- ── TECHO BLANCO (como el bus real Aucorsa) ── -->
+  <rect x="62" y="128" width="388" height="44" rx="18" fill="#f2f2f0"/>
+  <!-- sombra sutil debajo del techo -->
+  <rect x="62" y="160" width="388" height="8" fill="#d8d8d4"/>
+
+  <!-- ── CARROCERÍA VERDE LIMA ── -->
+  <rect x="62" y="168" width="388" height="178" rx="0" fill="#7ed957"/>
+  <!-- esquinas inferiores redondeadas -->
+  <rect x="62" y="326" width="388" height="20" rx="10" fill="#7ed957"/>
+  <!-- franja inferior más oscura -->
+  <rect x="62" y="320" width="388" height="26" fill="#5ab83a"/>
+
+  <!-- ── PARABRISAS FRONTAL (grande, oscuro, esquinas redondeadas) ── -->
+  <rect x="72" y="138" width="108" height="110" rx="12" fill="#1a2e3a"/>
+  <!-- reflejo sutil en el parabrisas -->
+  <rect x="80" y="145" width="30" height="55" rx="6" fill="#243848" opacity="0.6"/>
+
+  <!-- ── VENTANAS LATERALES (tintadas oscuras como en la foto) ── -->
+  <rect x="196" y="172" width="70" height="62" rx="8" fill="#1a2e3a"/>
+  <rect x="280" y="172" width="70" height="62" rx="8" fill="#1a2e3a"/>
+  <rect x="364" y="172" width="72" height="62" rx="8" fill="#1a2e3a"/>
+  <!-- reflejos en ventanas -->
+  <rect x="200" y="176" width="14" height="50" rx="4" fill="#243848" opacity="0.5"/>
+  <rect x="284" y="176" width="14" height="50" rx="4" fill="#243848" opacity="0.5"/>
+  <rect x="368" y="176" width="14" height="50" rx="4" fill="#243848" opacity="0.5"/>
+
+  <!-- ── PUERTA (doble hoja) ── -->
+  <rect x="196" y="248" width="70" height="90" rx="5" fill="#5ab83a"/>
+  <line x1="231" y1="250" x2="231" y2="336" stroke="#3a9a2a" stroke-width="3"/>
+  <circle cx="242" cy="295" r="5" fill="#3a9a2a"/>
+  <!-- marco puerta -->
+  <rect x="196" y="248" width="70" height="4" fill="#3a9a2a"/>
+
+  <!-- ── FRANJA BLANCA SUPERIOR lateral (igual que el bus real) ── -->
+  <rect x="190" y="168" width="260" height="12" fill="#f0f0ee"/>
+
+  <!-- ── ESPEJO RETROVISOR ── -->
+  <rect x="36" y="188" width="26" height="16" rx="5" fill="#b0b0a8"/>
+
+  <!-- ── CHASIS / FALDA INFERIOR ── -->
+  <rect x="62" y="336" width="388" height="14" fill="#3a9a2a"/>
+
+  <!-- ── RUEDAS ── -->
+  <!-- Trasera -->
+  <circle cx="152" cy="368" r="50" fill="#111"/>
+  <circle cx="152" cy="368" r="32" fill="#222"/>
+  <circle cx="152" cy="368" r="16" fill="#777"/>
+  <circle cx="152" cy="368" r="6"  fill="#333"/>
+  <line x1="152" y1="352" x2="152" y2="384" stroke="#555" stroke-width="3"/>
+  <line x1="136" y1="359" x2="168" y2="377" stroke="#555" stroke-width="3"/>
+  <line x1="136" y1="377" x2="168" y2="359" stroke="#555" stroke-width="3"/>
+
+  <!-- Delantera -->
+  <circle cx="368" cy="368" r="50" fill="#111"/>
+  <circle cx="368" cy="368" r="32" fill="#222"/>
+  <circle cx="368" cy="368" r="16" fill="#777"/>
+  <circle cx="368" cy="368" r="6"  fill="#333"/>
+  <line x1="368" y1="352" x2="368" y2="384" stroke="#555" stroke-width="3"/>
+  <line x1="352" y1="359" x2="384" y2="377" stroke="#555" stroke-width="3"/>
+  <line x1="352" y1="377" x2="384" y2="359" stroke="#555" stroke-width="3"/>
+
+  <!-- ── TEXTO CÓRDOBA ── -->
+  <text x="256" y="466"
+        font-family="Arial Black, Arial, sans-serif"
+        font-weight="900"
+        font-size="62"
+        fill="#ffffff"
+        text-anchor="middle"
+        letter-spacing="1">Córdoba</text>
+
+</svg>
