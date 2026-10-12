@@ -99,6 +99,8 @@ body{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe
 .form-actions{position:static;background:#fff}
 input::placeholder{color:#8995a8;opacity:1}
 .content-section,.use-section,.faq-section,.other-projects{content-visibility:auto;contain-intrinsic-size:500px}
+.blog-post,.guide-block,.seo-landing-card,.aside-card{min-width:0}
+.site-footer a{overflow-wrap:anywhere}
 @media(prefers-contrast:more){.activity-card,.content-card,.project-links a{border-color:var(--navy)}.section-help,.content-card p,.project-links span{color:#394861}.kicker{color:#394861}}
 @media(max-width:650px){
   .activity-tools{align-items:stretch}.activity-tools button{align-self:end;min-width:72px;padding-left:10px;padding-right:10px}.activity-tools input{font-size:16px}
