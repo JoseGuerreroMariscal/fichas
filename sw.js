@@ -1,15 +1,14 @@
-const CACHE_NAME = 'fichasfacil-v64';
+const CACHE_NAME = 'fichasfacil-v65';
 const APP_SHELL = [
   './',
   './index.html',
-  './styles.css?v=20261011-37',
+  './styles.css?v=20261011-38',
   './app.js?v=20261011-49',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-17',
   './pwa-icon.svg?v=20261011-17',
   './portada-fichas-reales.svg?v=20261011-1',
-  './portada-fichas-reales-v2.svg?v=20261011-2',
-  './assets/portada-fichas-reales-v2.png?v=20261011-2',
+  './portada-fichas-reales-v2.svg?v=20261011-3',
   './blog.html',
   './guia.html',
   './llms.txt'
