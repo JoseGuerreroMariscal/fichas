@@ -1,11 +1,9 @@
-const CACHE_NAME = 'fichasfacil-v84';
+const CACHE_NAME = 'fichasfacil-v85';
 const APP_SHELL = [
   './',
   './index.html',
   './404.html',
-  './styles.css?v=20261012-43',
-  './styles.css?v=20261012-44',
-  './styles.css?v=20261012-42',
+  './styles.css?v=20261012-81',
   './blog.html',
   './guia.html',
   './sumas.html',
@@ -20,7 +18,7 @@ const APP_SHELL = [
   './aviso-legal.html',
   './privacidad.html',
   './cookies.html',
-  './app.js?v=20261012-60',
+  './app.js?v=20261012-84',
   './assets/jspdf.umd.min.js?v=20261012-1',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-17',
