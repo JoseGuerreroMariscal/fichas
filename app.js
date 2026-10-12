@@ -668,7 +668,7 @@ const practicalActivities = {
   geometria: [
     ['Observa la figura. ¿Cuántos lados y vértices tiene este triángulo?', '3 lados y 3 vértices.'],
     ['Observa la figura. ¿Cuántos vértices tiene el cuadrado? ¿Son todos sus lados iguales?', '4 vértices. Sí, sus lados son iguales.'],
-    ['Observa la figura redonda. ¿Cómo se llama y qué característica tienen sus puntos respecto al centro?', 'El círculo. Todos sus puntos están a la misma distancia del centro.'],
+    ['Observa la figura redonda. ¿Cómo se llama y qué característica tienen sus puntos respecto al centro?', 'La circunferencia. Todos sus puntos están a la misma distancia del centro.'],
     ['Observa el pentágono. ¿Cuántos lados tiene y cómo se llama?', '5 lados. Pentágono.'],
     ['Observa la figura. ¿Cuántos lados tiene el rectángulo y cómo son sus lados opuestos?', '4 lados. Los lados opuestos son iguales.'],
     ['Observa el hexágono. ¿Cuántos lados tiene y cómo se llama?', '6 lados. Hexágono.'],
