@@ -1,9 +1,20 @@
-const CACHE_NAME = 'fichasfacil-v70';
+const CACHE_NAME = 'fichasfacil-v71';
 const APP_SHELL = [
   './',
   './index.html',
-  './styles.css?v=20261012-41',
-  './app.js?v=20261012-52',
+  './styles.css?v=20261012-42',
+  './blog.html',
+  './guia.html',
+  './sumas.html',
+  './restas.html',
+  './multiplicaciones.html',
+  './divisiones.html',
+  './problemas-matematicos.html',
+  './comprension-lectora.html',
+  './caligrafia.html',
+  './geometria.html',
+  './fracciones.html',
+  './app.js?v=20261012-53',
   './assets/jspdf.umd.min.js?v=20261012-1',
   './manifest.webmanifest',
   './favicon.svg?v=20261011-17',
